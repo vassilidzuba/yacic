@@ -1,6 +1,6 @@
-# YACICC
+# YACIC
 
-This projet aims at developping yet another java application to run CI pipelines with the following characteristics:
+This project aims at developing yet another java application to run CI pipelines with the following characteristics:
 
 * simple
 * customisable
