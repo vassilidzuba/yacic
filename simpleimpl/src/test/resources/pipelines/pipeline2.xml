@@ -1,0 +1,13 @@
+<pipeline type="sequential" id="pip2">
+  <description>Pipeline One</description>
+
+  <step id="step1" class="vassilidzuba.yacic.simpleimpl.Action1">
+  </step>
+
+  <step id="step1" class="vassilidzuba.yacic.simpleimpl.BadAction1">
+  </step>
+
+  <step id="step1" class="vassilidzuba.yacic.simpleimpl.Action2">
+  </step>
+
+</pipeline>

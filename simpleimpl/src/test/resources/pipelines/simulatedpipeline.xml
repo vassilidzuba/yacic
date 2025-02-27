@@ -1,0 +1,29 @@
+<pipeline type="sequential" id="simplepipeline">
+   <description>Simulates a java application build pipeline</description>
+
+
+   <step id="git" class="vassilidzuba.yacic.simpleimpl.simul.GitAction">
+       <description>Pull the project from Git</description>
+   </step>
+
+
+   <step id="build" class="vassilidzuba.yacic.simpleimpl.simul.BuildAction">
+       <description>Build the artefect</description>
+   </step>
+
+
+   <step id="inttest" class="vassilidzuba.yacic.simpleimpl.simul.IntegrationTestsAction">
+       <description>Run the integration test</description>
+   </step>
+
+
+   <step id="sonar" class="vassilidzuba.yacic.simpleimpl.simul.SonarAction">
+       <description>Execute Sonar checks</description>
+   </step>
+
+
+   <step id="nexus" class="vassilidzuba.yacic.simpleimpl.simul.NexusAction">
+       <description>Put the arefacty to Nexus</description>
+   </step>
+
+</pipeline>
