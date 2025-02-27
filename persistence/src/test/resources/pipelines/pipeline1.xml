@@ -1,0 +1,10 @@
+<pipeline type="sequential" id="pip1">
+  <description>Pipeline One</description>
+
+  <step id="step1" class="vassilidzuba.yacic.persistence.Action1">
+  </step>
+
+  <step id="step1" class="vassilidzuba.yacic.persistence.Action2">
+  </step>
+
+</pipeline>
