@@ -14,8 +14,11 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.server.api;
 
-public class ServerConfig {
+import java.util.ArrayList;
+
+public class PipelineList extends ArrayList<String> {
+	private static final long serialVersionUID = -6620433207929554172L;
 
 }
