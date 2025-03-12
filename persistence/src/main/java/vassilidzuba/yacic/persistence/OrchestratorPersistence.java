@@ -55,7 +55,7 @@ public class OrchestratorPersistence {
 	public List<String> listPipelines() {
 		var db = new Jdbc(ds);
 		
-		return db.select("select id from pîpelines");
+		return db.select("select id from pipelines");
 	}
 
 	private String date2string(LocalDateTime ldt) {
