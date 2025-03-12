@@ -36,6 +36,7 @@
 		<module>model</module>
 		<module>simpleimpl</module>
 		<module>persistence</module>
+		<module>podmanutil</module>
 		<module>server</module>
 	</modules>
 
