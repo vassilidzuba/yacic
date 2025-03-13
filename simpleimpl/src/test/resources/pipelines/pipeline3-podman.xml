@@ -1,0 +1,12 @@
+<pipeline type="sequential" id ="pip1">
+  <description>Pipeline Three</description>
+
+  <step id="step1" type='builtin' class="vassilidzuba.yacic.simpleimpl.Action1">
+  
+  </step>
+
+  <step id="step2" type='podman'>
+  
+  </step>
+
+</pipeline>

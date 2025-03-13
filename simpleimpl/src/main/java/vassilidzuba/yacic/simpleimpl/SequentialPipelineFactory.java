@@ -17,6 +17,7 @@
 package vassilidzuba.yacic.simpleimpl;
 
 import java.io.InputStream;
+import java.util.ArrayDeque;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.Pipeline;
 
 @Slf4j
@@ -40,7 +42,8 @@ public final class SequentialPipelineFactory {
 
 		var xmlsr = xmlif.createXMLStreamReader(is);
 		var ctx = new Context();
-				
+		ctx.getElementTypes().push(ElementType.TOP);
+
 		while (xmlsr.hasNext()) {
 			var eventType = xmlsr.next();
 
@@ -61,13 +64,13 @@ public final class SequentialPipelineFactory {
 
 		return ctx.getPipeline();
 	}
-	
+
 	private static void processCharacters(XMLStreamReader xmlsr, Context ctx) {
 		var data = xmlsr.getText();
-		if (ctx.isInDescription()) {
+		if (ctx.getElementTypes().peek() == ElementType.DESCRIPTION) {
 			ctx.getDescription().append(data);
 		}
-		
+
 	}
 
 	private static void processStartElement(XMLStreamReader xmlsr, Context ctx) {
@@ -78,20 +81,20 @@ public final class SequentialPipelineFactory {
 			break;
 		case "step":
 			processStartStep(xmlsr, ctx);
-		break;
+			break;
 		case "description":
 			processStartDescription(xmlsr, ctx);
-		break;
+			break;
 		default:
 			log.error("unexpected element: {}", name);
 		}
-		
+
 	}
 
-	@SuppressWarnings("unused") 
+	@SuppressWarnings("unused")
 	private static void processStartDescription(XMLStreamReader xmlsr, Context ctx) {
 		ctx.setDescription(new StringBuilder());
-		ctx.setInDescription(true);
+		ctx.getElementTypes().push(ElementType.DESCRIPTION);
 	}
 
 	private static void processPipeline(XMLStreamReader xmlsr, Context ctx) {
@@ -105,14 +108,26 @@ public final class SequentialPipelineFactory {
 	@SneakyThrows
 	private static void processStartStep(XMLStreamReader xmlsr, Context ctx) {
 		var id = xmlsr.getAttributeValue(null, "id");
-		var className = xmlsr.getAttributeValue(null, "class");
-		var clazz = Class.forName(className);
-		var action = (JavaAction) clazz.getDeclaredConstructor().newInstance();
-		action.setId(id);
-		ctx.setStep(action);
-		ctx.setInStep(true);
+		var type = xmlsr.getAttributeValue(null, "type");
+		if (type == null || "builtin".equals(type)) {
+			var className = xmlsr.getAttributeValue(null, "class");
+			var clazz = Class.forName(className);
+			var action = (JavaAction) clazz.getDeclaredConstructor().newInstance();
+			action.setId(id);
+			ctx.setStep(action);
+			ctx.getElementTypes().push(ElementType.BUILTIN_STEP);
+			return;
+		}
+		if ("podman".equals(type)) {
+			var action = new PodmanAction();
+			action.setId(id);
+			ctx.setStep(action);
+			ctx.getElementTypes().push(ElementType.PODMAN_STEP);
+			return;
+		}
+		log.error("unexpected step type: {}", type);
 	}
-	
+
 	private static void processEndElement(XMLStreamReader xmlsr, Context ctx) {
 		String name = xmlsr.getName().getLocalPart();
 		switch (name) {
@@ -121,54 +136,68 @@ public final class SequentialPipelineFactory {
 			break;
 		case "step":
 			processEndStep(xmlsr, ctx);
-		break;
+			break;
 		case "description":
 			processEndDescription(xmlsr, ctx);
-		break;
+			break;
 		default:
 			log.error("unexpected element: {}", name);
 		}
 	}
-	
-	@SuppressWarnings("unused") 
+
+	@SuppressWarnings("unused")
 	private static void processEndDescription(XMLStreamReader xmlsr, Context ctx) {
-		if (ctx.isInStep()) {
-			ctx.getStep().setDescription(ctx.getDescription().toString());
-		} else {
+		ctx.getElementTypes().pop();
+		switch (ctx.getElementTypes().peek()) {
+		case ElementType.BUILTIN_STEP:
+			JavaAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
+			break;
+		case ElementType.PODMAN_STEP:
+			PodmanAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
+			break;
+		case ElementType.TOP:
 			ctx.getPipeline().setDescription(ctx.getDescription().toString());
+			break;
+		default:
+			log.error("unexpected description end");
 		}
+
 		ctx.setDescription(null);
-		ctx.setInDescription(false);
 	}
 
-	@SuppressWarnings("unused") 
+	@SuppressWarnings("unused")
 	private static void processEndPipeline(XMLStreamReader xmlsr, Context ctx) {
 		// nothing special to do
 	}
 
-	@SuppressWarnings("unused") 
+	@SuppressWarnings("unused")
 	private static void processEndStep(XMLStreamReader xmlsr, Context ctx) {
 		ctx.getPipeline().addAction(ctx.getStep());
 		ctx.setStep(null);
-		ctx.setInStep(false);
+		ctx.getElementTypes().pop();
 	}
 
 	static class Context {
-		@Setter 
+		@Setter
 		@Getter
 		private SequentialPipeline pipeline;
-		@Setter 
+		@Setter
 		@Getter
-		private JavaAction step;
-		@Setter 
+		private Action step;
+		@Setter
 		@Getter
-		private boolean inStep;
-		@Setter 
+		private PodmanAction podmanStep;
+		@Setter
 		@Getter
-		private boolean inDescription;
-		@Setter 
+		private ArrayDeque<ElementType> elementTypes = new ArrayDeque<>();
+		@Setter
 		@Getter
 		private StringBuilder description;
 
 	}
+	
+	static enum ElementType {
+		TOP, DESCRIPTION, BUILTIN_STEP, PODMAN_STEP;
+	};
+	
 }

@@ -48,4 +48,17 @@ class SequentialPipelineFactoryTest {
 			Assertions.assertEquals("badaction1:failure", ps.getStatus());
 		}
 	}
+
+	@Test
+	@SneakyThrows
+	void test3() {
+		var classloader = getClass().getClassLoader();
+		try (var is = classloader.getResourceAsStream("pipelines/pipeline3-podman.xml")) {
+			var pipeline = SequentialPipelineFactory.parse(is);
+			
+			var ps = pipeline.run();
+			
+			Assertions.assertEquals("ok", ps.getStatus());
+		}
+	}
 }
