@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 
 @Slf4j
-public class BadAction1 extends JavaAction {
+public class BadAction1 extends BuiltinAction {
 
 	@Override
 	public String getId() {
@@ -28,13 +28,13 @@ public class BadAction1 extends JavaAction {
 	}
 
 	@Override
-	public String run() {
+	public String run(SequentialPipelineConfiguration pctx) {
 		log.info("running {}", getId());
 		return "failure";
 	}
 
 	@Override
-	public ActionExecutionHandle runAsynchronously() {
+	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
 		throw new UnsupportedOperationException("not supported");
 	}
 

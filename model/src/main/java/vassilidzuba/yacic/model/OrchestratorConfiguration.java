@@ -14,8 +14,13 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.model;
 
-public class ServerConfig {
+import java.util.Map;
 
+import lombok.Getter;
+
+public class OrchestratorConfiguration {
+	@Getter 
+	private Map<String, String> properties;
 }

@@ -39,7 +39,7 @@ class SimulatedPipelineTest {
 		Files.createDirectories(dataArea);
 		pipeline.setDataArea(dataArea);
 		
-		o.run(pipeline);
+		o.run(pipeline, null);
 		var ostatus = o.shutdown();
 		
 		Assertions.assertTrue(ostatus);

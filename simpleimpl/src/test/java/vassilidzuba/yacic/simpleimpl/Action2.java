@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 
 @Slf4j
-public class Action2 extends JavaAction {
+public class Action2 extends BuiltinAction {
 
 	@Override
 	public String getId() {
@@ -32,7 +32,7 @@ public class Action2 extends JavaAction {
 
 	@Override
 	@SneakyThrows
-	public String run() {
+	public String run(SequentialPipelineConfiguration pctx) {
 		log.info("starting {}", getId());
 		Thread.sleep(Duration.ofSeconds(3));
 		log.info("completing {}", getId());
@@ -40,7 +40,7 @@ public class Action2 extends JavaAction {
 	}
 
 	@Override
-	public ActionExecutionHandle runAsynchronously() {
+	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
 		throw new UnsupportedOperationException("not supportyed");
 	}
 

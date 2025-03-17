@@ -14,8 +14,17 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.simpleimpl;
 
-public class ServerApp {
+import java.util.HashMap;
+import java.util.Map;
+
+import lombok.Getter;
+import vassilidzuba.yacic.model.PipelineConfiguration;
+import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
+
+public class SequentialPipelineConfiguration extends PipelineConfiguration {
+	@Getter
+	private Map<String, PodmanActionDefinition> pad = new HashMap<>();
 
 }

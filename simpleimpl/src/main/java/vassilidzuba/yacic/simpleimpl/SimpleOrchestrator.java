@@ -29,27 +29,27 @@ import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.model.PipelineStatus;
 
 @Slf4j
-public class SimpleOrchestrator implements Orchestrator {
-	private List<PipelineStatus> history = new ArrayList<>();
+public class SimpleOrchestrator implements Orchestrator<SequentialPipelineConfiguration> {
+	private List<PipelineStatus<SequentialPipelineConfiguration>> history = new ArrayList<>();
 	private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	@Override
-	public void run(Pipeline pipeline) {
-		executor.submit(() -> execute(pipeline));
+	public void run(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx) {
+		executor.submit(() -> execute(pipeline, pctx));
 	}
 
-	public void execute(Pipeline pipeline) {
-		var ps = pipeline.run();
+	public void execute(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx) {
+		var ps = pipeline.run(pctx);
 		history.add(ps);
 	}
 
 	@Override
-	public List<PipelineStatus> getHistory() {
+	public List<PipelineStatus<SequentialPipelineConfiguration>> getHistory() {
 		return history;
 	}
 
 	@Override
-	public List<PipelineStatus> getHistory(String pipelineType) {
+	public List<PipelineStatus<SequentialPipelineConfiguration>> getHistory(String pipelineType) {
 		return history.stream().filter(ps -> pipelineType.equals(ps.getPipeline().getType())).toList();
 	}
 

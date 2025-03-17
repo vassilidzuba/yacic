@@ -18,24 +18,24 @@ package vassilidzuba.yacic.model;
 
 import java.util.List;
 
-public interface Orchestrator {
+public interface Orchestrator<T extends PipelineConfiguration>{
 
 	/**
 	 * Run a pipeline.
-	 * @param pipeline
+	 * @param pipeline the pip"eline
 	 */
-	void run(Pipeline pipeline);
+	void run(Pipeline<T> pipeline, T pconfig);
 	
 	/**
 	 * retrieve the history;
 	 * @return the history
 	 */
-	List<PipelineStatus> getHistory();
+	List<PipelineStatus<T>> getHistory();
 
 	
 	/**
 	 * retrieve the history of the pipelines with a given type;
 	 * @return the history
 	 */
-	List<PipelineStatus> getHistory(String pipelineType);
+	List<PipelineStatus<T>> getHistory(String pipelineType);
 }

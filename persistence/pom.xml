@@ -6,7 +6,9 @@
 		<groupId>vassilidzuba</groupId>
 		<artifactId>yacic</artifactId>
 		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
+	<groupId>vassilidzuba.yacic</groupId>
 	<artifactId>persistence</artifactId>
 	<name>orchestrator-persistence</name>
 	<description>Provide persistence to the orchestrator</description>
@@ -22,7 +24,6 @@
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>simpleimpl</artifactId>
 			<version>1.0-SNAPSHOT</version>
-			<scope>test</scope>
 		</dependency>
 		
 		<dependency>

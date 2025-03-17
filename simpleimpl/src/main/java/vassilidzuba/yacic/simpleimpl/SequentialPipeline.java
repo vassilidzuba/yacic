@@ -29,10 +29,10 @@ import vassilidzuba.yacic.model.ActionStatus;
 import vassilidzuba.yacic.model.PipelineStatus;
 
 @Slf4j
-public class SequentialPipeline extends AbstractPipeline {
+public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfiguration> {
 	private static AtomicInteger seqnum = new AtomicInteger(1);
-
-	private List<Action> actions = new ArrayList<>();
+	
+	private List<Action<SequentialPipelineConfiguration>> actions = new ArrayList<>();
 	private int num;
 
 	public SequentialPipeline(String type) {
@@ -40,12 +40,12 @@ public class SequentialPipeline extends AbstractPipeline {
 		setType(type);
 	}
 	
-	public void addAction(Action a) {
+	public void addAction(Action<SequentialPipelineConfiguration> a) {
 		actions.add(a);
 	}
 
 	@Override
-	public boolean runNextStep(PipelineStatus ps) {
+	public boolean runNextStep(PipelineStatus<SequentialPipelineConfiguration> ps, SequentialPipelineConfiguration pconfig) {
 		var currentStep = ps.getCurrentStep();
 		var oa = searchAction(currentStep);
 		if (oa.isPresent()) {
@@ -54,7 +54,7 @@ public class SequentialPipeline extends AbstractPipeline {
 			a.setDataArea(getDataArea());
 			String status;
 			try {
-				status = a.run();
+				status = a.run(pconfig);
 				
 			} catch (Exception e) {
 				log.error("exception during {}", a, e);
@@ -83,11 +83,11 @@ public class SequentialPipeline extends AbstractPipeline {
 		return false;
 	}
 	
-	private Optional<Action> searchAction(String id) {
+	private Optional<Action<SequentialPipelineConfiguration>> searchAction(String id) {
 		return actions.stream().filter(a -> id.equals(a.getId())).findFirst();
 	}
 	
-	private Optional<Action> getNextAction(String id) {
+	private Optional<Action<SequentialPipelineConfiguration>> getNextAction(String id) {
 		for (int ii = 0; ii < actions.size(); ii++) {
 			if (id.equals(actions.get(ii).getId())) {
 				if ((ii + 1) < actions.size()) {
@@ -102,12 +102,12 @@ public class SequentialPipeline extends AbstractPipeline {
 	}
 
 	@Override
-	public PipelineStatus run() {
+	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig) {
 		var ps = initialize(actions.get(0).getId());
 
 		ps.setStartDate(LocalDateTime.now());
 		
-		while (runNextStep(ps)) {}
+		while (runNextStep(ps, pconfig)) {}
 		
 
 		ps.setEndDate(LocalDateTime.now());

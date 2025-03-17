@@ -14,8 +14,22 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.podmanutil;
 
-public class ServerController {
+import lombok.Getter;
+import lombok.Setter;
 
+public class PodmanActionDefinition {
+	@Setter @Getter
+	private String image;
+	@Setter @Getter
+	private String host;
+	@Setter @Getter
+	private String username;
+	@Setter @Getter
+	private String command;
+	@Setter @Getter
+	private String setup;
+	@Setter @Getter
+	private String cleanup;
 }

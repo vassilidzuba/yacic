@@ -36,6 +36,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>vassilidzuba.yacic</groupId>
+			<artifactId>podmanutil</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>

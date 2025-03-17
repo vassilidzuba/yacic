@@ -24,6 +24,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import vassilidzuba.yacic.model.PipelineStatus;
+import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 public class OrchestratorPersistence {
 	private static HikariConfig config = new HikariConfig();
@@ -40,7 +41,7 @@ public class OrchestratorPersistence {
         ds = new HikariDataSource( config );
     }
 
-	public void store(PipelineStatus ps) {
+	public void store(PipelineStatus<SequentialPipelineConfiguration> ps) {
 		var db = new Jdbc(ds);
 		
 		db.store("""
@@ -55,7 +56,7 @@ public class OrchestratorPersistence {
 	public List<String> listPipelines() {
 		var db = new Jdbc(ds);
 		
-		return db.select("select id from pîpelines");
+		return db.select("select id from pipelines");
 	}
 
 	private String date2string(LocalDateTime ldt) {

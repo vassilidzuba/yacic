@@ -18,13 +18,17 @@ package vassilidzuba.yacic.simpleimpl;
 
 import java.time.Duration;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 
 @Slf4j
-public class Action1 extends JavaAction {
-
+public class Action1 extends BuiltinAction {
+	@Setter @Getter
+	private int sleepDuration = 3;
+	
 	@Override
 	public String getId() {
 		return "action1";
@@ -32,15 +36,15 @@ public class Action1 extends JavaAction {
 
 	@Override
 	@SneakyThrows
-	public String run() {
+	public String run(SequentialPipelineConfiguration pctx) {
 		log.info("starting {}", getId());
-		Thread.sleep(Duration.ofSeconds(3));
+		Thread.sleep(Duration.ofSeconds(sleepDuration));
 		log.info("completing {}", getId());
 		return "ok";
 	}
 
 	@Override
-	public ActionExecutionHandle runAsynchronously() {
+	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
 		throw new UnsupportedOperationException("not supportyed");
 	}
 
