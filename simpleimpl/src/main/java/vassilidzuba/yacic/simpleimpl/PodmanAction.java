@@ -22,15 +22,22 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
+import vassilidzuba.yacic.podmanutil.Podmanutil;
 
 @Slf4j
-public class PodmanAction implements Action  {
+public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 	@Setter
     private String id;
 	
 	@Setter
 	private String description;
-	
+
+	@Setter
+	private String type;
+
+	@Setter
+	private String subcommand = "";
+
 
 	@Override
 	public String getId() {
@@ -43,13 +50,32 @@ public class PodmanAction implements Action  {
 	}
 
 	@Override
-	public String run() {
+	public String run(SequentialPipelineConfiguration pconfig) {
 		log.info("running podman action");
-		return "ok";
+		log.info("    id          : {}", id);
+		log.info("    description : {}", description);
+		log.info("    type        : {}", type);
+		log.info("    subcommand  : {}", subcommand);
+		
+		var properties = pconfig.getProperties();
+		var pdef = pconfig.getPad().get(type);
+		
+		if (pdef == null) {
+			log.error("podman action type unknown : {}", type);
+			return "ko";
+		}
+		
+		var exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, System.out);
+		
+		if ("0".equals(exitStatus)) {
+			return "ok";
+		} else {
+			return "ko " + exitStatus;
+		}
 	}
 
 	@Override
-	public ActionExecutionHandle runAsynchronously() {
+	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
 		// TODO Auto-generated method stub
 		return null;
 	}

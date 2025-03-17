@@ -14,18 +14,22 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.simpleimpl;
+package vassilidzuba.yacic.podmanutil;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import lombok.Getter;
+import lombok.Setter;
 
-class ActionTest {
-
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
-	}
+public class PodmanActionDefinition {
+	@Setter @Getter
+	private String image;
+	@Setter @Getter
+	private String host;
+	@Setter @Getter
+	private String username;
+	@Setter @Getter
+	private String command;
+	@Setter @Getter
+	private String setup;
+	@Setter @Getter
+	private String cleanup;
 }

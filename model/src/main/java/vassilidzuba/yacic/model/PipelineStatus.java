@@ -23,9 +23,9 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-public class PipelineStatus {
+public class PipelineStatus <T extends PipelineConfiguration> {
 	@Setter @Getter
-	private Pipeline pipeline;
+	private Pipeline<T> pipeline;
 	@Setter @Getter
 	private String id;
 	@Setter @Getter
@@ -39,7 +39,7 @@ public class PipelineStatus {
 	@Setter @Getter
 	private List<ActionStatus> actionStatuses = new ArrayList<>();
 	
-	public PipelineStatus(Pipeline pipeline) {
+	public PipelineStatus(Pipeline<T> pipeline) {
 		this.pipeline = pipeline;
 	}
 }

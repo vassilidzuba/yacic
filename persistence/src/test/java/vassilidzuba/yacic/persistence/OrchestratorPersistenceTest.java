@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Pipeline;
+import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineFactory;
 
 @Slf4j
@@ -44,7 +45,7 @@ class OrchestratorPersistenceTest {
 	}
 	
 	@SneakyThrows
-	private Pipeline getPipeline() {
+	private Pipeline<SequentialPipelineConfiguration> getPipeline() {
 		var classloader = getClass().getClassLoader();
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline1.xml")) {
 			return SequentialPipelineFactory.parse(is);

@@ -26,7 +26,7 @@ import vassilidzuba.yacic.model.ActionExecutionHandle;
 /**
  * An action that executes Java code.
  */
-public abstract class JavaAction implements Action  {
+public abstract class BuiltinAction implements Action<SequentialPipelineConfiguration>  {
 	@Setter @Getter 
     private String id;
 	
@@ -66,7 +66,7 @@ public abstract class JavaAction implements Action  {
 	}
 	
 	@Override
-	public ActionExecutionHandle runAsynchronously() {
+	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
 		throw new UnsupportedOperationException("asynchronous action is not implemeted yet");
 	}
 }

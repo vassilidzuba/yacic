@@ -20,8 +20,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,31 +43,47 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Podmanutil {
+	private static final String YACIC = "yacic";
+
+	@Setter @Getter
+	private static boolean dryrun = false;
 
 	@Setter
 	@Getter
 	private String username = "podman";
+	
 
-	public String runMaven(String project, String cmd) {
-		return runMaven(project, cmd, System.out);
+	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pdef, String subcommand) {
+		return runGeneric(properties, pdef, subcommand, System.out);
 	}
 
-	public String runMaven(String project, String cmd, OutputStream os) {
+	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
+		log.info("in runGeneric");
+		var setup = substitute(pad.getSetup(), properties);
+		var cleanup = substitute(pad.getCleanup(), properties);
+		var command = substitute(pad.getCommand(), properties);
+		var subcommand2 = substitute(subcommand, properties);
+
+		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
+		
+		log.info("  command : {}", fullcommand);
+		
+		if (dryrun) {
+			return "OK";
+		}
+		
 		var exitStatus = new StringBuilder();
 
 		try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername("podman")
 				.build()) {
 
-			var command = "podman run -it --rm --name PROJECT -v \"$HOME/.m2:/root/.m2\" -v \"$HOME/maven/PROJECT\":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine CMD;echo MAVENTERMINATION $?"
-					.replace("PROJECT", project).replace("CMD", cmd);
-
-			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent("yacic");
+			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
 			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
 
-			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(command).withAutoConsume(false)
-					.onTask((task, session) -> {
-						exitStatus.append(process(session.getInputStream(), os));
-					}).build();
+			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(fullcommand).withAutoConsume(false)
+					.onTask((task, session) -> 
+						exitStatus.append(process(session.getInputStream(), os))
+					).build();
 
 			ssh.addTask(t);
 			t.waitForever();
@@ -78,25 +94,34 @@ public class Podmanutil {
 
 		return exitStatus.toString();
 	}
+	
+	private String substitute(String cmd, Map<String, String> properties) {
+		var command = cmd;
+		if (command == null) {
+			return "";
+		}
+		for (var e : properties.entrySet()) {
+			command = command.replace(e.getKey(), e.getValue());
+		}
+		return command;
+	}
 
 	@SneakyThrows
 	private String process(InputStream is, OutputStream os) {
 		var result = "";
-		var buffer = new char[10000];
 
-		try (var rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-				var wr = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
+		try (var rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
 			for (;;) {
 				var s = rd.readLine();
 				if (s == null) {
 					break;
 				}
-				if (s.contains("MAVENTERMINATION")) {
-					result = StringUtils.substringAfter(s, "MAVENTERMINATION").trim();
+				if (s.contains("PODMANTERMINATION")) {
+					result = StringUtils.substringAfter(s, "PODMANTERMINATION").trim();
 				}
-				wr.write(s);
-				wr.write(System.lineSeparator());
+				os.write(s.getBytes(StandardCharsets.UTF_8));
+				os.write(System.lineSeparator().getBytes(StandardCharsets.UTF_8));
 			}
 		}
 

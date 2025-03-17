@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.podmanutil;
 
+import java.util.HashMap;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -58,13 +60,12 @@ class PodmanutilTest {
 
 	@Test
 	void test2() {
-		var result = new Podmanutil().runMaven("simple", "mvn clean install");
+		var properties = new HashMap<String, String>();
+		
+		var pad = new PodmanActionDefinition();
+		pad.setCommand("docker.io/library/debian:stable");
+		
+		var result = new Podmanutil().runGeneric(properties, pad, "whoami");
 		Assertions.assertEquals("0", result);
-	}
-
-	@Test
-	void test3() {
-		var result = new Podmanutil().runMaven("simple", "mvn whatever");
-		Assertions.assertEquals("1", result);
 	}
 }

@@ -23,20 +23,20 @@ import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 import vassilidzuba.yacic.model.ActionListener;
 
-public abstract class AbstractActionExecutionHandle implements  ActionExecutionHandle{
-	private Action action;
-	private List<ActionListener> listeners = new ArrayList<>(); 
+public abstract class AbstractActionExecutionHandle implements  ActionExecutionHandle<SequentialPipelineConfiguration> {
+	private Action<SequentialPipelineConfiguration> action;
+	private List<ActionListener<SequentialPipelineConfiguration>> listeners = new ArrayList<>(); 
 	
-	protected AbstractActionExecutionHandle(Action action) {
+	protected AbstractActionExecutionHandle(Action<SequentialPipelineConfiguration> action) {
 		this.action = action;
 	}
 	
-	public Action getAction() {
+	public Action<SequentialPipelineConfiguration> getAction() {
 		return action;
 	}
 
 	@Override
-	public void addListener(ActionListener listener) {
+	public void addListener(ActionListener<SequentialPipelineConfiguration> listener) {
 		this.listeners.add(listener);
 	}
 }

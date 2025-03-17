@@ -20,14 +20,15 @@ import java.nio.file.Files;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.simpleimpl.JavaAction;
+import vassilidzuba.yacic.simpleimpl.BuiltinAction;
+import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 @Slf4j
-public class GitAction extends JavaAction {
+public class GitAction extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run() {
+	public String run(SequentialPipelineConfiguration pctx) {
 		log.info("running Git Action");
 		
 		var dataArea = getDataArea();

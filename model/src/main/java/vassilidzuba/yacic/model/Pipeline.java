@@ -18,7 +18,7 @@ package vassilidzuba.yacic.model;
 
 import java.nio.file.Path;
 
-public interface Pipeline {
+public interface Pipeline <T extends PipelineConfiguration> {
 	/**
 	 * Return the type of the pipeline<
 	 * 
@@ -44,14 +44,14 @@ public interface Pipeline {
 	 * Run the pipeline until completion.
 	 * @return the status
 	 */
-	PipelineStatus run();
+	PipelineStatus<T> run(T pctx);
 	
 	/**
 	 * initialize the pipeline but not run any step.
 	 * @paraù initialStep id of the current step
 	 * @return the status
 	 */
-	PipelineStatus initialize(String initialStep);
+	PipelineStatus<T> initialize(String initialStep);
 	
 	/**
 	 * Execute the next step.
@@ -59,7 +59,7 @@ public interface Pipeline {
 	 * @param ps the pipeline status
 	 * @return true if pipline should continue
 	 */
-	boolean runNextStep(PipelineStatus ps);
+	boolean runNextStep(PipelineStatus<T> ps, T pconfig);
 	
 	
 	/**
@@ -85,5 +85,4 @@ public interface Pipeline {
 	 * @return
 	 */
 	Path getDataArea();
-
 }

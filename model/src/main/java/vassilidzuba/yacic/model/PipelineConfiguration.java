@@ -13,19 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.	
 **/
+package vassilidzuba.yacic.model;
 
-package vassilidzuba.yacic.simpleimpl;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import lombok.Getter;
 
-class ActionTest {
-
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
-	}
+public class PipelineConfiguration {
+	@Getter 
+	private String name;
+	@Getter 
+	private Map<String, String> properties = new HashMap<>();
 }

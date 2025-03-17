@@ -16,16 +16,15 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import java.util.HashMap;
+import java.util.Map;
 
-class ActionTest {
+import lombok.Getter;
+import vassilidzuba.yacic.model.PipelineConfiguration;
+import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
-	}
+public class SequentialPipelineConfiguration extends PipelineConfiguration {
+	@Getter
+	private Map<String, PodmanActionDefinition> pad = new HashMap<>();
+
 }

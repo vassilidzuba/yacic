@@ -19,13 +19,14 @@ package vassilidzuba.yacic.simpleimpl.simul;
 import java.nio.file.Files;
 
 import lombok.SneakyThrows;
-import vassilidzuba.yacic.simpleimpl.JavaAction;
+import vassilidzuba.yacic.simpleimpl.BuiltinAction;
+import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
-public class SonarAction extends JavaAction {
+public class SonarAction extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run() {
+	public String run(SequentialPipelineConfiguration pctx) {
 		var src = getDataArea().resolve("src/main/java/foo.java");
 		if (! Files.isRegularFile(src)) {
 			return "missingfile";

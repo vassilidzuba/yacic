@@ -28,13 +28,13 @@ class SimpleOrchestratorTest {
 		var p = new SequentialPipeline("seq1");
 		p.addAction(new Action1());
 		p.addAction(new Action2());
-		o.run(p);
+		o.run(p, null);
 
 		var p2 = new SequentialPipeline("seq2");
 		p2.addAction(new Action1());
 		p2.addAction(new BadAction1());
 		p2.addAction(new Action2());
-		o.run(p2);
+		o.run(p2, null);
 		
 		var ostatus = o.shutdown();
 		

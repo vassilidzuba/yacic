@@ -16,13 +16,13 @@
 
 package vassilidzuba.yacic.model;
 
-public interface ActionExecutionHandle {
+public interface ActionExecutionHandle<T extends PipelineConfiguration> {
 
 	/**
 	 * return the action corresponding to the run.
 	 * @return the action
 	 */
-	Action getAction();
+	Action<T> getAction();
 	
 	/**
 	 * Checks if the run is co;pleted
@@ -40,5 +40,5 @@ public interface ActionExecutionHandle {
 	/**
 	 * add a listener.
 	 */
-	void addListener(ActionListener listener);
+	void addListener(ActionListener<T> listener);
 }

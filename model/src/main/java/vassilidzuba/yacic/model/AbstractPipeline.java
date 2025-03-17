@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 
 import lombok.Setter;
 
-public abstract class AbstractPipeline implements Pipeline {
+public abstract class AbstractPipeline<T extends PipelineConfiguration> implements Pipeline<T> {
 	@Setter
 	private String id;
 	@Setter
@@ -74,8 +74,8 @@ public abstract class AbstractPipeline implements Pipeline {
 	}
 	
 	@Override
-	public PipelineStatus initialize(String initialStep) {
-		var ps = new PipelineStatus(this);
+	public PipelineStatus<T> initialize(String initialStep) {
+		var ps = new PipelineStatus<T>(this);
 		ps.setId(getId());
 		ps.setStartDate(LocalDateTime.now());
 		ps.setCurrentStep(initialStep);

@@ -16,15 +16,14 @@
 
 package vassilidzuba.yacic.persistence;
 
-import java.time.Duration;
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
-import vassilidzuba.yacic.simpleimpl.JavaAction;
+import vassilidzuba.yacic.simpleimpl.BuiltinAction;
+import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 @Slf4j
-public class Action1 extends JavaAction {
+public class Action1 extends BuiltinAction {
 
 	@Override
 	public String getId() {
@@ -33,15 +32,14 @@ public class Action1 extends JavaAction {
 
 	@Override
 	@SneakyThrows
-	public String run() {
+	public String run(SequentialPipelineConfiguration pctx) {
 		log.info("starting {}", getId());
-		Thread.sleep(Duration.ofSeconds(3));
 		log.info("completing {}", getId());
 		return "ok";
 	}
 
 	@Override
-	public ActionExecutionHandle runAsynchronously() {
+	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
 		throw new UnsupportedOperationException("not supportyed");
 	}
 

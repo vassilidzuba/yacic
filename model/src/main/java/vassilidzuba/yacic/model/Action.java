@@ -18,7 +18,7 @@ package vassilidzuba.yacic.model;
 
 import java.nio.file.Path;
 
-public interface Action {
+public interface Action<T extends PipelineConfiguration> {
 	
 	/**
 	 * Returns the identifier of the action; should be unique.
@@ -36,13 +36,13 @@ public interface Action {
 	 * Executes an action synchronously.
 	 * @return the exit status of the run. Should be "OK" for a sucessfull run. 
 	 */
-	String run();
+	String run(T pctx);
 
 	/**
 	 * Executes an action asynchronously.
 	 * @return the handle to the execution. 
 	 */
-	ActionExecutionHandle runAsynchronously();
+	ActionExecutionHandle<T> runAsynchronously();
 	
 	/**
 	 * set the context qs q JSON string.

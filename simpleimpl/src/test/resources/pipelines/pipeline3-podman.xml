@@ -1,11 +1,18 @@
 <pipeline type="sequential" id ="pip1">
   <description>Pipeline Three</description>
 
-  <step id="step1" type='builtin' class="vassilidzuba.yacic.simpleimpl.Action1">
-  
+  <step id="step1" 
+        category='podman'
+        type="clone"
+        subcommand="clone REPO">
+  	<description>clone repository</description>
   </step>
 
-  <step id="step2" type='podman'>
+  <step id="step2" 
+        category='podman'
+        type="maven"
+        subcommand="mvn clean package">
+     <description>build package using maven</description>
   
   </step>
 

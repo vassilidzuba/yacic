@@ -22,10 +22,11 @@ import java.util.Map;
 
 import lombok.SneakyThrows;
 import vassilidzuba.yacic.model.Pipeline;
+import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineFactory;
 
 public final class PipelineManager {
-	private Map<String, Pipeline> pipelines = new HashMap<>();
+	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 	
 
 	@SneakyThrows

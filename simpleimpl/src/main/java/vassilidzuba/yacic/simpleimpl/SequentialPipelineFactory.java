@@ -38,7 +38,7 @@ public final class SequentialPipelineFactory {
 	static XMLInputFactory xmlif = XMLInputFactory.newInstance();
 
 	@SneakyThrows
-	public static Pipeline parse(InputStream is) {
+	public static Pipeline<SequentialPipelineConfiguration> parse(InputStream is) {
 
 		var xmlsr = xmlif.createXMLStreamReader(is);
 		var ctx = new Context();
@@ -108,24 +108,28 @@ public final class SequentialPipelineFactory {
 	@SneakyThrows
 	private static void processStartStep(XMLStreamReader xmlsr, Context ctx) {
 		var id = xmlsr.getAttributeValue(null, "id");
-		var type = xmlsr.getAttributeValue(null, "type");
-		if (type == null || "builtin".equals(type)) {
+		var category = xmlsr.getAttributeValue(null, "category");
+		if (category == null || "builtin".equals(category)) {
 			var className = xmlsr.getAttributeValue(null, "class");
 			var clazz = Class.forName(className);
-			var action = (JavaAction) clazz.getDeclaredConstructor().newInstance();
+			var action = (BuiltinAction) clazz.getDeclaredConstructor().newInstance();
 			action.setId(id);
 			ctx.setStep(action);
 			ctx.getElementTypes().push(ElementType.BUILTIN_STEP);
 			return;
 		}
-		if ("podman".equals(type)) {
+		if ("podman".equals(category)) {
+			var type = xmlsr.getAttributeValue(null, "type");
+			var command = xmlsr.getAttributeValue(null, "subcommand");
 			var action = new PodmanAction();
 			action.setId(id);
+			action.setType(type);
+			action.setSubcommand(command);
 			ctx.setStep(action);
 			ctx.getElementTypes().push(ElementType.PODMAN_STEP);
 			return;
 		}
-		log.error("unexpected step type: {}", type);
+		log.error("unexpected step type: {}", category);
 	}
 
 	private static void processEndElement(XMLStreamReader xmlsr, Context ctx) {
@@ -150,7 +154,7 @@ public final class SequentialPipelineFactory {
 		ctx.getElementTypes().pop();
 		switch (ctx.getElementTypes().peek()) {
 		case ElementType.BUILTIN_STEP:
-			JavaAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
+			BuiltinAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
 			break;
 		case ElementType.PODMAN_STEP:
 			PodmanAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
@@ -183,7 +187,7 @@ public final class SequentialPipelineFactory {
 		private SequentialPipeline pipeline;
 		@Setter
 		@Getter
-		private Action step;
+		private Action<SequentialPipelineConfiguration> step;
 		@Setter
 		@Getter
 		private PodmanAction podmanStep;
@@ -196,8 +200,8 @@ public final class SequentialPipelineFactory {
 
 	}
 	
-	static enum ElementType {
+	enum ElementType {
 		TOP, DESCRIPTION, BUILTIN_STEP, PODMAN_STEP;
-	};
+	}
 	
 }
