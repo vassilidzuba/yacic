@@ -65,7 +65,12 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 			return "ko";
 		}
 		
-		var exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, System.out);
+		String exitStatus;
+		if ("host".equals(pdef.getMode())) {
+			exitStatus = new Podmanutil().runHost(properties, pdef, subcommand, System.out);
+		} else {
+			exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, System.out);
+		}
 		
 		if ("0".equals(exitStatus)) {
 			return "ok";

@@ -21,6 +21,10 @@ import lombok.Setter;
 
 public class PodmanActionDefinition {
 	@Setter @Getter
+	private String id;
+	@Setter @Getter
+	private String mode;
+	@Setter @Getter
 	private String image;
 	@Setter @Getter
 	private String host;
