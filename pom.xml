@@ -126,6 +126,19 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.host.url>
+					http://192.168.0.20:9000
+				</sonar.host.url>
+			</properties>
+		</profile>
+
 	</profiles>
 
 	<distributionManagement>

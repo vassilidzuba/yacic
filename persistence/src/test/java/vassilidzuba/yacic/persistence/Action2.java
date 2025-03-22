@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.persistence;
 
+import java.io.OutputStream;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
@@ -48,4 +50,8 @@ public class Action2 extends BuiltinAction {
 		return "Action Two";
 	}
 
+	@Override
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+		return run(pctx);
+	}
 }

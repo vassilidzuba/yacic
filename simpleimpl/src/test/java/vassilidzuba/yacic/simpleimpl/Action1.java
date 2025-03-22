@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.io.OutputStream;
 import java.time.Duration;
 
 import lombok.Getter;
@@ -53,4 +54,9 @@ public class Action1 extends BuiltinAction {
 		return "Action One";
 	}
 
+
+	@Override
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+		return run(pctx);
+	}
 }

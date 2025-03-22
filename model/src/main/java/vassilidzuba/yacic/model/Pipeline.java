@@ -47,6 +47,12 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	PipelineStatus<T> run(T pctx);
 	
 	/**
+	 * Run the pipeline until completion.
+	 * @return the status
+	 */
+	PipelineStatus<T> run(T pctx, Path logFile);
+	
+	/**
 	 * initialize the pipeline but not run any step.
 	 * @paraù initialStep id of the current step
 	 * @return the status
@@ -57,9 +63,10 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	 * Execute the next step.
 	 * 
 	 * @param ps the pipeline status
-	 * @return true if pipline should continue
+	 * @param logFile path to the log file
+	 * @return true if pipeline should continue
 	 */
-	boolean runNextStep(PipelineStatus<T> ps, T pconfig);
+	boolean runNextStep(PipelineStatus<T> ps, T pconfig, Path logFile);
 	
 	
 	/**

@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl.simul;
 
+import java.io.OutputStream;
 import java.nio.file.Files;
 
 import lombok.SneakyThrows;
@@ -38,5 +39,11 @@ public class GitAction extends BuiltinAction {
 		Files.writeString(javaPath, "class foo {}");
 		
 		return "ok";
+	}
+	
+
+	@Override
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+		return run(pctx);
 	}
 }

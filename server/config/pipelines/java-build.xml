@@ -1,0 +1,27 @@
+<pipeline type="sequential" id ="java-build">
+  <description>Pipeline Three</description>
+
+  <step id="step1" 
+        category='podman'
+        type="clone"
+        subcommand="clone REPO">
+  	<description>clone repository</description>
+  </step>
+
+  <step id="step2" 
+        category='podman'
+        type="maven"
+        subcommand="mvn clean package javadoc:javadoc">
+     <description>build package using maven</description>
+  
+  </step>
+
+  <step id="step3" 
+        category='podman'
+        type="deploy_javadoc"
+        subcommand="">
+     <description>deploy javadoc to nginx</description>
+  
+  </step>
+
+</pipeline>
