@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.io.OutputStream;
+
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 
@@ -43,4 +45,9 @@ public class BadAction1 extends BuiltinAction {
 		return "bad action";
 	}
 
+
+	@Override
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+		return run(pctx);
+	}
 }

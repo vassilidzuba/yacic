@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.io.OutputStream;
 import java.nio.file.Path;
 
 import lombok.Setter;
@@ -49,8 +50,14 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 		return description;
 	}
 
+
 	@Override
 	public String run(SequentialPipelineConfiguration pconfig) {
+		return run(pconfig, System.out);
+	}
+	
+	@Override
+	public String run(SequentialPipelineConfiguration pconfig, OutputStream os) {
 		log.info("running podman action");
 		log.info("    id          : {}", id);
 		log.info("    description : {}", description);
@@ -65,7 +72,12 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 			return "ko";
 		}
 		
-		var exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, System.out);
+		String exitStatus;
+		if ("host".equals(pdef.getMode())) {
+			exitStatus = new Podmanutil().runHost(properties, pdef, subcommand, os);
+		} else {
+			exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, os);
+		}
 		
 		if ("0".equals(exitStatus)) {
 			return "ok";

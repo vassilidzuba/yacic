@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -56,22 +58,11 @@ class SequentialPipelineFactoryTest {
 		var pconf = new SequentialPipelineConfiguration();
 		pconf.getProperties().put("PROJECT", "example1");
 		pconf.getProperties().put("REPO", "http://odin.manul.lan:3000/vassili/example1.git");
+		pconf.getProperties().put("ROOT", "/mnt/yacic");
+		pconf.getProperties().put("BRANCH", "feature/initial");
+		pconf.getProperties().put("VERSION", "0.0.1-SNAPSHOT");
 		
-		var padClone = new PodmanActionDefinition();
-		padClone.setImage("docker.io/alpine/git");
-		padClone.setHost("odin");
-		padClone.setUsername("podman");
-		padClone.setCommand("--name clone-PROJECT -v ${HOME}:/root -v $(pwd)/yacic:/git docker.io/alpine/git");
-		padClone.setSetup("rm -rf $(pwd)/yacic/PROJECT;");
-		
-		var padMaven = new PodmanActionDefinition();
-		padMaven.setImage("maven:3.9.9-amazoncorretto-21-alpine");
-		padMaven.setHost("odin");
-		padMaven.setUsername("podman");
-		padMaven.setCommand("--name build-PROJECT -v \"$HOME/.m2:/root/.m2\" -v \"$HOME/yacic/PROJECT\":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine");
-
-		pconf.getPad().put("clone", padClone);
-		pconf.getPad().put("maven", padMaven);
+		pconf.getPad().putAll(readPodmanActionDefinitions());
 		
 		var classloader = getClass().getClassLoader();
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline3-podman.xml")) {
@@ -80,6 +71,14 @@ class SequentialPipelineFactoryTest {
 			var ps = pipeline.run(pconf);
 			
 			Assertions.assertEquals("ok", ps.getStatus());
+		}
+	}
+
+	@SneakyThrows
+	private Map<String, PodmanActionDefinition> readPodmanActionDefinitions() {
+		var classloader = getClass().getClassLoader();
+		try (var is = classloader.getResourceAsStream("pipelines/podmanactiondefinitions.xml")) {
+			return PodmanActionDefinitionFactory.parse(is);
 		}
 	}
 }

@@ -1,0 +1,32 @@
+<podmanactiondefinitions>
+
+	<podmanactiondefinition id="clone">
+		<image>docker.io/alpine/git</image>
+		<host>odin</host>
+		<username>podman</username>
+		<command>--name clone-PROJECT -v ${HOME}:/root -v ROOT:/git docker.io/alpine/git</command>
+		<setup>rm -rf /mnt/yacic/PROJECT;</setup>
+		<cleanup></cleanup>
+	</podmanactiondefinition>
+
+
+	<podmanactiondefinition id="maven">
+		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
+		<host>odin"</host>
+		<username>podman</username>
+		<command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "ROOT/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="deploy_javadoc" mode="host">
+		<host>odin"</host>
+		<username>podman</username>
+		<command>cp ROOT/PROJECT/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="build_image" mode="host">
+		<host>odin"</host>
+		<username>podman</username>
+		<command>cd ROOT/PROJECT;  podman build -f Dockerfile</command>
+	</podmanactiondefinition>
+
+</podmanactiondefinitions>

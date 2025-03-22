@@ -16,35 +16,32 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
+import java.nio.file.Files;
+import java.util.List;
 
 import com.codahale.metrics.annotation.Timed;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
-import vassilidzuba.yacic.server.api.Saying;
+import lombok.SneakyThrows;
 
-@Path("/hello-world")
+@Path("/yacic/project/list")
 @Produces(MediaType.APPLICATION_JSON)
-public class ServerResource {
-    private final String template;
-    private final String defaultName;
-    private final AtomicLong counter;
-
-    public ServerResource(String template, String defaultName) {
-        this.template = template;
-        this.defaultName = defaultName;
-        this.counter = new AtomicLong();
-    }
-
-    @GET
+public class ProjectListResource {
+	private java.nio.file.Path projectDirectory;
+	
+	public ProjectListResource(java.nio.file.Path projectDirectory) {
+		this.projectDirectory = projectDirectory;
+	}
+	
+	@GET
     @Timed
-    public Saying sayHello(@QueryParam("name") Optional<String> name) {
-        final String value = String.format(template, name.orElse(defaultName));
-        return new Saying(counter.incrementAndGet(), value);
+    @SneakyThrows
+    public List<String> listPipelines() {
+		try (var st = Files.list(projectDirectory)) {
+			return st.filter(Files::isDirectory).map(java.nio.file.Path::getFileName).map(java.nio.file.Path::toString).toList();
+		}
     }
 }

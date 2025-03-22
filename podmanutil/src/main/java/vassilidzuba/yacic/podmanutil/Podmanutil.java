@@ -81,8 +81,53 @@ public class Podmanutil {
 			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
 
 			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(fullcommand).withAutoConsume(false)
-					.onTask((task, session) -> 
-						exitStatus.append(process(session.getInputStream(), os))
+					.onTask((task, session) -> {
+						try (var is = session.getInputStream()) {
+							exitStatus.append(process(is, os));
+						}
+					}
+					).build();
+
+			ssh.addTask(t);
+			t.waitForever();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return exitStatus.toString();
+	}
+
+
+	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
+		log.info("in runHost");
+		var setup = substitute(pad.getSetup(), properties);
+		var cleanup = substitute(pad.getCleanup(), properties);
+		var command = substitute(pad.getCommand(), properties);
+		var subcommand2 = substitute(subcommand, properties);
+
+		var fullcommand = setup + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
+		
+		log.info("  command : {}", fullcommand);
+		
+		if (dryrun) {
+			return "OK";
+		}
+		
+		var exitStatus = new StringBuilder();
+
+		try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername("podman")
+				.build()) {
+
+			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
+			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
+
+			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(fullcommand).withAutoConsume(false)
+					.onTask((task, session) -> {
+					    try (var is = session.getInputStream()) {
+						    exitStatus.append(process(is, os));
+					    }
+					}
 					).build();
 
 			ssh.addTask(t);

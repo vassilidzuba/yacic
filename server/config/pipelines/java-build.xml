@@ -1,10 +1,10 @@
-<pipeline type="sequential" id ="pip1">
+<pipeline type="sequential" id ="java-build">
   <description>Pipeline Three</description>
 
   <step id="step1" 
         category='podman'
         type="clone"
-        subcommand="clone -b BRANCH REPO">
+        subcommand="clone REPO">
   	<description>clone repository</description>
   </step>
 
@@ -23,14 +23,5 @@
      <description>deploy javadoc to nginx</description>
   
   </step>
-
-  <step id="step4" 
-        category='podman'
-        type="build_image"
-        subcommand=" -t 192.168.0.20:5000/PROJECT:VERSION">
-     <description>build docker image</description>
-  
-  </step>
-
 
 </pipeline>

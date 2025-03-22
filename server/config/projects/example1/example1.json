@@ -1,0 +1,9 @@
+{
+	"PROJECT": "example1",
+	"REPO": "http://odin.manul.lan:3000/vassili/example1.git",
+	"ROOT": "/mnt/yacic",
+	"BRANCH": "feature/initial",
+	"VERSION": "0.0.1-SNAPSHOT",
+	
+	"pipeline": "java-build"
+}

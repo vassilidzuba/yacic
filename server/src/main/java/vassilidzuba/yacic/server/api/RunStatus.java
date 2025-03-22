@@ -14,26 +14,16 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.podmanutil;
+package vassilidzuba.yacic.server.api;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public class PodmanActionDefinition {
+public class RunStatus {
 	@Setter @Getter
-	private String id;
-	@Setter @Getter
-	private String mode;
-	@Setter @Getter
-	private String image;
-	@Setter @Getter
-	private String host;
-	@Setter @Getter
-	private String username;
-	@Setter @Getter
-	private String command;
-	@Setter @Getter
-	private String setup;
-	@Setter @Getter
-	private String cleanup;
+	private String status;
+	
+	public RunStatus(String status) {
+		this.status = status;
+	}
 }

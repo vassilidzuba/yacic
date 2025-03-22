@@ -1,5 +1,0 @@
-{
-   "template": "Hello, %s!",
-   "defaultName": "Stranger",
-   "pipelinesDirectory": "config/pipelines"
-}
