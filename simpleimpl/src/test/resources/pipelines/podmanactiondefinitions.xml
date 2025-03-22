@@ -18,10 +18,15 @@
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="deploy_javadoc" mode="host">
-		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
 		<host>odin"</host>
 		<username>podman</username>
 		<command>cp ROOT/PROJECT/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="build_image" mode="host">
+		<host>odin"</host>
+		<username>podman</username>
+		<command>cd ROOT/PROJECT;  podman build -f Dockerfile</command>
 	</podmanactiondefinition>
 
 </podmanactiondefinitions>

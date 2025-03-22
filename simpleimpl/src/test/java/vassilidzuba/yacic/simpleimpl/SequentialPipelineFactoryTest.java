@@ -59,6 +59,8 @@ class SequentialPipelineFactoryTest {
 		pconf.getProperties().put("PROJECT", "example1");
 		pconf.getProperties().put("REPO", "http://odin.manul.lan:3000/vassili/example1.git");
 		pconf.getProperties().put("ROOT", "/mnt/yacic");
+		pconf.getProperties().put("BRANCH", "feature/initial");
+		pconf.getProperties().put("VERSION", "0.0.1-SNAPSHOT");
 		
 		pconf.getPad().putAll(readPodmanActionDefinitions());
 		
