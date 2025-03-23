@@ -36,4 +36,11 @@
 		<command>--name build-PROJECT -v ROOT/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build  </command>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="gcc_compile">
+		<host>odin</host>
+		<image>docker.io/library/gcc:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v ROOT/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
+	</podmanactiondefinition>
+
 </podmanactiondefinitions>

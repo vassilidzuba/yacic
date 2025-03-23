@@ -1,0 +1,10 @@
+{
+	"PROJECT": "helloc",
+	"REPO": "http://odin.manul.lan:3000/vassili/helloc.git",
+	"ROOT": "/mnt/yacic",
+	"BRANCH": "feature/initial",
+	"PROGRAM": "hello",
+	"VERSION": "",
+	
+	"pipeline": "gcc-build"
+}
