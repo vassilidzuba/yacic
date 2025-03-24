@@ -29,6 +29,7 @@ class OrchestratorPersistenceTest {
 
 	@Test
 	void test1() {
+		OrchestratorPersistence.setDatabasePassword("sa");
 		var op = new OrchestratorPersistence();
 		
 		var pipeline = getPipeline();

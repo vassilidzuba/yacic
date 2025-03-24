@@ -116,7 +116,7 @@ public class PodmanActionDefinitionFactory {
 		case "podmanactiondefinitions":
 			break;
 		case "podmanactiondefinition":
-			processEndAction(xmlsr, ctx);
+			processEndAction(ctx);
 			break;
 		case "image":
 			ctx.getPodmanActionDefinition().setImage(ctx.getSb().toString());
@@ -141,7 +141,7 @@ public class PodmanActionDefinitionFactory {
 		}
 	}
 
-	private static void processEndAction(XMLStreamReader xmlsr, Context ctx) {
+	private static void processEndAction(Context ctx) {
 		var pad = ctx.getPodmanActionDefinition();
 		ctx.getPodmanActionDefinitions().put(pad.getId(), pad);
 	}

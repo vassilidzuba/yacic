@@ -35,12 +35,6 @@ public interface Action<T extends PipelineConfiguration> {
 	
 	/**
 	 * Executes an action synchronously.
-	 * @return the exit status of the run. Should be "OK" for a sucessfull run. 
-	 */
-	String run(T pctx);
-
-	/**
-	 * Executes an action synchronously.
 	 * @param pconfig the connfiguration
 	 * @param os a stream to the log 
 	 * @return the exit status of the run. Should be "OK" for a sucessfull run. 

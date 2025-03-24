@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
@@ -33,7 +35,7 @@ class SequentialPipelineFactoryTest {
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline1.xml")) {
 			var pipeline = SequentialPipelineFactory.parse(is);
 			
-			var ps = pipeline.run(null);
+			var ps = pipeline.run(null, Files.createTempFile(Path.of("target"), "test", ".log"));
 			
 			Assertions.assertEquals("ok", ps.getStatus());
 		}
@@ -46,7 +48,7 @@ class SequentialPipelineFactoryTest {
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline2.xml")) {
 			var pipeline = SequentialPipelineFactory.parse(is);
 			
-			var ps = pipeline.run(null);
+			var ps = pipeline.run(null, Files.createTempFile(Path.of("target"), "test", ".log"));
 			
 			Assertions.assertEquals("badaction1:failure", ps.getStatus());
 		}
@@ -68,7 +70,7 @@ class SequentialPipelineFactoryTest {
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline3-podman.xml")) {
 			var pipeline = SequentialPipelineFactory.parse(is);
 			
-			var ps = pipeline.run(pconf);
+			var ps = pipeline.run(pconf, Files.createTempFile(Path.of("target"), "test", ".log"));
 			
 			Assertions.assertEquals("ok", ps.getStatus());
 		}

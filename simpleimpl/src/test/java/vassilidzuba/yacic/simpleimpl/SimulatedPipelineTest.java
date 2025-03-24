@@ -39,7 +39,7 @@ class SimulatedPipelineTest {
 		Files.createDirectories(dataArea);
 		pipeline.setDataArea(dataArea);
 		
-		o.run(pipeline, null);
+		o.run(pipeline, null, Files.createTempFile(Path.of("target"), "temp", ".log"));
 		var ostatus = o.shutdown();
 		
 		Assertions.assertTrue(ostatus);
@@ -48,7 +48,7 @@ class SimulatedPipelineTest {
 	}
 	
 	@SneakyThrows
-	private Pipeline getPipeline() {
+	private Pipeline<SequentialPipelineConfiguration> getPipeline() {
 		var classloader = getClass().getClassLoader();
 		try (var is = classloader.getResourceAsStream("pipelines/simulatedpipeline.xml")) {
 			return SequentialPipelineFactory.parse(is);

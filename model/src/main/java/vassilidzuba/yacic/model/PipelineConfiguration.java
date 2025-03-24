@@ -22,7 +22,5 @@ import lombok.Getter;
 
 public class PipelineConfiguration {
 	@Getter 
-	private String name;
-	@Getter 
 	private Map<String, String> properties = new HashMap<>();
 }

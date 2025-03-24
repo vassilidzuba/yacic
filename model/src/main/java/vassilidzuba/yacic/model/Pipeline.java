@@ -44,12 +44,6 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	 * Run the pipeline until completion.
 	 * @return the status
 	 */
-	PipelineStatus<T> run(T pctx);
-	
-	/**
-	 * Run the pipeline until completion.
-	 * @return the status
-	 */
 	PipelineStatus<T> run(T pctx, Path logFile);
 	
 	/**

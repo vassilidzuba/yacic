@@ -12,21 +12,35 @@
 
 	<podmanactiondefinition id="maven">
 		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
-		<host>odin"</host>
+		<host>odin</host>
 		<username>podman</username>
 		<command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "ROOT/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="deploy_javadoc" mode="host">
-		<host>odin"</host>
+		<host>odin</host>
 		<username>podman</username>
 		<command>cp ROOT/PROJECT/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="build_image" mode="host">
-		<host>odin"</host>
+		<host>odin</host>
 		<username>podman</username>
 		<command>cd ROOT/PROJECT;  podman build -f Dockerfile</command>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="go_compile">
+		<host>odin</host>
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v ROOT/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build  </command>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="gcc_compile">
+		<host>odin</host>
+		<image>docker.io/library/gcc:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v ROOT/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
 	</podmanactiondefinition>
 
 </podmanactiondefinitions>

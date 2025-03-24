@@ -18,18 +18,33 @@ package vassilidzuba.yacic.simpleimpl;
 
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 import vassilidzuba.yacic.podmanutil.Podmanutil;
 
 @Slf4j
-public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
+public class PodmanAction implements Action<SequentialPipelineConfiguration> {
+	private static ObjectMapper objectMapper = new ObjectMapper();
+
+	private Map<String, String> context = new HashMap<>();
+
 	@Setter
-    private String id;
-	
+	private String id;
+
+	@Setter
+	@Getter
+	private Path dataArea;
+
 	@Setter
 	private String description;
 
@@ -38,7 +53,6 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 
 	@Setter
 	private String subcommand = "";
-
 
 	@Override
 	public String getId() {
@@ -50,12 +64,6 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 		return description;
 	}
 
-
-	@Override
-	public String run(SequentialPipelineConfiguration pconfig) {
-		return run(pconfig, System.out);
-	}
-	
 	@Override
 	public String run(SequentialPipelineConfiguration pconfig, OutputStream os) {
 		log.info("running podman action");
@@ -63,22 +71,22 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 		log.info("    description : {}", description);
 		log.info("    type        : {}", type);
 		log.info("    subcommand  : {}", subcommand);
-		
+
 		var properties = pconfig.getProperties();
 		var pdef = pconfig.getPad().get(type);
-		
+
 		if (pdef == null) {
 			log.error("podman action type unknown : {}", type);
 			return "ko";
 		}
-		
+
 		String exitStatus;
 		if ("host".equals(pdef.getMode())) {
 			exitStatus = new Podmanutil().runHost(properties, pdef, subcommand, os);
 		} else {
 			exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, os);
 		}
-		
+
 		if ("0".equals(exitStatus)) {
 			return "ok";
 		} else {
@@ -88,32 +96,24 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration>  {
 
 	@Override
 	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("no asynchronous execution yet");
 	}
 
 	@Override
+	@SneakyThrows
 	public void setContext(String data) {
-		// TODO Auto-generated method stub
-		
+		if (data == null) {
+			context = new HashMap<>();
+		} else {
+			var typeRef = new TypeReference<HashMap<String, String>>() {
+			};
+			context = objectMapper.readValue(data, typeRef);
+		}
 	}
 
 	@Override
+	@SneakyThrows
 	public String getContext() {
-		// TODO Auto-generated method stub
-		return null;
+		return objectMapper.writeValueAsString(context);
 	}
-
-	@Override
-	public void setDataArea(Path data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Path getDataArea() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

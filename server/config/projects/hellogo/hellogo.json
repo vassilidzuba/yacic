@@ -1,0 +1,9 @@
+{
+	"PROJECT": "hellogo",
+	"REPO": "http://odin.manul.lan:3000/vassili/hellogo.git",
+	"ROOT": "/mnt/yacic",
+	"BRANCH": "feature/initial",
+	"VERSION": "",
+	
+	"pipeline": "go-build"
+}

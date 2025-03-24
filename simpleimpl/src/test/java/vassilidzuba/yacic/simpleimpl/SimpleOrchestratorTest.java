@@ -16,25 +16,31 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import lombok.SneakyThrows;
 
 class SimpleOrchestratorTest {
 
 	@Test
+	@SneakyThrows
 	void test1() {
 		var o = new SimpleOrchestrator();
 
 		var p = new SequentialPipeline("seq1");
 		p.addAction(new Action1());
 		p.addAction(new Action2());
-		o.run(p, null);
+		o.run(p, null, Files.createTempFile(Path.of("target"), "temp", ".log"));
 
 		var p2 = new SequentialPipeline("seq2");
 		p2.addAction(new Action1());
 		p2.addAction(new BadAction1());
 		p2.addAction(new Action2());
-		o.run(p2, null);
+		o.run(p2, null, Files.createTempFile(Path.of("target"), "temp", ".log"));
 		
 		var ostatus = o.shutdown();
 		

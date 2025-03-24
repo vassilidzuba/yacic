@@ -24,7 +24,7 @@ class ActionTest {
 	@Test
 	void test1() {
 		var a = new Action1();
-		var status = a.run(null);
+		var status = a.run(null, null);
 		Assertions.assertEquals("ok", status);
 		Assertions.assertEquals("action1", a.getId());
 	}

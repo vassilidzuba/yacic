@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,12 +35,12 @@ public class SimpleOrchestrator implements Orchestrator<SequentialPipelineConfig
 	private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	@Override
-	public void run(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx) {
-		executor.submit(() -> execute(pipeline, pctx));
+	public void run(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx, Path logFile) {
+		executor.submit(() -> execute(pipeline, pctx, logFile));
 	}
 
-	public void execute(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx) {
-		var ps = pipeline.run(pctx);
+	public void execute(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx, Path logFile) {
+		var ps = pipeline.run(pctx, logFile);
 		history.add(ps);
 	}
 

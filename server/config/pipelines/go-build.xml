@@ -1,0 +1,19 @@
+<pipeline type="sequential" id ="go-build">
+  <description>Pipeline Three</description>
+
+  <step id="step1" 
+        category='podman'
+        type="clone"
+        subcommand="clone REPO">
+  	<description>clone repository</description>
+  </step>
+
+  <step id="step2" 
+        category='podman'
+        type="go_compile"
+        subcommand="">
+     <description>compile the project</description>
+  
+  </step>
+
+</pipeline>

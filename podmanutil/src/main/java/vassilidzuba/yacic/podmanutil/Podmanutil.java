@@ -43,6 +43,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Podmanutil {
+	private static final String DEFAULT_USERNAME = "podman";
+	private static final String S_EXCEPTION = "exception";
+
 	private static final String YACIC = "yacic";
 
 	@Setter @Getter
@@ -50,13 +53,8 @@ public class Podmanutil {
 
 	@Setter
 	@Getter
-	private String username = "podman";
+	private String username = DEFAULT_USERNAME;
 	
-
-	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pdef, String subcommand) {
-		return runGeneric(properties, pdef, subcommand, System.out);
-	}
-
 	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
 		log.info("in runGeneric");
 		var setup = substitute(pad.getSetup(), properties);
@@ -66,6 +64,23 @@ public class Podmanutil {
 
 		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
 		
+		return run(os, fullcommand);
+	}
+
+
+	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
+		log.info("in runHost");
+		var setup = substitute(pad.getSetup(), properties);
+		var cleanup = substitute(pad.getCleanup(), properties);
+		var command = substitute(pad.getCommand(), properties);
+		var subcommand2 = substitute(subcommand, properties);
+
+		var fullcommand = setup + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
+		
+		return run(os, fullcommand);
+	}
+	
+	private String run(OutputStream os, String fullcommand) {
 		log.info("  command : {}", fullcommand);
 		
 		if (dryrun) {
@@ -74,7 +89,7 @@ public class Podmanutil {
 		
 		var exitStatus = new StringBuilder();
 
-		try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername("podman")
+		try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername(username)
 				.build()) {
 
 			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
@@ -92,53 +107,13 @@ public class Podmanutil {
 			t.waitForever();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(S_EXCEPTION, e);
+			return S_EXCEPTION;
 		}
 
 		return exitStatus.toString();
 	}
 
-
-	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
-		log.info("in runHost");
-		var setup = substitute(pad.getSetup(), properties);
-		var cleanup = substitute(pad.getCleanup(), properties);
-		var command = substitute(pad.getCommand(), properties);
-		var subcommand2 = substitute(subcommand, properties);
-
-		var fullcommand = setup + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
-		
-		log.info("  command : {}", fullcommand);
-		
-		if (dryrun) {
-			return "OK";
-		}
-		
-		var exitStatus = new StringBuilder();
-
-		try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername("podman")
-				.build()) {
-
-			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
-			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
-
-			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(fullcommand).withAutoConsume(false)
-					.onTask((task, session) -> {
-					    try (var is = session.getInputStream()) {
-						    exitStatus.append(process(is, os));
-					    }
-					}
-					).build();
-
-			ssh.addTask(t);
-			t.waitForever();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return exitStatus.toString();
-	}
 	
 	private String substitute(String cmd, Map<String, String> properties) {
 		var command = cmd;

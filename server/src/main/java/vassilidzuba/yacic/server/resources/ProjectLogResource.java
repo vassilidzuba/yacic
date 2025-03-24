@@ -42,9 +42,9 @@ public class ProjectLogResource {
 	@GET
 	@Timed
 	@SneakyThrows
-	public String run(@QueryParam("project") Optional<String> project) {
+	public String getLog(@QueryParam("project") Optional<String> project) {
 		if (project.isEmpty()) {
-			Log.info("mirssing project");
+			Log.info("missing project");
 			return "";
 		}
 		

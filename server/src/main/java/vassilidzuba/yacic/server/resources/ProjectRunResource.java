@@ -42,12 +42,13 @@ public class ProjectRunResource {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 	private Map<String, PodmanActionDefinition> actionDefinitions = new HashMap<>();
-
+	private String projectsDirectory;
+	
 	public ProjectRunResource(Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines,
-			Map<String, PodmanActionDefinition> actionDefinitions) {
+			Map<String, PodmanActionDefinition> actionDefinitions, String projectsDirectory) {
 		this.pipelines.putAll(pipelines);
 		this.actionDefinitions.putAll(actionDefinitions);
-
+		this.projectsDirectory = projectsDirectory;
 	}
 
 	@GET
@@ -57,7 +58,8 @@ public class ProjectRunResource {
 		if (name.isEmpty()) {
 			return new RunStatus("noname");
 		}
-		var path = java.nio.file.Path.of("config/projects/" + name.get() + "/" + name.get() + ".json");
+		java.nio.file.Path pdir = java.nio.file.Path.of(projectsDirectory).resolve(name.get());
+		var path = pdir.resolve(name.get() + ".json");
 		if (!Files.isReadable(path)) {
 			return new RunStatus("noexist");
 		}
@@ -73,7 +75,7 @@ public class ProjectRunResource {
 
 		var pipeline = pipelines.get(map.get("pipeline"));
 
-		var logFile =  java.nio.file.Path.of("config/projects/" + name.get() + "/" + name.get() + ".log");
+		var logFile =  pdir.resolve(name.get() + ".log");
 		Files.deleteIfExists(logFile);
 		Files.writeString(logFile,  "");
 		

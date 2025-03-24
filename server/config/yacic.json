@@ -1,6 +1,4 @@
 {
-   "template": "Hello, %s!",
-   "defaultName": "Stranger",
    "pipelineDirectory": "config/pipelines",
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects"

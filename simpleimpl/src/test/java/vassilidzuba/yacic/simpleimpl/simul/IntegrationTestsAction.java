@@ -27,7 +27,7 @@ public class IntegrationTestsAction extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
 		var src = getDataArea().resolve("src/main/java/foo.class");
 		if (! Files.isRegularFile(src)) {
 			return "missingfile";
@@ -38,11 +38,4 @@ public class IntegrationTestsAction extends BuiltinAction {
 		
 		return "ok";
 	}
-	
-
-	@Override
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
-		return run(pctx);
-	}
-
 }

@@ -65,7 +65,17 @@ class PodmanutilTest {
 		var pad = new PodmanActionDefinition();
 		pad.setCommand("docker.io/library/debian:stable");
 		
-		var result = new Podmanutil().runGeneric(properties, pad, "whoami");
+		var result = new Podmanutil().runGeneric(properties, pad, "whoami", System.out);
+		Assertions.assertEquals("0", result);
+	}
+
+	@Test
+	void test3() {
+		var properties = new HashMap<String, String>();
+		
+		var pad = new PodmanActionDefinition();
+		
+		var result = new Podmanutil().runHost(properties, pad, "whoami", System.out);
 		Assertions.assertEquals("0", result);
 	}
 }
