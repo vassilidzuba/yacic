@@ -30,7 +30,7 @@ public class BadAction1 extends BuiltinAction {
 	}
 
 	@Override
-	public String run(SequentialPipelineConfiguration pctx) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream o) {
 		log.info("running {}", getId());
 		return "failure";
 	}
@@ -43,11 +43,5 @@ public class BadAction1 extends BuiltinAction {
 	@Override
 	public String getDescription() {
 		return "bad action";
-	}
-
-
-	@Override
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
-		return run(pctx);
 	}
 }

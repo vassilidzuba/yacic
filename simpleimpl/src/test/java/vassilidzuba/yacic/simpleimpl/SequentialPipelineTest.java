@@ -16,30 +16,37 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import lombok.SneakyThrows;
 
 class SequentialPipelineTest {
 
 	@Test
+	@SneakyThrows
 	void test1() {
 		var p = new SequentialPipeline("seq");
 		p.addAction(new Action1());
 		p.addAction(new Action2());
 		
-		var ps = p.run(null);
+		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"));
 		Assertions.assertEquals("ok", ps.getStatus());
 	}
 	
 
 	@Test
+	@SneakyThrows
 	void test2() {
 		var p = new SequentialPipeline("seq");
 		p.addAction(new Action1());
 		p.addAction(new BadAction1());
 		p.addAction(new Action2());
 		
-		var ps = p.run(null);
+		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"));
 		Assertions.assertEquals("badaction1:failure", ps.getStatus());
 	}
 }

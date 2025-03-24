@@ -17,7 +17,6 @@
 package vassilidzuba.yacic.simpleimpl;
 
 import java.io.OutputStream;
-import java.time.Duration;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +32,8 @@ public class Action2 extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx) {
-		log.info("starting {}", getId());
-		Thread.sleep(Duration.ofSeconds(3));
-		log.info("completing {}", getId());
+	public String run(SequentialPipelineConfiguration pctx, OutputStream o) {
+		log.info("running {}", getId());
 		return "ok";
 	}
 
@@ -48,11 +45,5 @@ public class Action2 extends BuiltinAction {
 	@Override
 	public String getDescription() {
 		return "Action Two";
-	}
-
-
-	@Override
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
-		return run(pctx);
 	}
 }

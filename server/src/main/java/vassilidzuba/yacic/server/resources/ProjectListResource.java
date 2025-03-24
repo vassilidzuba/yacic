@@ -39,7 +39,7 @@ public class ProjectListResource {
 	@GET
     @Timed
     @SneakyThrows
-    public List<String> listPipelines() {
+    public List<String> listProjects() {
 		try (var st = Files.list(projectDirectory)) {
 			return st.filter(Files::isDirectory).map(java.nio.file.Path::getFileName).map(java.nio.file.Path::toString).toList();
 		}

@@ -17,13 +17,17 @@
 package vassilidzuba.yacic.server.api;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class RunStatus {
-	@Setter @Getter
+	@Getter
 	private String status;
 	
 	public RunStatus(String status) {
 		this.status = status;
+	}
+	
+	@Override
+	public String toString() {
+		return "[RunStatus status:" + status + "]";
 	}
 }

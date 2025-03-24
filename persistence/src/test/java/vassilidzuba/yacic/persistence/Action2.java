@@ -34,7 +34,7 @@ public class Action2 extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
 		log.info("starting {}", getId());
 		log.info("completing {}", getId());
 		return "ok";
@@ -48,10 +48,5 @@ public class Action2 extends BuiltinAction {
 	@Override
 	public String getDescription() {
 		return "Action Two";
-	}
-
-	@Override
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
-		return run(pctx);
 	}
 }

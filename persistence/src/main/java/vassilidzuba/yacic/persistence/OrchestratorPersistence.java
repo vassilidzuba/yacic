@@ -23,39 +23,49 @@ import java.util.List;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import lombok.Setter;
 import vassilidzuba.yacic.model.PipelineStatus;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 public class OrchestratorPersistence {
 	private static HikariConfig config = new HikariConfig();
-    private static HikariDataSource ds;
-    
-    static {
-        config.setJdbcUrl( "jdbc:h2:mem:yacic;INIT=RUNSCRIPT FROM 'yacic.sql';" );
-        config.setUsername( "sa" );
-        config.setPassword( "sa" );
-        config.addDataSourceProperty( "cachePrepStmts" , "true" );
-        config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
-        config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
-        config.setDriverClassName("org.h2.Driver");
-        ds = new HikariDataSource( config );
-    }
+	private static HikariDataSource ds;
+	@Setter
+	private static String databasePassword;
+	private static boolean inited = false;
+
+	private static void init() {
+		if (!inited) {
+			config.setJdbcUrl("jdbc:h2:mem:yacic;INIT=RUNSCRIPT FROM 'yacic.sql';");
+			config.setUsername("sa");
+			config.setPassword(databasePassword);
+			config.addDataSourceProperty("cachePrepStmts", "true");
+			config.addDataSourceProperty("prepStmtCacheSize", "250");
+			config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+			config.setDriverClassName("org.h2.Driver");
+			ds = new HikariDataSource(config);
+			inited = true;
+		}
+	}
 
 	public void store(PipelineStatus<SequentialPipelineConfiguration> ps) {
-		var db = new Jdbc(ds);
+		init();
 		
+		var db = new Jdbc(ds);
+
 		db.store("""
 				insert into pipelines(pipeline_id, id, status, start_date, end_date, current_step)
 				values(?, ?, ?, ?, ?, ?);
-				""",
-				ps.getPipeline().getId(), ps.getId(), ps.getStatus(), date2string(ps.getStartDate()), date2string(ps.getEndDate()), ps.getCurrentStep());
-		
+				""", ps.getPipeline().getId(), ps.getId(), ps.getStatus(), date2string(ps.getStartDate()),
+				date2string(ps.getEndDate()), ps.getCurrentStep());
+
 	}
 
-
 	public List<String> listPipelines() {
+		init();
+
 		var db = new Jdbc(ds);
-		
+
 		return db.select("select id from pipelines");
 	}
 
@@ -63,7 +73,7 @@ public class OrchestratorPersistence {
 		if (ldt == null) {
 			return "";
 		} else {
-		    return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(ldt);
+			return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(ldt);
 		}
 	}
 }

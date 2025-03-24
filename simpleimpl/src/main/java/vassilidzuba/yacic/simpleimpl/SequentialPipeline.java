@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.AbstractPipeline;
@@ -33,13 +32,9 @@ import vassilidzuba.yacic.model.PipelineStatus;
 
 @Slf4j
 public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfiguration> {
-	private static AtomicInteger seqnum = new AtomicInteger(1);
-
 	private List<Action<SequentialPipelineConfiguration>> actions = new ArrayList<>();
-	private int num;
 
 	public SequentialPipeline(String type) {
-		this.num = seqnum.getAndIncrement();
 		setType(type);
 	}
 
@@ -58,14 +53,9 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			a.setDataArea(getDataArea());
 			String status;
 			try {
-				if (logFile == null) {
-					status = a.run(pconfig);
-				} else {
-					try (var os = Files.newOutputStream(logFile, StandardOpenOption.APPEND)) {
-						status = a.run(pconfig, os);
-					}
+				try (var os = Files.newOutputStream(logFile, StandardOpenOption.APPEND)) {
+					status = a.run(pconfig, os);
 				}
-
 			} catch (Exception e) {
 				log.error("exception during {}", a, e);
 				status = "exception";
@@ -112,19 +102,12 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 	}
 
 	@Override
-	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig) {
-		return run(pconfig, null);
-	}
-	
-
-	@Override
 	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig, Path logFile) {
 		var ps = initialize(actions.get(0).getId());
 
 		ps.setStartDate(LocalDateTime.now());
 
-		while (runNextStep(ps, pconfig, logFile)) {
-		}
+		while (runNextStep(ps, pconfig, logFile)) ;
 
 		ps.setEndDate(LocalDateTime.now());
 

@@ -29,7 +29,7 @@ public class GitAction extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
 		log.info("running Git Action");
 		
 		var dataArea = getDataArea();
@@ -39,11 +39,5 @@ public class GitAction extends BuiltinAction {
 		Files.writeString(javaPath, "class foo {}");
 		
 		return "ok";
-	}
-	
-
-	@Override
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
-		return run(pctx);
 	}
 }
