@@ -18,6 +18,14 @@
 
   <step id="step3" 
         category='podman'
+        type="maven_sonar"
+        subcommand="">
+     <description>build package using maven</description>
+  
+  </step>
+
+  <step id="step4" 
+        category='podman'
         type="deploy_javadoc"
         subcommand="">
      <description>deploy javadoc to nginx</description>
