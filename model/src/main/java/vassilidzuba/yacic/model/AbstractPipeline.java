@@ -19,8 +19,14 @@ package vassilidzuba.yacic.model;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
+import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Abstract pipeline, with actual data.
+ * 
+ * @param <T> pipeline configuration class.
+ */
 public abstract class AbstractPipeline<T extends PipelineConfiguration> implements Pipeline<T> {
 	@Setter
 	private String id;
@@ -28,7 +34,7 @@ public abstract class AbstractPipeline<T extends PipelineConfiguration> implemen
 	private String description;
 	@Setter
 	private String type;
-	@Setter
+	@Setter @Getter
 	private String currentStep;
 	private String actionContext;
 	private Path dataArea;
@@ -47,10 +53,6 @@ public abstract class AbstractPipeline<T extends PipelineConfiguration> implemen
 	@Override
 	public String getDescription() {
 		return this.description;
-	}
-	
-	public String getCurrentStep() {
-		return this.currentStep;
 	}
 	
 	@Override

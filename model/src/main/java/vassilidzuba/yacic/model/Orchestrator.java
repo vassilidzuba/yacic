@@ -23,7 +23,9 @@ public interface Orchestrator<T extends PipelineConfiguration>{
 
 	/**
 	 * Run a pipeline.
-	 * @param pipeline the pip"eline
+	 * @param pipeline the pipeline
+	 * @param pconfig the pipeline configuration
+	 * @param logFile the log file
 	 */
 	void run(Pipeline<T> pipeline, T pconfig, Path logFile);
 	

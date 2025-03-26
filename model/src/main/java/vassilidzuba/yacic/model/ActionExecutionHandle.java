@@ -25,20 +25,21 @@ public interface ActionExecutionHandle<T extends PipelineConfiguration> {
 	Action<T> getAction();
 	
 	/**
-	 * Checks if the run is co;pleted
-	 * @return true is the run is co;pleted<
+	 * Checks if the run is completed
+	 * @return true is the run is completed.
 	 */
 	boolean isCompleted();
 	
 	/**
-	 * returns the exit stqtus of the qction if it is completed or "*running*" otherwise.   
-	 * @return
+	 * returns the exit status of the action if it is completed or "*running*" otherwise.   
+	 * @return the exit status
 	 */
 	String getExitStatus();
 	
 	
 	/**
 	 * add a listener.
+	 * @param listener the listener
 	 */
 	void addListener(ActionListener<T> listener);
 }

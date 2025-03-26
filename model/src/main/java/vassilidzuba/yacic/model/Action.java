@@ -39,7 +39,7 @@ public interface Action<T extends PipelineConfiguration> {
 	 * @param os a stream to the log 
 	 * @return the exit status of the run. Should be "OK" for a sucessfull run. 
 	 */
-	String run(T pctx, OutputStream os);
+	String run(T pconfig, OutputStream os);
 
 	/**
 	 * Executes an action asynchronously.
@@ -54,8 +54,8 @@ public interface Action<T extends PipelineConfiguration> {
 	void setContext(String data);
 	
 	/**
-	 * get the contect as a JSON string.
-	 * @return
+	 * get the context as a JSON string.
+	 * @return the context
 	 */
 	String getContext();
 	

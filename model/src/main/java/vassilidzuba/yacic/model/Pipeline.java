@@ -20,35 +20,37 @@ import java.nio.file.Path;
 
 public interface Pipeline <T extends PipelineConfiguration> {
 	/**
-	 * Return the type of the pipeline<
+	 * Return the type of the pipeline.
 	 * 
-	 * @return the identifier of the pipeline<
+	 * @return the identifier of the pipeline
 	 */
 	String getType();
 	
 	/**
 	 * Return the identifier of the pipeline.
 	 * 
-	 * @return the identifier of the pipeline<
+	 * @return the identifier of the pipeline
 	 */
 	String getId();
 	
 	/**
 	 * Return the description of the pipeline.
 	 * 
-	 * @return the description of the pipeline<
+	 * @return the description of the pipeline
 	 */
 	String getDescription();
 	
 	/**
 	 * Run the pipeline until completion.
+	 * @param pconfig the pipeline configuration
+	 * @param logFile the path to the log file
 	 * @return the status
 	 */
-	PipelineStatus<T> run(T pctx, Path logFile);
+	PipelineStatus<T> run(T pconfig, Path logFile);
 	
 	/**
 	 * initialize the pipeline but not run any step.
-	 * @paraù initialStep id of the current step
+	 * @param initialStep id of the current step
 	 * @return the status
 	 */
 	PipelineStatus<T> initialize(String initialStep);
@@ -57,6 +59,7 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	 * Execute the next step.
 	 * 
 	 * @param ps the pipeline status
+	 * @param pconfig the pipeline configuration
 	 * @param logFile path to the log file
 	 * @return true if pipeline should continue
 	 */
@@ -71,19 +74,19 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	
 	/**
 	 * get the action context as a JSON string.
-	 * @return
+	 * @return the context
 	 */
 	String getActionContext();
 	
 	/**
 	 * set the data area.
-	 * @param data tne JSON data
+	 * @param data the JSON data
 	 */
 	void setDataArea(Path data);
 	
 	/**
 	 * get the data area.
-	 * @return
+	 * @return the path of the data area
 	 */
 	Path getDataArea();
 }
