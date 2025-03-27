@@ -36,6 +36,9 @@ import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
+/**
+ * Resource executing a pipeline on a specific project.
+ */
 @Path("/yacic/project/run")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProjectRunResource {
@@ -44,6 +47,13 @@ public class ProjectRunResource {
 	private Map<String, PodmanActionDefinition> actionDefinitions = new HashMap<>();
 	private String projectsDirectory;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param pipelines the pipeline map.
+	 * @param actionDefinitions the action definition map
+	 * @param projectsDirectory the projects directory
+	 */
 	public ProjectRunResource(Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines,
 			Map<String, PodmanActionDefinition> actionDefinitions, String projectsDirectory) {
 		this.pipelines.putAll(pipelines);
@@ -51,15 +61,21 @@ public class ProjectRunResource {
 		this.projectsDirectory = projectsDirectory;
 	}
 
+	/**
+	 * Performs the run.
+	 * 
+	 * @param project the name of the project
+	 * @return the execution status.
+	 */
 	@GET
 	@Timed
 	@SneakyThrows
-	public RunStatus run(@QueryParam("project") Optional<String> name) {
-		if (name.isEmpty()) {
+	public RunStatus run(@QueryParam("project") Optional<String> project) {
+		if (project.isEmpty()) {
 			return new RunStatus("noname");
 		}
-		java.nio.file.Path pdir = java.nio.file.Path.of(projectsDirectory).resolve(name.get());
-		var path = pdir.resolve(name.get() + ".json");
+		java.nio.file.Path pdir = java.nio.file.Path.of(projectsDirectory).resolve(project.get());
+		var path = pdir.resolve(project.get() + ".json");
 		if (!Files.isReadable(path)) {
 			return new RunStatus("noexist");
 		}
@@ -75,7 +91,7 @@ public class ProjectRunResource {
 
 		var pipeline = pipelines.get(map.get("pipeline"));
 
-		var logFile =  pdir.resolve(name.get() + ".log");
+		var logFile =  pdir.resolve(project.get() + ".log");
 		Files.deleteIfExists(logFile);
 		Files.writeString(logFile,  "");
 		

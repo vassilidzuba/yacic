@@ -11,7 +11,7 @@
   <step id="step2" 
         category='podman'
         type="maven"
-        subcommand="mvn clean package javadoc:javadoc">
+        subcommand="mvn clean package javadoc:aggregate-jar">
      <description>build package using maven</description>
   
   </step>
@@ -20,7 +20,7 @@
         category='podman'
         type="maven_sonar"
         subcommand="">
-     <description>build package using maven</description>
+     <description>execute sonarqube</description>
   
   </step>
 

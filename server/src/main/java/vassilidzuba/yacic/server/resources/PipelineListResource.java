@@ -29,15 +29,28 @@ import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.server.api.PipelineList;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
+/**
+ * Resource returning the list of the names of the pipelines.
+ */
 @Path("/yacic/pipeline/list")
 @Produces(MediaType.APPLICATION_JSON)
 public class PipelineListResource {
 	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param pipelines the pipeline map.
+	 */
 	public PipelineListResource(Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines) {
 		this.pipelines.putAll(pipelines);
 	}
 	
+	/**
+	 * Compute the list of names of the pipelines.
+	 * 
+	 * @return the list of names. 
+	 */
 	@GET
     @Timed
     public PipelineList listPipelines() {

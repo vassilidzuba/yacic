@@ -115,5 +115,9 @@ public class ServerConfiguration extends Configuration {
 	public void setProjectDirectory(String projectDirectory) {
 		this.projectDirectory = projectDirectory;
 	}
-
+	
+	public void reload() {
+		loadPipelines();
+		loadActionDefinitions();
+	}
 }

@@ -16,46 +16,47 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.nio.file.Files;
-import java.util.List;
-
 import com.codahale.metrics.annotation.Timed;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.server.ServerConfiguration;
+import vassilidzuba.yacic.server.api.ReloadStatus;
 
 /**
- * Resource returning the list of the names of the projects.
+ * Resource that reloads the pipelines and action definitions from the directories.
  */
-@Path("/yacic/project/list")
+@Slf4j
+@Path("/yacic/config/reload")
 @Produces(MediaType.APPLICATION_JSON)
-public class ProjectListResource {
-	private java.nio.file.Path projectDirectory;
-	
+public class ConfigReloadResource {
+	private ServerConfiguration configuration;
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param projectDirectory the list of the projects.
+	 * @param configuration the server configuration.
 	 */
-	public ProjectListResource(java.nio.file.Path projectDirectory) {
-		this.projectDirectory = projectDirectory;
+	public ConfigReloadResource(ServerConfiguration configuration) {
+		this.configuration = configuration;
 	}
-	
+
 	/**
-	 * Compute the list.
-	 * It(s simply the names of the subdirectories in the project directory.
-	 * 
-	 * @return the list of the projects.
+	 * perform the reload.
+	 * @return status indicating if the reload was successful.
 	 */
 	@GET
-    @Timed
-    @SneakyThrows
-    public List<String> listProjects() {
-		try (var st = Files.list(projectDirectory)) {
-			return st.filter(Files::isDirectory).map(java.nio.file.Path::getFileName).map(java.nio.file.Path::toString).toList();
+	@Timed
+	public ReloadStatus reload() {
+		try {
+			configuration.reload();
+			return new ReloadStatus(true);
+		} catch (Exception e) {
+			log.info("exception when reloading configuration", e);
+			return new ReloadStatus(false);
 		}
-    }
+	}
 }

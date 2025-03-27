@@ -30,15 +30,30 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 
+/**
+ * Resource returning a log of a run.
+ * The log is in a file in the specific project direcory, with the name of the project and the extension <i>.log</i>.
+ */
 @Path("/yacic/project/log")
 @Produces(MediaType.TEXT_PLAIN)
 public class ProjectLogResource {
 	private java.nio.file.Path projectDirectory;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param projectDirectory the projects directory.
+	 */
 	public ProjectLogResource(java.nio.file.Path projectDirectory) {
 		this.projectDirectory = projectDirectory;
 	}
 	
+	/**
+	 * Reads and return the log.
+	 * 
+	 * @param project the project name.
+	 * @return the text of the log
+	 */
 	@GET
 	@Timed
 	@SneakyThrows
@@ -55,5 +70,4 @@ public class ProjectLogResource {
 		
 		return "";
 	}
-
 }

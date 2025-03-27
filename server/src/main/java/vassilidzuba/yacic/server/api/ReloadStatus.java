@@ -14,11 +14,28 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.server.api;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Exception thrown when no configuration is availblee.
+ * Reload status.
+ * 
+ * This is the return value of the resource ConfigReload.
  */
-public class NoConfigurationAvailable extends RuntimeException {
-	private static final long serialVersionUID = 5168051045086644218L;
+public class ReloadStatus {
+
+	@Setter
+	@Getter
+	boolean ok;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param ok true if the reload was successful.
+	 */
+	public ReloadStatus(boolean ok) {
+		this.ok = ok;
+	}
 }

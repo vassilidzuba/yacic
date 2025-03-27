@@ -25,14 +25,25 @@ import io.dropwizard.core.setup.Environment;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.server.health.ConfigurationHealthCheck;
+import vassilidzuba.yacic.server.resources.ConfigReloadResource;
 import vassilidzuba.yacic.server.resources.PipelineListResource;
 import vassilidzuba.yacic.server.resources.ProjectListResource;
 import vassilidzuba.yacic.server.resources.ProjectLogResource;
 import vassilidzuba.yacic.server.resources.ProjectRunResource;
 
+/**
+ * Main class of the REST server.
+ */
 @Slf4j
 public class ServerApplication extends Application<ServerConfiguration> {
-    public static void main(String... args) throws Exception {
+
+	/**
+	 * Main entry point.
+	 * 
+	 * @param args command line arguments.
+	 * @throws Exception when a major failure occurred.
+	 */
+	public static void main(String... args) throws Exception {
     	if (args.length < 2) {
     		log.error("too few arguments");
     		throw new NoConfigurationAvailable();
@@ -65,7 +76,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
 		
         initResources(environment.jersey(), configuration);
         
-        // to run healthchecks: curl http://localhost:8081/healthcheck
+        // to run health checks: curl http://localhost:8081/healthcheck
         var healthCheck = new ConfigurationHealthCheck(configuration);
         environment.healthChecks().register("config", healthCheck);
 	}
@@ -76,5 +87,6 @@ public class ServerApplication extends Application<ServerConfiguration> {
         jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory()));
         jersey.register(new ProjectListResource(Path.of(configuration.getProjectDirectory())));
         jersey.register(new ProjectLogResource(Path.of(configuration.getProjectDirectory())));
+        jersey.register(new ConfigReloadResource(configuration));
 	}
 }
