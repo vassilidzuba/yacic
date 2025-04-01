@@ -19,6 +19,10 @@ package vassilidzuba.yacic.server;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
@@ -30,6 +34,10 @@ import vassilidzuba.yacic.server.resources.PipelineListResource;
 import vassilidzuba.yacic.server.resources.ProjectListResource;
 import vassilidzuba.yacic.server.resources.ProjectLogResource;
 import vassilidzuba.yacic.server.resources.ProjectRunResource;
+import vassilidzuba.yacic.server.security.User;
+import vassilidzuba.yacic.server.security.YacicAuthenticator;
+import vassilidzuba.yacic.server.security.YacicAuthorizer;
+import vassilidzuba.yacic.server.security.YacicSecurity;
 
 /**
  * Main class of the REST server.
@@ -70,10 +78,18 @@ public class ServerApplication extends Application<ServerConfiguration> {
 
 	@Override
 	public void run(ServerConfiguration configuration, Environment environment) throws Exception {
+		YacicSecurity.init(Path.of("config/security.json"));
 		
 		configuration.loadPipelines();
 		configuration.loadActionDefinitions();
 		
+	    environment.jersey().register(new AuthDynamicFeature(
+	            new BasicCredentialAuthFilter.Builder<User>()
+	                .setAuthenticator(new YacicAuthenticator())
+	                .setAuthorizer(new YacicAuthorizer())
+	                .setRealm("SUPER SECRET STUFF")
+	                .buildAuthFilter()));
+	    environment.jersey().register(RolesAllowedDynamicFeature.class);
         initResources(environment.jersey(), configuration);
         
         // to run health checks: curl http://localhost:8081/healthcheck

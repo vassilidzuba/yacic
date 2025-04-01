@@ -1,0 +1,19 @@
+{
+   "pipelineDirectory": "config/pipelines",
+   "actionDefinitionDirectory": "config/actiondefinitions",
+   "projectDirectory": "config/projects",
+   "server": {
+        "applicationConnectors":
+            [
+                {
+                "type": "http",
+                "port": 0
+                }
+            ],
+        "adminConnectors": [
+            {
+            "type": "http",
+            "port": 0}
+            ]
+    }
+}

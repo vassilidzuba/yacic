@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.codahale.metrics.annotation.Timed;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -34,6 +35,7 @@ import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
  */
 @Path("/yacic/pipeline/list")
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class PipelineListResource {
 	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 	

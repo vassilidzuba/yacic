@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.codahale.metrics.annotation.Timed;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -32,6 +33,7 @@ import lombok.SneakyThrows;
  */
 @Path("/yacic/project/list")
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class ProjectListResource {
 	private java.nio.file.Path projectDirectory;
 	

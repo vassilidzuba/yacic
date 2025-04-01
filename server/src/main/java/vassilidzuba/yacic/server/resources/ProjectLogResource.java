@@ -23,6 +23,7 @@ import java.util.Optional;
 import com.codahale.metrics.annotation.Timed;
 import com.sshtools.common.logger.Log;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -36,6 +37,7 @@ import lombok.SneakyThrows;
  */
 @Path("/yacic/project/log")
 @Produces(MediaType.TEXT_PLAIN)
+@PermitAll
 public class ProjectLogResource {
 	private java.nio.file.Path projectDirectory;
 	

@@ -25,6 +25,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -41,6 +42,7 @@ import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
  */
 @Path("/yacic/project/run")
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class ProjectRunResource {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
