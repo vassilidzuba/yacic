@@ -1,9 +1,7 @@
 {
-	"PROJECT": "yacic",
-	"REPO": "https://github.com/vassilidzuba/yacic.git",
-	"ROOT": "/mnt/yacic",
-	"BRANCH": "main",
-	"VERSION": "1.0-SNAPSHOT",
+	"project": "yacic",
+	"repo": "https://github.com/vassilidzuba/yacic.git",
+	"root": "/mnt/yacic",
 	
 	"pipeline": "java-build"
 }

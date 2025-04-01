@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.security.PermitAll;
@@ -35,6 +34,7 @@ import lombok.SneakyThrows;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
+import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 /**
@@ -82,16 +82,17 @@ public class ProjectRunResource {
 			return new RunStatus("noexist");
 		}
 
-		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-		};
-		Map<String, String> map = objectMapper.readValue(Files.readAllBytes(path), typeRef);
+		var prconf = objectMapper.readValue(Files.readAllBytes(path), ProjectConfiguration.class);
 
 		var pconf = new SequentialPipelineConfiguration();
-		pconf.getProperties().putAll(map);
+		pconf.getProperties().putAll(prconf.getProperties());
+		pconf.getProperties().put("PROJECT", prconf.getProject());
+		pconf.getProperties().put("REPO", prconf.getRepo());
+		pconf.getProperties().put("ROOT", prconf.getRoot());
 
 		pconf.getPad().putAll(actionDefinitions);
 
-		var pipeline = pipelines.get(map.get("pipeline"));
+		var pipeline = pipelines.get(prconf.getPipeline());
 
 		var logFile =  pdir.resolve(project.get() + ".log");
 		Files.deleteIfExists(logFile);
