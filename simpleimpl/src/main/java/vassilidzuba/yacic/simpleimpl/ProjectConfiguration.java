@@ -67,7 +67,7 @@ public class ProjectConfiguration {
 			pc.propertiesdArray = null;
 		}
 		if (pc.branchesArray != null) {
-			pc.branchesArray.forEach(b -> pc.getBranches().put(b.getId(), b.getName()));
+			pc.branchesArray.forEach(b -> pc.getBranches().put(b.getName(), b.getDir()));
 			pc.branchesArray = null;
 		}
 		
@@ -84,8 +84,8 @@ public class ProjectConfiguration {
 	
 	static class Branch {
 		@Setter @Getter
-		private String id;
-		@Setter @Getter
 		private String name;
+		@Setter @Getter
+		private String dir;
 	}
 }

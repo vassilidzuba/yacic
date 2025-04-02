@@ -6,7 +6,7 @@
 	"pipeline": "java-build",
 	
 	"branches": [
-		{"id": "b1", "name": "main"},
-		{"id": "b2", "name": "feature/initial"}
+		{"name": "main",            "dir": "b0"},
+		{"name": "feature/initial", "dir": "b1"}
 	]
 }

@@ -31,6 +31,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
@@ -43,8 +44,8 @@ import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 @Path("/yacic/project/run")
 @Produces(MediaType.APPLICATION_JSON)
 @PermitAll
+@Slf4j
 public class ProjectRunResource {
-	private static ObjectMapper objectMapper = new ObjectMapper();
 	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 	private Map<String, PodmanActionDefinition> actionDefinitions = new HashMap<>();
 	private String projectsDirectory;
@@ -72,7 +73,9 @@ public class ProjectRunResource {
 	@GET
 	@Timed
 	@SneakyThrows
-	public RunStatus run(@QueryParam("project") Optional<String> project) {
+	public RunStatus run(@QueryParam("project") Optional<String> project, @QueryParam("branch") Optional<String> obranch) {
+		var branch = obranch.orElse("main"); 
+				
 		if (project.isEmpty()) {
 			return new RunStatus("noname");
 		}
@@ -82,13 +85,19 @@ public class ProjectRunResource {
 			return new RunStatus("noexist");
 		}
 
-		var prconf = objectMapper.readValue(Files.readAllBytes(path), ProjectConfiguration.class);
+		var prconf = readProjectConfiguration(path);
+		if (prconf == null) {
+			return new RunStatus("bad project config");
+		}
 
 		var pconf = new SequentialPipelineConfiguration();
 		pconf.getProperties().putAll(prconf.getProperties());
 		pconf.getProperties().put("PROJECT", prconf.getProject());
 		pconf.getProperties().put("REPO", prconf.getRepo());
 		pconf.getProperties().put("ROOT", prconf.getRoot());
+		pconf.getProperties().put("BRANCH", branch);
+		pconf.getProperties().put("BRANCHDIR", getBranchDir(prconf, branch));
+		pconf.getProperties().put("DATAAREA", prconf.getRoot() + "/" + prconf.getProject() + "/" + getBranchDir(prconf, branch));
 
 		pconf.getPad().putAll(actionDefinitions);
 
@@ -101,5 +110,19 @@ public class ProjectRunResource {
 		var ps = pipeline.run(pconf, logFile);
 
 		return new RunStatus(ps.getStatus());
+	}
+	
+	private ProjectConfiguration readProjectConfiguration(java.nio.file.Path path) {
+		try (var is = Files.newInputStream(path)) {
+			return ProjectConfiguration.read(is);
+		} catch (Exception e) {
+			log.error("unable to read project configuration", e);
+			return null;
+		}
+	}
+
+	private String getBranchDir(ProjectConfiguration prconf, String branch) {
+		var dir = prconf.getBranches().get(branch);
+		return dir == null ? "b0" : dir;
 	}
 }

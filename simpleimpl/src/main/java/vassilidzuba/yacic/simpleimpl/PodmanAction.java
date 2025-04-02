@@ -71,8 +71,11 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 		log.info("    description : {}", description);
 		log.info("    type        : {}", type);
 		log.info("    subcommand  : {}", subcommand);
-
+		log.info("    properties  :");
+		
 		var properties = pconfig.getProperties();
+		properties.forEach((k,v) -> log.info("        {} : {}", k, v));
+		
 		var pdef = pconfig.getPad().get(type);
 
 		if (pdef == null) {

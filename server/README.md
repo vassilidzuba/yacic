@@ -12,7 +12,7 @@ to get the list of the pipelines:
 
     curl -u vassili:sekret http://localhost:8080/yacic/pipelines/list
 
-to run a pipeline (where foo ius the project name):
+to run a pipeline (where *foo* is the project name):
 
     curl -u vassili:sekret http://localhost:8080/yacic/project/run?project=foo
     

@@ -60,7 +60,7 @@ class ProjectRunResourceTest {
 		Files.createDirectories(Path.of(projectDirectory).resolve("test"));
 		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), "{\"pipeline\": \"testpipeline\"}");
 
-		var status = prr.run(Optional.of("test"));
+		var status = prr.run(Optional.of("test"), Optional.empty());
 
 		log.info("status: {}", status);
 		
