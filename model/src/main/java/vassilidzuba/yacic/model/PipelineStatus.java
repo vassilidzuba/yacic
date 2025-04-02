@@ -23,6 +23,10 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Pipeline status
+ * @param <T> pipeline configuration
+ */
 public class PipelineStatus <T extends PipelineConfiguration> {
 	@Setter @Getter
 	private Pipeline<T> pipeline;
@@ -39,6 +43,11 @@ public class PipelineStatus <T extends PipelineConfiguration> {
 	@Setter @Getter
 	private List<ActionStatus> actionStatuses = new ArrayList<>();
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param pipeline the pipeline;
+	 */
 	public PipelineStatus(Pipeline<T> pipeline) {
 		this.pipeline = pipeline;
 	}

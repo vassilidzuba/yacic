@@ -17,8 +17,7 @@
 package vassilidzuba.yacic.server;
 
 
-import java.util.ArrayList;
-
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 class ServerApplicationTest {
 	private static final DropwizardAppExtension<ServerConfiguration> EXT = new DropwizardAppExtension<>(
             ServerApplication.class,
-            "config/yacic.json"
+            "config/yacic-test.json"
         );
 
 
@@ -43,13 +42,18 @@ class ServerApplicationTest {
 	@SneakyThrows
 	void test1() {
 		var client = EXT.client();
-
+		
+		HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder().build();
+		client.register(feature);
+		
 		var response = client.target(
                 String.format("http://localhost:%d/yacic/pipeline/list", EXT.getLocalPort()))
                .request()
+               .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_USERNAME, "vassili")
+               .property(HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD, "sekret")
                .get();
 
-		var data = response.readEntity(ArrayList.class);
+		var data = response.readEntity(String.class);
 		
 		Assertions.assertEquals(200, response.getStatus());
 		Assertions.assertTrue(data.contains("java-build"));

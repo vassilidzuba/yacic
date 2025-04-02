@@ -1,22 +1,30 @@
 <pipeline type="sequential" id ="java-build">
   <description>Pipeline Three</description>
 
-  <step id="step1" 
+  <step id="clone" 
         category='podman'
         type="clone"
-        subcommand="clone REPO">
+        subcommand='clone -b "BRANCH" REPO'>
   	<description>clone repository</description>
   </step>
 
-  <step id="step2" 
+  <step id="build" 
         category='podman'
         type="maven"
-        subcommand="mvn clean package javadoc:javadoc">
+        subcommand="mvn clean package javadoc:aggregate-jar">
      <description>build package using maven</description>
   
   </step>
 
-  <step id="step3" 
+  <step id="sonar" 
+        category='podman'
+        type="maven_sonar"
+        subcommand="">
+     <description>execute sonarqube</description>
+  
+  </step>
+
+  <step id="deploy" 
         category='podman'
         type="deploy_javadoc"
         subcommand="">

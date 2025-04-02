@@ -1,14 +1,12 @@
 {
-	"project": "example1",
-	"repo": "http://odin.manul.lan:3000/vassili/example1.git",
+	"project": "badexample1",
+	"repo": "http://odin.manul.lan:3000/vassili/badexample1.git",
 	"root": "/mnt/yacic",
 	
 	"pipeline": "java-build",
+	
 	"branches": [
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}
-	],
-	"properties": [
-7	]
-	
+	]
 }

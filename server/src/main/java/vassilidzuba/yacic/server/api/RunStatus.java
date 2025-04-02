@@ -18,6 +18,10 @@ package vassilidzuba.yacic.server.api;
 
 import lombok.Getter;
 
+/**
+ * Project run status.
+ * This is the return value of the resource ProjectRunResource.
+ */
 public class RunStatus {
 	@Getter
 	private String status;

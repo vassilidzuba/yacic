@@ -14,11 +14,19 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.server.security;
 
-/**
- * Exception thrown when no configuration is availblee.
- */
-public class NoConfigurationAvailable extends RuntimeException {
-	private static final long serialVersionUID = 5168051045086644218L;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import io.dropwizard.auth.Authorizer;
+import jakarta.ws.rs.container.ContainerRequestContext;
+
+public class YacicAuthorizer  implements Authorizer<User> {
+
+	@Override
+	public boolean authorize(User principal, String role, @Nullable ContainerRequestContext requestContext) {
+		// no authorization check yet
+		return true;
+	}
+
 }

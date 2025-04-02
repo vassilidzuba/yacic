@@ -18,5 +18,11 @@ package vassilidzuba.yacic.model;
 
 public interface ActionListener<T extends PipelineConfiguration> {
 
+	/**
+	 * receives the signal of an event.
+	 * 
+	 * @param event the event
+	 * @param a the action handle
+	 */
 	void signalEvent(ActionEvent event, ActionExecutionHandle<T> a);
 }

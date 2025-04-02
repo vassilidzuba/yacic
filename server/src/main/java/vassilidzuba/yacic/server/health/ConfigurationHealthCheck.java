@@ -24,6 +24,10 @@ import com.codahale.metrics.health.HealthCheck;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.server.ServerConfiguration;
 
+/**
+ * Health check.
+ * It checks that the directories specified in the main configuration file do exist. 
+ */
 @Slf4j
 public class ConfigurationHealthCheck  extends HealthCheck {
 	private ServerConfiguration config;

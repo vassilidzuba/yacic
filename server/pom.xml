@@ -49,6 +49,11 @@
 
 		<dependency>
 			<groupId>io.dropwizard</groupId>
+			<artifactId>dropwizard-auth</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.dropwizard</groupId>
 			<artifactId>dropwizard-client</artifactId>
 			<scope>test</scope>
 		</dependency>

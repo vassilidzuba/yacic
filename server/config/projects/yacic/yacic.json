@@ -1,0 +1,7 @@
+{
+	"project": "yacic",
+	"repo": "https://github.com/vassilidzuba/yacic.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "java-build"
+}

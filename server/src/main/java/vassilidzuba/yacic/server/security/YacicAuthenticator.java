@@ -14,11 +14,18 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.server.security;
 
-/**
- * Exception thrown when no configuration is availblee.
- */
-public class NoConfigurationAvailable extends RuntimeException {
-	private static final long serialVersionUID = 5168051045086644218L;
+import java.util.Optional;
+
+import io.dropwizard.auth.AuthenticationException;
+import io.dropwizard.auth.Authenticator;
+import io.dropwizard.auth.basic.BasicCredentials;
+
+public class YacicAuthenticator implements Authenticator<BasicCredentials, User> {
+
+	@Override
+	public Optional<User> authenticate(BasicCredentials credentials) throws AuthenticationException {
+		return YacicSecurity.check(credentials);
+	}
 }

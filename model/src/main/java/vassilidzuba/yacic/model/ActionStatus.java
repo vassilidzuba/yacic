@@ -19,6 +19,9 @@ package vassilidzuba.yacic.model;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Action status.
+ */
 public class ActionStatus {
 	@Setter @Getter
 	private String id;

@@ -14,11 +14,19 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server;
+package vassilidzuba.yacic.server.security;
 
-/**
- * Exception thrown when no configuration is availblee.
- */
-public class NoConfigurationAvailable extends RuntimeException {
-	private static final long serialVersionUID = 5168051045086644218L;
+import java.security.Principal;
+
+public class User implements Principal {
+	private String username;
+	
+	public User(String username) {
+		this.username = username;
+	}
+	
+	@Override
+	public String getName() {
+		return username;
+	}
 }
