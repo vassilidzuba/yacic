@@ -18,9 +18,11 @@ package vassilidzuba.yacic.simpleimpl.simul;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.List;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.simpleimpl.BuiltinAction;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
@@ -29,7 +31,7 @@ public class GitAction extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os, List<Node> nodez) {
 		log.info("running Git Action");
 		
 		var dataArea = getDataArea();

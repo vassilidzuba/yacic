@@ -33,7 +33,7 @@ class SequentialPipelineTest {
 		p.addAction(new Action1());
 		p.addAction(new Action2());
 		
-		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"));
+		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"), null);
 		Assertions.assertEquals("ok", ps.getStatus());
 	}
 	
@@ -46,7 +46,7 @@ class SequentialPipelineTest {
 		p.addAction(new BadAction1());
 		p.addAction(new Action2());
 		
-		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"));
+		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"), null);
 		Assertions.assertEquals("badaction1:failure", ps.getStatus());
 	}
 }

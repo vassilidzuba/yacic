@@ -39,7 +39,7 @@ class SimulatedPipelineTest {
 		Files.createDirectories(dataArea);
 		pipeline.setDataArea(dataArea);
 		
-		o.run(pipeline, null, Files.createTempFile(Path.of("target"), "temp", ".log"));
+		o.run(pipeline, null, Files.createTempFile(Path.of("target"), "temp", ".log"), null);
 		var ostatus = o.shutdown();
 		
 		Assertions.assertTrue(ostatus);

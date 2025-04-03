@@ -19,6 +19,7 @@ package vassilidzuba.yacic.simpleimpl;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,6 +31,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.podmanutil.Podmanutil;
 
 @Slf4j
@@ -65,7 +67,7 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 	}
 
 	@Override
-	public String run(SequentialPipelineConfiguration pconfig, OutputStream os) {
+	public String run(SequentialPipelineConfiguration pconfig, OutputStream os, List<Node> nodes) {
 		log.info("running podman action");
 		log.info("    id          : {}", id);
 		log.info("    description : {}", description);
@@ -84,10 +86,13 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 		}
 
 		String exitStatus;
+		var podmanutil = new Podmanutil();
+		podmanutil.addNodes(nodes);
+		
 		if ("host".equals(pdef.getMode())) {
-			exitStatus = new Podmanutil().runHost(properties, pdef, subcommand, os);
+			exitStatus = podmanutil.runHost(properties, pdef, subcommand, os, pdef.getRole());
 		} else {
-			exitStatus = new Podmanutil().runGeneric(properties, pdef, subcommand, os);
+			exitStatus = podmanutil.runGeneric(properties, pdef, subcommand, os, pdef.getRole());
 		}
 
 		if ("0".equals(exitStatus)) {

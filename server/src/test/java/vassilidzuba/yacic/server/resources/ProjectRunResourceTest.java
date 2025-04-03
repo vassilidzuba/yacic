@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.simpleimpl.BuiltinAction;
@@ -55,7 +57,7 @@ class ProjectRunResourceTest {
 		
 		String projectDirectory = "target/projects";
 
-		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory);
+		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory, null);
 
 		Files.createDirectories(Path.of(projectDirectory).resolve("test"));
 		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), "{\"pipeline\": \"testpipeline\"}");
@@ -69,7 +71,7 @@ class ProjectRunResourceTest {
 
 	class SpecialAction extends BuiltinAction {
 		@Override
-		public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+		public String run(SequentialPipelineConfiguration pctx, OutputStream os, List<Node> nodes) {
 			log.info("run specialaction");
 			return "ok";
 		}

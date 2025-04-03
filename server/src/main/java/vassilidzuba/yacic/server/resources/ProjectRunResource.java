@@ -18,11 +18,11 @@ package vassilidzuba.yacic.server.resources;
 
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.GET;
@@ -32,6 +32,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
@@ -49,6 +50,7 @@ public class ProjectRunResource {
 	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 	private Map<String, PodmanActionDefinition> actionDefinitions = new HashMap<>();
 	private String projectsDirectory;
+	private List<Node> nodes;
 	
 	/**
 	 * Constructor.
@@ -56,12 +58,15 @@ public class ProjectRunResource {
 	 * @param pipelines the pipeline map.
 	 * @param actionDefinitions the action definition map
 	 * @param projectsDirectory the projects directory
+	 * @param nodes list of nodes
 	 */
 	public ProjectRunResource(Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines,
-			Map<String, PodmanActionDefinition> actionDefinitions, String projectsDirectory) {
+			Map<String, PodmanActionDefinition> actionDefinitions, String projectsDirectory,
+			List<Node> nodes) {
 		this.pipelines.putAll(pipelines);
 		this.actionDefinitions.putAll(actionDefinitions);
 		this.projectsDirectory = projectsDirectory;
+		this.nodes = nodes;
 	}
 
 	/**
@@ -107,7 +112,7 @@ public class ProjectRunResource {
 		Files.deleteIfExists(logFile);
 		Files.writeString(logFile,  "");
 		
-		var ps = pipeline.run(pconf, logFile);
+		var ps = pipeline.run(pconf, logFile, nodes);
 
 		return new RunStatus(ps.getStatus());
 	}

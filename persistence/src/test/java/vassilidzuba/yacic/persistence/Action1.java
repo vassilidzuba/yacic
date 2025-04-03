@@ -17,10 +17,12 @@
 package vassilidzuba.yacic.persistence;
 
 import java.io.OutputStream;
+import java.util.List;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.simpleimpl.BuiltinAction;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
@@ -34,7 +36,7 @@ public class Action1 extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os, List<Node> nodes) {
 		log.info("starting {}", getId());
 		log.info("completing {}", getId());
 		return "ok";

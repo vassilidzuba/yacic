@@ -18,6 +18,7 @@ package vassilidzuba.yacic.model;
 
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.List;
 
 public interface Action<T extends PipelineConfiguration> {
 	
@@ -35,11 +36,12 @@ public interface Action<T extends PipelineConfiguration> {
 	
 	/**
 	 * Executes an action synchronously.
-	 * @param pconfig the connfiguration
+	 * @param pconfig the configuration
 	 * @param os a stream to the log 
+	 * @param nodes a list of nodes
 	 * @return the exit status of the run. Should be "OK" for a sucessfull run. 
 	 */
-	String run(T pconfig, OutputStream os);
+	String run(T pconfig, OutputStream os, List<Node> nodes);
 
 	/**
 	 * Executes an action asynchronously.

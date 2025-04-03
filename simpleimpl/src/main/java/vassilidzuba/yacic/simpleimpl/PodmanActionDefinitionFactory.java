@@ -75,8 +75,8 @@ public class PodmanActionDefinitionFactory {
 		case "image":
 			ctx.setInImage(true);
 			break;
-		case "host":
-			ctx.setInHost(true);
+		case "role":
+			ctx.setInRole(true);
 			break;
 		case "username":
 			ctx.setInUsername(true);
@@ -121,8 +121,8 @@ public class PodmanActionDefinitionFactory {
 		case "image":
 			ctx.getPodmanActionDefinition().setImage(ctx.getSb().toString());
 			break;
-		case "host":
-			ctx.getPodmanActionDefinition().setHost(ctx.getSb().toString());
+		case "role":
+			ctx.getPodmanActionDefinition().setRole(ctx.getSb().toString());
 			break;
 		case "username":
 			ctx.getPodmanActionDefinition().setUsername(ctx.getSb().toString());
@@ -158,7 +158,7 @@ public class PodmanActionDefinitionFactory {
 		private boolean inImage;
 		@Setter
 		@Getter
-		private boolean inHost;
+		private boolean inRole;
 		@Setter
 		@Getter
 		private boolean inUsername;

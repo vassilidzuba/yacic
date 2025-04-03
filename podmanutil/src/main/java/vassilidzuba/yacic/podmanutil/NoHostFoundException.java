@@ -14,18 +14,12 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.simpleimpl;
+package vassilidzuba.yacic.podmanutil;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-class ActionTest {
-
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null, null, null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
+public class NoHostFoundException extends RuntimeException{
+	private static final long serialVersionUID = -4421791969942298449L;
+	
+	public NoHostFoundException(String msg) {
+		super(msg);
 	}
 }

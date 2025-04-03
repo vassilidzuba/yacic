@@ -16,30 +16,26 @@
 
 package vassilidzuba.yacic.model;
 
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
-public interface Orchestrator<T extends PipelineConfiguration>{
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-	/**
-	 * Run a pipeline.
-	 * @param pipeline the pipeline
-	 * @param pconfig the pipeline configuration
-	 * @param logFile the log file
-	 * @param node list of noces
-	 */
-	void run(Pipeline<T> pipeline, T pconfig, Path logFile, List<Node> nodes);
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+public class Node {
+	@Setter @Getter
+	private String host;
+	@Setter @Getter
+	private List<String> roles;
 	
-	/**
-	 * retrieve the history;
-	 * @return the history
-	 */
-	List<PipelineStatus<T>> getHistory();
-
-	
-	/**
-	 * retrieve the history of the pipelines with a given type;
-	 * @return the history
-	 */
-	List<PipelineStatus<T>> getHistory(String pipelineType);
+	public Node(String host, String... roles) {
+		this.host = host;
+		this.roles = new ArrayList<>();
+		for (var role: roles) {
+			this.roles.add(role);
+		}
+	}
 }

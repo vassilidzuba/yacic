@@ -19,6 +19,7 @@ package vassilidzuba.yacic.server;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +29,7 @@ import io.dropwizard.core.Configuration;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.simpleimpl.PodmanActionDefinitionFactory;
@@ -48,6 +50,8 @@ public class ServerConfiguration extends Configuration {
 	@NotEmpty
 	private String actionDefinitionDirectory;
 
+	private List<Node> nodes;
+	
 	@JsonIgnore
 	@Getter
 	private Map<String, PodmanActionDefinition> podmanActionDefinitions = new HashMap<>();
@@ -68,7 +72,6 @@ public class ServerConfiguration extends Configuration {
 			st.forEach(this::loadPipeline);
 		}
 	}
-	
 	
 	@SneakyThrows
 	private void loadPipeline(Path path) {
@@ -105,16 +108,26 @@ public class ServerConfiguration extends Configuration {
 		}
 	}
 	
-	
 	@JsonProperty
 	public String getProjectDirectory() {
 		return projectDirectory;
 	}
-	
+
 	@JsonProperty
 	public void setProjectDirectory(String projectDirectory) {
 		this.projectDirectory = projectDirectory;
 	}
+	
+	@JsonProperty
+	public List<Node> getNodes() {
+		return nodes;
+	}
+	
+	@JsonProperty
+	public void setNodes(List<Node> nodes) {
+		this.nodes = nodes;
+	}
+	
 	
 	public void reload() {
 		loadPipelines();

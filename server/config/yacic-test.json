@@ -2,6 +2,11 @@
    "pipelineDirectory": "config/pipelines",
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
+      
+   "nodes": [
+      {"host": "odin", "roles": ["git", "java", "golang", "gcc"]}
+   ],
+   
    "server": {
         "applicationConnectors":
             [

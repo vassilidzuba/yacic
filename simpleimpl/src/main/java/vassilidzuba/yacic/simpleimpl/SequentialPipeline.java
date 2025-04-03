@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.AbstractPipeline;
 import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionStatus;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.PipelineStatus;
 
 @Slf4j
@@ -44,7 +45,7 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 
 	@Override
 	public boolean runNextStep(PipelineStatus<SequentialPipelineConfiguration> ps,
-			SequentialPipelineConfiguration pconfig, Path logFile) {
+			SequentialPipelineConfiguration pconfig, Path logFile, List<Node> nodes) {
 		var currentStep = ps.getCurrentStep();
 		var oa = searchAction(currentStep);
 		if (oa.isPresent()) {
@@ -54,7 +55,7 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			String status;
 			try {
 				try (var os = Files.newOutputStream(logFile, StandardOpenOption.APPEND)) {
-					status = a.run(pconfig, os);
+					status = a.run(pconfig, os, nodes);
 				}
 			} catch (Exception e) {
 				log.error("exception during {}", a, e);
@@ -102,12 +103,12 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 	}
 
 	@Override
-	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig, Path logFile) {
+	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig, Path logFile, List<Node> nodes) {
 		var ps = initialize(actions.get(0).getId());
 
 		ps.setStartDate(LocalDateTime.now());
 
-		while (runNextStep(ps, pconfig, logFile)) ;
+		while (runNextStep(ps, pconfig, logFile, nodes)) ;
 
 		ps.setEndDate(LocalDateTime.now());
 

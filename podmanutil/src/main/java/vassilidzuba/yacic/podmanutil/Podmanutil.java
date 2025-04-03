@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +38,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 
 /**
  * Utilities for the yacic application;not intended to be a generix podman
@@ -54,8 +57,24 @@ public class Podmanutil {
 	@Setter
 	@Getter
 	private String username = DEFAULT_USERNAME;
+
+	@Setter
+	@Getter
+	private List<Node> nodes;
 	
-	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
+	public Podmanutil() {
+		this.nodes = new ArrayList<>();
+	}
+	
+	public void addNode(Node node) {
+		this.nodes.add(node);
+	}
+	
+	public void addNodes(List<Node> nodes) {
+		this.nodes.addAll(nodes);
+	}
+	
+	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os, String role) {
 		log.info("in runGeneric");
 		var setup = substitute(pad.getSetup(), properties);
 		var cleanup = substitute(pad.getCleanup(), properties);
@@ -64,11 +83,11 @@ public class Podmanutil {
 
 		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
 		
-		return run(os, fullcommand);
+		return run(os, fullcommand, role);
 	}
 
 
-	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os) {
+	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os, String role) {
 		log.info("in runHost");
 		var setup = substitute(pad.getSetup(), properties);
 		var cleanup = substitute(pad.getCleanup(), properties);
@@ -77,10 +96,10 @@ public class Podmanutil {
 
 		var fullcommand = setup + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
 		
-		return run(os, fullcommand);
+		return run(os, fullcommand, role);
 	}
 	
-	private String run(OutputStream os, String fullcommand) {
+	private String run(OutputStream os, String fullcommand, String role) {
 		log.info("  command : {}", fullcommand);
 		
 		if (dryrun) {
@@ -89,7 +108,7 @@ public class Podmanutil {
 		
 		var exitStatus = new StringBuilder();
 
-		try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername(username)
+		try (SshClient ssh = SshClientBuilder.create().withHostname(getHost(role)).withPort(22).withUsername(username)
 				.build()) {
 
 			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
@@ -146,5 +165,10 @@ public class Podmanutil {
 		}
 
 		return result;
+	}
+	
+	private String getHost(String role) {
+		var node = nodes.stream().filter(n -> n.getRoles().contains(role)).findAny();
+		return node.orElseThrow(() -> new NoHostFoundException("no host found for role: " + role)).getHost();
 	}
 }

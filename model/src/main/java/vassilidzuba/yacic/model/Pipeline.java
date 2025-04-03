@@ -17,6 +17,7 @@
 package vassilidzuba.yacic.model;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public interface Pipeline <T extends PipelineConfiguration> {
 	/**
@@ -44,9 +45,10 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	 * Run the pipeline until completion.
 	 * @param pconfig the pipeline configuration
 	 * @param logFile the path to the log file
+	 * @param nodes list of nodes
 	 * @return the status
 	 */
-	PipelineStatus<T> run(T pconfig, Path logFile);
+	PipelineStatus<T> run(T pconfig, Path logFile, List<Node> nodes);
 	
 	/**
 	 * initialize the pipeline but not run any step.
@@ -61,9 +63,10 @@ public interface Pipeline <T extends PipelineConfiguration> {
 	 * @param ps the pipeline status
 	 * @param pconfig the pipeline configuration
 	 * @param logFile path to the log file
+	 * @param nodes list of nodes
 	 * @return true if pipeline should continue
 	 */
-	boolean runNextStep(PipelineStatus<T> ps, T pconfig, Path logFile);
+	boolean runNextStep(PipelineStatus<T> ps, T pconfig, Path logFile, List<Node> nodes);
 	
 	
 	/**
