@@ -85,4 +85,18 @@ class PodmanutilTest {
 		var result = podmanutil.runHost(properties, pad, "whoami", System.out, "shell");
 		Assertions.assertEquals("0", result);
 	}
+
+
+	@Test
+	void test4() {
+		var properties = new HashMap<String, String>();
+		
+		var pad = new PodmanActionDefinition();
+
+		var podmanutil = new Podmanutil();
+		podmanutil.addNode(new Node("localhost", "shell"));
+
+		var result = podmanutil.runHost(properties, pad, "hostname && echo foo", System.out, "shell");
+		Assertions.assertEquals("0", result);
+	}
 }

@@ -17,6 +17,7 @@
 package vassilidzuba.yacic.podmanutil;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -51,7 +52,8 @@ public class Podmanutil {
 
 	private static final String YACIC = "yacic";
 
-	@Setter @Getter
+	@Setter
+	@Getter
 	private static boolean dryrun = false;
 
 	@Setter
@@ -61,66 +63,104 @@ public class Podmanutil {
 	@Setter
 	@Getter
 	private List<Node> nodes;
-	
+
 	public Podmanutil() {
 		this.nodes = new ArrayList<>();
 	}
-	
+
 	public void addNode(Node node) {
 		this.nodes.add(node);
 	}
-	
+
 	public void addNodes(List<Node> nodes) {
 		this.nodes.addAll(nodes);
 	}
-	
-	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os, String role) {
+
+	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand,
+			OutputStream os, String role) {
 		log.info("in runGeneric");
 		var setup = substitute(pad.getSetup(), properties);
 		var cleanup = substitute(pad.getCleanup(), properties);
 		var command = substitute(pad.getCommand(), properties);
 		var subcommand2 = substitute(subcommand, properties);
 
-		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
-		
+		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + "; echo PODMANTERMINATION $?; "
+				+ cleanup;
+
 		return run(os, fullcommand, role);
 	}
 
-
-	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand, OutputStream os, String role) {
+	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand,
+			OutputStream os, String role) {
 		log.info("in runHost");
 		var setup = substitute(pad.getSetup(), properties);
 		var cleanup = substitute(pad.getCleanup(), properties);
 		var command = substitute(pad.getCommand(), properties);
 		var subcommand2 = substitute(subcommand, properties);
 
-		var fullcommand = setup + command + " " + subcommand2 + ";echo PODMANTERMINATION $?; " + cleanup; 
-		
+		var fullcommand = setup + command + " " + subcommand2 + "; echo PODMANTERMINATION $?; " + cleanup;
+
 		return run(os, fullcommand, role);
 	}
-	
+
 	private String run(OutputStream os, String fullcommand, String role) {
 		log.info("  command : {}", fullcommand);
-		
+
 		if (dryrun) {
 			return "OK";
 		}
-		
+
+		var host = getHost(role);
+
+		if ("localhost".equals(host)) {
+			return runLocal(fullcommand, os);
+		} else {
+			return runRemote(host, fullcommand, os);
+		}
+
+	}
+
+	@SneakyThrows
+	private String runLocal(String fullcommand, OutputStream os) {
+		var command = fullcommand.replace("; echo PODMANTERMINATION $?", "").trim();
+
+		var processbuilder = new ProcessBuilder(completeCommand(command)).redirectErrorStream(true);
+
+		var process = processbuilder.start();
+		inheritIO(process.getInputStream(), os);
+
+		var ret = process.waitFor();
+
+		if (ret != 0 || process.exitValue() != 0) {
+			return "" + process.exitValue();
+		}
+
+		return "0";
+	}
+
+	private List<String> completeCommand(String cmd) {
+		String system = System.getProperty("os.name").toLowerCase();
+		if (system.contains("win")) {
+			return List.of("cmd.exe", "/C", cmd);
+		} else {
+			return List.of("/usr/bin/bash", "-c", cmd);
+		}
+	}
+
+	private String runRemote(String host, String command, OutputStream os) {
 		var exitStatus = new StringBuilder();
 
-		try (SshClient ssh = SshClientBuilder.create().withHostname(getHost(role)).withPort(22).withUsername(username)
-				.build()) {
+		try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username).build()) {
 
 			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
 			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
 
-			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(fullcommand).withAutoConsume(false)
+			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(command).withAutoConsume(false)
 					.onTask((task, session) -> {
 						try (var is = session.getInputStream()) {
 							exitStatus.append(process(is, os));
 						}
-					}
-					).build();
+					}).build();
 
 			ssh.addTask(t);
 			t.waitForever();
@@ -133,7 +173,6 @@ public class Podmanutil {
 		return exitStatus.toString();
 	}
 
-	
 	private String substitute(String cmd, Map<String, String> properties) {
 		var command = cmd;
 		if (command == null) {
@@ -166,9 +205,29 @@ public class Podmanutil {
 
 		return result;
 	}
-	
+
 	private String getHost(String role) {
 		var node = nodes.stream().filter(n -> n.getRoles().contains(role)).findAny();
 		return node.orElseThrow(() -> new NoHostFoundException("no host found for role: " + role)).getHost();
+	}
+
+	private static void inheritIO(final InputStream is, final OutputStream os) {
+		new Thread(new Runnable() {
+			public void run() {
+				var buffer = new byte[1024];
+				for (;;) {
+					try {
+						var nbbytes = is.read(buffer);
+						if (nbbytes < 0) {
+							return;
+						} else {
+							os.write(buffer, 0, nbbytes);
+						}
+					} catch (IOException e) {
+						log.error("exception when redirecting process output");
+					}
+				}
+			}
+		}).start();
 	}
 }
