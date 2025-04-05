@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.server.resources;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
+import vassilidzuba.yacic.podmanutil.FileAccessUtil;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
 import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
@@ -51,18 +54,17 @@ public class ProjectRunResource {
 	private Map<String, PodmanActionDefinition> actionDefinitions = new HashMap<>();
 	private String projectsDirectory;
 	private List<Node> nodes;
-	
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param pipelines the pipeline map.
+	 * @param pipelines         the pipeline map.
 	 * @param actionDefinitions the action definition map
 	 * @param projectsDirectory the projects directory
-	 * @param nodes list of nodes
+	 * @param nodes             list of nodes
 	 */
 	public ProjectRunResource(Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines,
-			Map<String, PodmanActionDefinition> actionDefinitions, String projectsDirectory,
-			List<Node> nodes) {
+			Map<String, PodmanActionDefinition> actionDefinitions, String projectsDirectory, List<Node> nodes) {
 		this.pipelines.putAll(pipelines);
 		this.actionDefinitions.putAll(actionDefinitions);
 		this.projectsDirectory = projectsDirectory;
@@ -78,9 +80,10 @@ public class ProjectRunResource {
 	@GET
 	@Timed
 	@SneakyThrows
-	public RunStatus run(@QueryParam("project") Optional<String> project, @QueryParam("branch") Optional<String> obranch) {
-		var branch = obranch.orElse("main"); 
-				
+	public RunStatus run(@QueryParam("project") Optional<String> project,
+			@QueryParam("branch") Optional<String> obranch) {
+		var branch = obranch.orElse("main");
+
 		if (project.isEmpty()) {
 			return new RunStatus("noname");
 		}
@@ -102,21 +105,23 @@ public class ProjectRunResource {
 		pconf.getProperties().put("ROOT", prconf.getRoot());
 		pconf.getProperties().put("BRANCH", branch);
 		pconf.getProperties().put("BRANCHDIR", getBranchDir(prconf, branch));
-		pconf.getProperties().put("DATAAREA", prconf.getRoot() + "/" + prconf.getProject() + "/" + getBranchDir(prconf, branch));
+		pconf.getProperties().put("DATAAREA",
+				prconf.getRoot() + "/" + prconf.getProject() + "/" + getBranchDir(prconf, branch));
+		pconf.getProperties().putAll(prconf.getProperties());
 
 		pconf.getPad().putAll(actionDefinitions);
 
 		var pipeline = pipelines.get(prconf.getPipeline());
 
-		var logFile =  pdir.resolve(project.get() + ".log");
+		var logFile = pdir.resolve(project.get() + ".log");
 		Files.deleteIfExists(logFile);
-		Files.writeString(logFile,  "");
-		
+		Files.writeString(logFile, "");
+
 		var ps = pipeline.run(pconf, logFile, nodes);
 
 		return new RunStatus(ps.getStatus());
 	}
-	
+
 	private ProjectConfiguration readProjectConfiguration(java.nio.file.Path path) {
 		try (var is = Files.newInputStream(path)) {
 			return ProjectConfiguration.read(is);

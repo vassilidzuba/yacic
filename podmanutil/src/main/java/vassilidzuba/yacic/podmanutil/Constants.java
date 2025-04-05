@@ -16,26 +16,11 @@
 
 package vassilidzuba.yacic.podmanutil;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public class PodmanActionDefinition {
-	@Setter @Getter
-	private String id;
-	@Setter @Getter
-	private String mode;
-	@Setter @Getter
-	private String image;
-	@Setter @Getter
-	private String username;
-	@Setter @Getter
-	private String command;
-	@Setter @Getter
-	private String setup;
-	@Setter @Getter
-	private String cleanup;
-	@Setter @Getter
-	private String role;
-	@Setter @Getter
-	private boolean uselocalproperties;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Constants {
+	public static final String DEFAULT_USERNAME = "podman";
+	public static final String YACIC = "yacic";
 }

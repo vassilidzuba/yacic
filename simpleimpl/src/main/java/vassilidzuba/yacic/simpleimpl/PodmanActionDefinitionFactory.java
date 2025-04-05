@@ -104,9 +104,11 @@ public class PodmanActionDefinitionFactory {
 	private static void processStartAction(XMLStreamReader xmlsr, Context ctx) {
 		var id = xmlsr.getAttributeValue(null, "id");
 		var mode = xmlsr.getAttributeValue(null, "mode");
+		var uselocalproperties = xmlsr.getAttributeValue(null, "uselocalproperties");
 		var pad = new PodmanActionDefinition();
 		pad.setId(id);
 		pad.setMode(mode);
+		pad.setUselocalproperties("true".equals(uselocalproperties));
 		ctx.setPodmanActionDefinition(pad);
 	}
 	

@@ -47,10 +47,7 @@ import vassilidzuba.yacic.model.Node;
  */
 @Slf4j
 public class Podmanutil {
-	private static final String DEFAULT_USERNAME = "podman";
 	private static final String S_EXCEPTION = "exception";
-
-	private static final String YACIC = "yacic";
 
 	@Setter
 	@Getter
@@ -58,7 +55,7 @@ public class Podmanutil {
 
 	@Setter
 	@Getter
-	private String username = DEFAULT_USERNAME;
+	private String username = Constants.DEFAULT_USERNAME;
 
 	@Setter
 	@Getter
@@ -79,6 +76,7 @@ public class Podmanutil {
 	public String runGeneric(Map<String, String> properties, PodmanActionDefinition pad, String subcommand,
 			OutputStream os, String role) {
 		log.info("in runGeneric");
+		
 		var setup = substitute(pad.getSetup(), properties);
 		var cleanup = substitute(pad.getCleanup(), properties);
 		var command = substitute(pad.getCommand(), properties);
@@ -152,7 +150,7 @@ public class Podmanutil {
 
 		try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username).build()) {
 
-			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(YACIC);
+			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(Constants.YACIC);
 			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
 
 			Task t = CommandTaskBuilder.create().withClient(ssh).withCommand(command).withAutoConsume(false)
@@ -211,23 +209,23 @@ public class Podmanutil {
 		return node.orElseThrow(() -> new NoHostFoundException("no host found for role: " + role)).getHost();
 	}
 
-	private static void inheritIO(final InputStream is, final OutputStream os) {
-		new Thread(new Runnable() {
-			public void run() {
-				var buffer = new byte[1024];
-				for (;;) {
-					try {
-						var nbbytes = is.read(buffer);
-						if (nbbytes < 0) {
-							return;
-						} else {
-							os.write(buffer, 0, nbbytes);
-						}
-					} catch (IOException e) {
-						log.error("exception when redirecting process output");
-					}
+	private void inheritIO(final InputStream is, final OutputStream os) {
+		new Thread(() -> copy(is, os)).start();
+	}
+	
+	private void copy(final InputStream is, final OutputStream os) {
+		var buffer = new byte[1024];
+		for (;;) {
+			try {
+				var nbbytes = is.read(buffer);
+				if (nbbytes < 0) {
+					return;
+				} else {
+					os.write(buffer, 0, nbbytes);
 				}
+			} catch (IOException e) {
+				log.error("exception when redirecting process output");
 			}
-		}).start();
+		}
 	}
 }

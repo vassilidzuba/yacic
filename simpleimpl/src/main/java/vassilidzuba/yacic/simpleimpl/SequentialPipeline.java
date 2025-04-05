@@ -114,5 +114,4 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 
 		return ps;
 	}
-
 }

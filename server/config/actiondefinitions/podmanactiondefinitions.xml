@@ -30,9 +30,9 @@
 		<role>java</role>
 	</podmanactiondefinition>
 
-	<podmanactiondefinition id="build_image" mode="host">
+	<podmanactiondefinition id="build_image" mode="host" uselocalproperties="true">
 		<username>podman</username>
-		<command>cd DATAAREA/PROJECT;  podman build -f Dockerfile</command>
+		<command>cd DATAAREA/PROJECT;  podman build -t DOCKERTAG -f Dockerfile</command>
 		<role>java</role>
 	</podmanactiondefinition>
 

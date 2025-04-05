@@ -32,4 +32,11 @@
   
   </step>
 
+  <step id="build-image" 
+        category='podman'
+        type="build_image"
+        subcommand="">
+     <description>build podman image</description>
+  </step>
+
 </pipeline>

@@ -16,12 +16,15 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,7 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 import vassilidzuba.yacic.model.Node;
+import vassilidzuba.yacic.podmanutil.FileAccessUtil;
 import vassilidzuba.yacic.podmanutil.Podmanutil;
+import vassilidzuba.yacic.simpleimpl.ProjectConfiguration.Property;
 
 @Slf4j
 public class PodmanAction implements Action<SequentialPipelineConfiguration> {
@@ -52,6 +57,9 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 
 	@Setter
 	private String type;
+
+	@Setter
+	private boolean uselocalproperties;
 
 	@Setter
 	private String subcommand = "";
@@ -75,8 +83,6 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 		log.info("    subcommand  : {}", subcommand);
 		log.info("    properties  :");
 		
-		var properties = pconfig.getProperties();
-		properties.forEach((k,v) -> log.info("        {} : {}", k, v));
 		
 		var pdef = pconfig.getPad().get(type);
 
@@ -84,6 +90,15 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 			log.error("podman action type unknown : {}", type);
 			return "ko";
 		}
+	
+		var properties = new HashMap<String, String>(); 
+		properties.putAll(pconfig.getProperties());
+		if (pdef.isUselocalproperties()) {
+			addLocalProperties(properties, nodes);
+		}
+
+		properties.forEach((k,v) -> log.info("        {} : {}", k, v));
+		
 
 		String exitStatus;
 		var podmanutil = new Podmanutil();
@@ -123,5 +138,23 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 	@SneakyThrows
 	public String getContext() {
 		return objectMapper.writeValueAsString(context);
+	}
+	
+
+	
+
+	@SneakyThrows
+	private void addLocalProperties(Map<String, String> properties, List<Node> nodes) {
+		var projectarea = properties.get("DATAAREA") + "/" + properties.get("PROJECT");
+		// wa assume that all the hosts have the data area at the same place,
+		// so any host will do.
+		var host = nodes.get(0).getHost();
+		var localconfigdata = new FileAccessUtil().readFile(host, "podman", projectarea + "/yacic-properties.json");
+		if (localconfigdata != null) {
+			try (var is = new ByteArrayInputStream(localconfigdata.getBytes(StandardCharsets.UTF_8))) {
+				var localconfig = ProjectConfiguration.read(is);
+				properties.putAll(localconfig.getProperties());
+			}
+		}
 	}
 }
