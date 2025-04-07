@@ -20,13 +20,12 @@ import java.nio.file.Path;
 
 import lombok.Getter;
 import lombok.Setter;
-import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 
 /**
  * An action that executes Java code.
  */
-public abstract class BuiltinAction implements Action<SequentialPipelineConfiguration>  {
+public abstract class BuiltinAction extends AbstractAction {
 	@Setter @Getter 
     private String id;
 	

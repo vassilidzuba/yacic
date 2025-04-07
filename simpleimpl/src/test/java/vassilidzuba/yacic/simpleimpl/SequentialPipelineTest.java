@@ -18,6 +18,7 @@ package vassilidzuba.yacic.simpleimpl;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class SequentialPipelineTest {
 		p.addAction(new Action1());
 		p.addAction(new Action2());
 		
-		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"), null);
+		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
 		Assertions.assertEquals("ok", ps.getStatus());
 	}
 	
@@ -46,7 +47,7 @@ class SequentialPipelineTest {
 		p.addAction(new BadAction1());
 		p.addAction(new Action2());
 		
-		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"), null);
+		var ps = p.run(null, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
 		Assertions.assertEquals("badaction1:failure", ps.getStatus());
 	}
 }

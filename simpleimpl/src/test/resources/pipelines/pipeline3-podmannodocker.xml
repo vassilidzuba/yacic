@@ -1,30 +1,22 @@
-<pipeline type="sequential" id ="java-build">
+<pipeline type="sequential" id ="pip1">
   <description>Pipeline Three</description>
 
-  <step id="clone" 
+  <step id="step1" 
         category='podman'
         type="clone"
-        subcommand='clone -b "BRANCH" REPO'>
+        subcommand="clone -b BRANCH REPO">
   	<description>clone repository</description>
   </step>
 
-  <step id="build" 
+  <step id="step2" 
         category='podman'
         type="maven"
-        subcommand="mvn clean package javadoc:aggregate-jar">
+        subcommand="mvn clean package javadoc:javadoc">
      <description>build package using maven</description>
   
   </step>
 
-  <step id="sonar" 
-        category='podman'
-        type="maven_sonar"
-        subcommand="">
-     <description>execute sonarqube</description>
-  
-  </step>
-
-  <step id="deploy" 
+  <step id="step3" 
         category='podman'
         type="deploy_javadoc"
         subcommand="">
@@ -32,11 +24,11 @@
   
   </step>
 
-  <step id="build-image" 
+  <step id="step4" 
         category='podman'
         type="build_image"
-        subcommand="">
-     <description>build podman image</description>
+        subcommand=" -t 192.168.0.20:5000/PROJECT:VERSION">
+     <description>build docker image</description>
      <skipwhen>
      	<flag name="NODOCKER"/>
      </skipwhen>

@@ -16,8 +16,6 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +34,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
-import vassilidzuba.yacic.podmanutil.FileAccessUtil;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
 import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
@@ -117,7 +114,7 @@ public class ProjectRunResource {
 		Files.deleteIfExists(logFile);
 		Files.writeString(logFile, "");
 
-		var ps = pipeline.run(pconf, logFile, nodes);
+		var ps = pipeline.run(pconf, logFile, nodes, prconf.getFlags());
 
 		return new RunStatus(ps.getStatus());
 	}

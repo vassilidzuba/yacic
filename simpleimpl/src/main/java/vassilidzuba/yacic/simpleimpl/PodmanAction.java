@@ -23,8 +23,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,15 +32,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionExecutionHandle;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.podmanutil.FileAccessUtil;
 import vassilidzuba.yacic.podmanutil.Podmanutil;
-import vassilidzuba.yacic.simpleimpl.ProjectConfiguration.Property;
 
 @Slf4j
-public class PodmanAction implements Action<SequentialPipelineConfiguration> {
+public class PodmanAction extends AbstractAction {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
 	private Map<String, String> context = new HashMap<>();
@@ -63,7 +61,7 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 
 	@Setter
 	private String subcommand = "";
-
+	
 	@Override
 	public String getId() {
 		return id;
@@ -81,6 +79,7 @@ public class PodmanAction implements Action<SequentialPipelineConfiguration> {
 		log.info("    description : {}", description);
 		log.info("    type        : {}", type);
 		log.info("    subcommand  : {}", subcommand);
+		log.info("    skipwhen    : {}", getSkipWhen().stream().collect(Collectors.joining(" ")));
 		log.info("    properties  :");
 		
 		

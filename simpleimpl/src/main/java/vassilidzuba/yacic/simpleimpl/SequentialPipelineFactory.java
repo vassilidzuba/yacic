@@ -85,10 +85,21 @@ public final class SequentialPipelineFactory {
 		case "description":
 			processStartDescription(xmlsr, ctx);
 			break;
+		case "skipwhen":
+			// ignored
+			break;
+		case "flag":
+			processStartFlag(xmlsr, ctx);
+			break;
 		default:
 			log.error("unexpected element: {}", name);
 		}
 
+	}
+
+	private static void processStartFlag(XMLStreamReader xmlsr, Context ctx) {
+		var flag = xmlsr.getAttributeValue(null, "name");
+		ctx.getStep().getSkipWhen().add(flag);
 	}
 
 	@SuppressWarnings("unused")
@@ -188,9 +199,6 @@ public final class SequentialPipelineFactory {
 		@Setter
 		@Getter
 		private Action<SequentialPipelineConfiguration> step;
-		@Setter
-		@Getter
-		private PodmanAction podmanStep;
 		@Setter
 		@Getter
 		private ArrayDeque<ElementType> elementTypes = new ArrayDeque<>();

@@ -18,8 +18,10 @@ package vassilidzuba.yacic.simpleimpl;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -57,6 +59,8 @@ public class ProjectConfiguration {
 	private String root;
 	@Setter @Getter
 	private String pipeline;
+	@Setter @Getter
+	private Set<String> flags = new HashSet<>();
 	
 	@SneakyThrows
 	public static ProjectConfiguration read(InputStream is)  {

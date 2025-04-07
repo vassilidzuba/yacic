@@ -19,6 +19,7 @@ package vassilidzuba.yacic.model;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 public interface Action<T extends PipelineConfiguration> {
 	
@@ -69,7 +70,14 @@ public interface Action<T extends PipelineConfiguration> {
 	
 	/**
 	 * get the data area.
-	 * @return
+	 * @return the data area path
 	 */
 	Path getDataArea();
+
+	
+	/**
+	 * get the flags that make the pipeline skip the action.
+	 * @return the set of flags
+	 */
+	Set<String> getSkipWhen();
 }
