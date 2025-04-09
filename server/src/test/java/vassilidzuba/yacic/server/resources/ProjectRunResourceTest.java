@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -57,11 +56,20 @@ class ProjectRunResourceTest {
 		pipelines.put(pipeline.getId(), pipeline);
 		
 		String projectDirectory = "target/projects";
+		String logsDirectory = "target/logs";
 
-		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory, null);
+		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory, logsDirectory, 3, null);
 
 		Files.createDirectories(Path.of(projectDirectory).resolve("test"));
-		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), "{\"pipeline\": \"testpipeline\"}");
+		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), """
+				
+				{"pipeline": "testpipeline",
+	             "branches": [
+		               {"name": "main",            "dir": "b0"},
+		               {"name": "feature/initial", "dir": "b1"}
+	              ]
+                }				
+				""");
 
 		var status = prr.run(Optional.of("test"), Optional.empty());
 

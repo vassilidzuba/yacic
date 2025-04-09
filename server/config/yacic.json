@@ -2,7 +2,9 @@
    "pipelineDirectory": "config/pipelines",
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
-   
+   "logsDirectory": "target/logs",
+   "maxNbLogs": 3,
+      
    "nodes": [
       {"host": "odin", "roles": ["git", "java", "golang", "gcc"]}
    ]

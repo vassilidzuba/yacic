@@ -17,11 +17,16 @@
 package vassilidzuba.yacic.simpleimpl;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,10 +35,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Project configuration. 
  */
+@Slf4j
 public class ProjectConfiguration {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
@@ -76,6 +83,28 @@ public class ProjectConfiguration {
 		}
 		
 		return pc;
+	}
+
+	public static ProjectConfiguration readProjectConfiguration(Path path) {
+		try (var is = Files.newInputStream(path)) {
+			return ProjectConfiguration.read(is);
+		} catch (Exception e) {
+			log.error("unable to read project configuration: {}", e.getMessage());
+			return null;
+		}
+	}
+
+
+	public Optional<String> getBranchDir(String branch) {
+		if (StringUtils.isBlank(branch)) {
+			return getBranchDir("main");
+		}
+		var dir = getBranches().get(branch);
+		if (dir != null) {
+			return Optional.of(dir);
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	

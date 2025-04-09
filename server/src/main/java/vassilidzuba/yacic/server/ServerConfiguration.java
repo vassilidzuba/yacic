@@ -50,6 +50,11 @@ public class ServerConfiguration extends Configuration {
 	@NotEmpty
 	private String actionDefinitionDirectory;
 
+	@NotEmpty
+	private String logsDirectory;
+
+	private int maxNbLogs;
+
 	private List<Node> nodes;
 	
 	@JsonIgnore
@@ -118,6 +123,26 @@ public class ServerConfiguration extends Configuration {
 		this.projectDirectory = projectDirectory;
 	}
 	
+	@JsonProperty
+	public String getLogsDirectory() {
+		return logsDirectory;
+	}
+
+	@JsonProperty
+	public void setLogsDirectory(String logsDirectory) {
+		this.logsDirectory = logsDirectory;
+	}
+	
+	@JsonProperty
+	public int getMaxNbLogs() {
+		return maxNbLogs;
+	}
+
+	@JsonProperty
+	public void setMaxNbLogs(int maxNbLogs) {
+		this.maxNbLogs = maxNbLogs;
+	}
+
 	@JsonProperty
 	public List<Node> getNodes() {
 		return nodes;
