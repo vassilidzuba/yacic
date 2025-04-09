@@ -12,13 +12,16 @@ to get the list of the pipelines:
 
     curl -u vassili:sekret http://localhost:8080/yacic/pipelines/list
 
-to run a pipeline (where *foo* is the project name):
+to run a pipeline (where *example1* is the project name):
 
-    curl -u vassili:sekret http://localhost:8080/yacic/project/run?project=foo
+    curl -u vassili:sekret http://localhost:8080/yacic/project/run?project=example1
+    curl -u vassili:sekret "http://localhost:8080/yacic/project/run?project=example1&branch=feature/initial"
     
 to obtain, the log of the run:
 
-    curl -u vassili:sekret http://localhost:8080/yacic/project/log?project=foo
+    curl -u vassili:sekret http://localhost:8080/yacic/project/log?project=example1
+    curl -u vassili:sekret "http://localhost:8080/yacic/project/log?project=example1&branch=feature/initial"
+    curl -u vassili:sekret "http://localhost:8080/yacic/project/log?project=example1&branch=feature/initial&pos=2"
     
 ## Security
 

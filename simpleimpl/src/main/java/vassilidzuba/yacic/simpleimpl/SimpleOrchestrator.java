@@ -19,12 +19,14 @@ package vassilidzuba.yacic.simpleimpl;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Orchestrator;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.model.PipelineStatus;
@@ -35,12 +37,12 @@ public class SimpleOrchestrator implements Orchestrator<SequentialPipelineConfig
 	private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	@Override
-	public void run(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx, Path logFile) {
-		executor.submit(() -> execute(pipeline, pctx, logFile));
+	public void run(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx, Path logFile, List<Node> nodes, Set<String> flags) {
+		executor.submit(() -> execute(pipeline, pctx, logFile, nodes, flags));
 	}
 
-	public void execute(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx, Path logFile) {
-		var ps = pipeline.run(pctx, logFile);
+	public void execute(Pipeline<SequentialPipelineConfiguration> pipeline, SequentialPipelineConfiguration pctx, Path logFile, List<Node> nodes, Set<String> flags) {
+		var ps = pipeline.run(pctx, logFile, nodes, flags);
 		history.add(ps);
 	}
 

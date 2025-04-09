@@ -51,4 +51,21 @@ public class PipelineStatus <T extends PipelineConfiguration> {
 	public PipelineStatus(Pipeline<T> pipeline) {
 		this.pipeline = pipeline;
 	}
+	
+	@Override
+	public String toString() {
+		var sb = new StringBuilder();
+		
+		sb.append("[id=");
+		sb.append(id);
+		sb.append(" status=");
+		sb.append(status);
+		sb.append(" currentStep=");
+		sb.append(currentStep);
+		sb.append(" pipeline=");
+		sb.append(pipeline.getId());
+		sb.append("]");
+			
+		return sb.toString();
+	}
 }

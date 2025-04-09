@@ -14,18 +14,13 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.simpleimpl;
+package vassilidzuba.yacic.podmanutil;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-class ActionTest {
-
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null, null, null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
-	}
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Constants {
+	public static final String DEFAULT_USERNAME = "podman";
+	public static final String YACIC = "yacic";
 }

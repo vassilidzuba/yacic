@@ -2,52 +2,52 @@
 
 	<podmanactiondefinition id="clone">
 		<image>docker.io/alpine/git</image>
-		<host>odin</host>
 		<username>podman</username>
 		<command>--name clone-PROJECT -v ${HOME}:/root -v DATAAREA:/git docker.io/alpine/git</command>
 		<setup>rm -rf DATAAREA/PROJECT; mkdir -p DATAAREA;</setup>
 		<cleanup></cleanup>
+		<role>git</role>
 	</podmanactiondefinition>
 
 
 	<podmanactiondefinition id="maven">
 		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
-		<host>odin</host>
 		<username>podman</username>
 		<command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
+		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="maven_sonar">
 		<image>192.168.0.20:5000/maven-sonar:java21</image>
-		<host>odin</host>
 		<username>podman</username>
 		<command>--name build-PROJECT --secret sonar-token,type=env,target=token -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT 192.168.0.20:5000/maven-sonar:java21</command>
+		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="deploy_javadoc" mode="host">
-		<host>odin</host>
 		<username>podman</username>
 		<command>cp DATAAREA/PROJECT/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
+		<role>java</role>
 	</podmanactiondefinition>
 
-	<podmanactiondefinition id="build_image" mode="host">
-		<host>odin</host>
+	<podmanactiondefinition id="build_image" mode="host" uselocalproperties="true">
 		<username>podman</username>
-		<command>cd DATAAREA/PROJECT;  podman build -f Dockerfile</command>
+		<command>cd DATAAREA/PROJECT;  podman build -t DOCKERTAG -f Dockerfile</command>
+		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_compile">
-		<host>odin</host>
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
 		<command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build  </command>
+		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="gcc_compile">
-		<host>odin</host>
 		<image>docker.io/library/gcc:bookworm</image>
 		<username>podman</username>
 		<command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
+		<role>gcc</role>
 	</podmanactiondefinition>
 
 </podmanactiondefinitions>

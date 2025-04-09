@@ -19,12 +19,22 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <manifestEntries>
+                    <Main-Class>vassilidzuba.yacic.server.ServerApplication</Main-Class>
+                  </manifestEntries>
+                </transformer>
+                <transformer />
+              </transformers>
+            </configuration>
           </execution>
         </executions>
         <configuration>
           <transformers>
             <transformer>
-              <mainClass>vassilidzuba.simple.SimpleApp</mainClass>
+              <mainClass>vassilidzuba.yacic.server.ServerApplication</mainClass>
             </transformer>
           </transformers>
         </configuration>

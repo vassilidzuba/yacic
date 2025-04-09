@@ -37,10 +37,8 @@ class ProjectConfigurationTest {
 			Assertions.assertEquals("/mnt/yacic", pc.getRoot());
 			Assertions.assertEquals("java-build", pc.getPipeline());
 			
-			Assertions.assertEquals("main", pc.getBranches().get("b1"));
-			Assertions.assertEquals("feature/initial", pc.getBranches().get("b2"));
-			
-			Assertions.assertEquals("bar", pc.getProperties().get("foo"));
+			Assertions.assertEquals("b0", pc.getBranches().get("main"));
+			Assertions.assertEquals("b1", pc.getBranches().get("feature/initial"));
 		}
 	}
 }

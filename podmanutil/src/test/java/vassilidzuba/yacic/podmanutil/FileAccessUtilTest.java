@@ -14,18 +14,41 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.simpleimpl;
+package vassilidzuba.yacic.podmanutil;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ActionTest {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+class FileAccessUtilTest {
 
 	@Test
 	void test1() {
-		var a = new Action1();
-		var status = a.run(null, null, null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
+		var s = new FileAccessUtil().readFile("localhost", null, "README.md");
+		
+		Assertions.assertNotNull(s);
+	}
+
+	@Test
+	void test2() {
+		var s = new FileAccessUtil().readFile("localhost", null, "nosuchfile");
+		
+		Assertions.assertNull(s);
+	}
+
+	@Test
+	void test3() {
+		var s = new FileAccessUtil().readFile("odin", "podman", "/mnt/yacic/app/config/yacic.yaml");
+		Assertions.assertNotNull(s);
+		log.info("{}", s);
+	}
+
+
+	@Test
+	void test4() {
+		var s = new FileAccessUtil().readFile("odin", "podman", "/mnt/yacic/app/config/nosuchfile");
+		Assertions.assertNull(s);
 	}
 }

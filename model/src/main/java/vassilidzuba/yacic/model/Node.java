@@ -14,18 +14,28 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.simpleimpl;
+package vassilidzuba.yacic.model;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.List;
 
-class ActionTest {
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null, null, null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+public class Node {
+	@Setter @Getter
+	private String host;
+	@Setter @Getter
+	private List<String> roles;
+	
+	public Node(String host, String... roles) {
+		this.host = host;
+		this.roles = new ArrayList<>();
+		for (var role: roles) {
+			this.roles.add(role);
+		}
 	}
 }

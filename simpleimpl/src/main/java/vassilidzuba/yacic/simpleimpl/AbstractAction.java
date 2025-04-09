@@ -16,16 +16,16 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import java.util.HashSet;
+import java.util.Set;
 
-class ActionTest {
+import lombok.Getter;
+import vassilidzuba.yacic.model.Action;
 
-	@Test
-	void test1() {
-		var a = new Action1();
-		var status = a.run(null, null, null);
-		Assertions.assertEquals("ok", status);
-		Assertions.assertEquals("action1", a.getId());
-	}
+public abstract class AbstractAction implements Action<SequentialPipelineConfiguration>  {
+	
+
+	@Getter
+	private Set<String> skipWhen = new HashSet<>();
+
 }

@@ -27,8 +27,6 @@ public class PodmanActionDefinition {
 	@Setter @Getter
 	private String image;
 	@Setter @Getter
-	private String host;
-	@Setter @Getter
 	private String username;
 	@Setter @Getter
 	private String command;
@@ -36,4 +34,8 @@ public class PodmanActionDefinition {
 	private String setup;
 	@Setter @Getter
 	private String cleanup;
+	@Setter @Getter
+	private String role;
+	@Setter @Getter
+	private boolean uselocalproperties;
 }

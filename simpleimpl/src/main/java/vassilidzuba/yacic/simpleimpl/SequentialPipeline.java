@@ -23,11 +23,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.AbstractPipeline;
 import vassilidzuba.yacic.model.Action;
 import vassilidzuba.yacic.model.ActionStatus;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.PipelineStatus;
 
 @Slf4j
@@ -44,17 +46,23 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 
 	@Override
 	public boolean runNextStep(PipelineStatus<SequentialPipelineConfiguration> ps,
-			SequentialPipelineConfiguration pconfig, Path logFile) {
+			SequentialPipelineConfiguration pconfig, Path logFile, List<Node> nodes, Set<String> flags) {
 		var currentStep = ps.getCurrentStep();
 		var oa = searchAction(currentStep);
 		if (oa.isPresent()) {
 			var a = oa.get();
 			a.setContext(getActionContext());
 			a.setDataArea(getDataArea());
+
+			if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
+				log.warn("action skipped : {}", a.getId());
+				return hasNextAction(a.getId(), ps);
+			}
+
 			String status;
 			try {
 				try (var os = Files.newOutputStream(logFile, StandardOpenOption.APPEND)) {
-					status = a.run(pconfig, os);
+					status = a.run(pconfig, os, nodes);
 				}
 			} catch (Exception e) {
 				log.error("exception during {}", a, e);
@@ -69,18 +77,24 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			setActionContext(a.getContext());
 			if (!"ok".equals(status)) {
 				ps.setStatus(a.getId() + ":" + status);
+				return false;
 			} else {
 				ps.setStatus(status);
-				var nextAction = getNextAction(currentStep);
-				if (!nextAction.isEmpty()) {
-					ps.setCurrentStep(nextAction.get().getId());
-					return true;
-				}
+				return hasNextAction(a.getId(), ps);
 			}
-
 		}
-
+		
 		return false;
+	}
+	
+	private boolean hasNextAction(String currentStep, PipelineStatus<SequentialPipelineConfiguration> ps) {
+		var nextAction = getNextAction(currentStep);
+		if (!nextAction.isEmpty()) {
+			ps.setCurrentStep(nextAction.get().getId());
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private Optional<Action<SequentialPipelineConfiguration>> searchAction(String id) {
@@ -102,16 +116,17 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 	}
 
 	@Override
-	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig, Path logFile) {
+	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig, Path logFile,
+			List<Node> nodes, Set<String> flags) {
 		var ps = initialize(actions.get(0).getId());
 
 		ps.setStartDate(LocalDateTime.now());
 
-		while (runNextStep(ps, pconfig, logFile)) ;
+		while (runNextStep(ps, pconfig, logFile, nodes, flags))
+			;
 
 		ps.setEndDate(LocalDateTime.now());
 
 		return ps;
 	}
-
 }

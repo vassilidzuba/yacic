@@ -18,6 +18,7 @@ package vassilidzuba.yacic.model;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 public interface Orchestrator<T extends PipelineConfiguration>{
 
@@ -26,8 +27,10 @@ public interface Orchestrator<T extends PipelineConfiguration>{
 	 * @param pipeline the pipeline
 	 * @param pconfig the pipeline configuration
 	 * @param logFile the log file
+	 * @param node list of nodes
+	 * @param flags set of flags
 	 */
-	void run(Pipeline<T> pipeline, T pconfig, Path logFile);
+	void run(Pipeline<T> pipeline, T pconfig, Path logFile, List<Node> nodes, Set<String> flags);
 	
 	/**
 	 * retrieve the history;

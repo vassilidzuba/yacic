@@ -16,9 +16,16 @@
 
 package vassilidzuba.yacic.server;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.SneakyThrows;
 
 class ServerConfigurationTest {
 
@@ -50,7 +57,7 @@ class ServerConfigurationTest {
 
 
 	@Test
-	@DisplayName("load actio,n definitions")
+	@DisplayName("load action definitions")
 	void test3() {
 		var sc = new ServerConfiguration();
 		sc.setActionDefinitionDirectory("config/actiondefinitions");
@@ -58,5 +65,27 @@ class ServerConfigurationTest {
 		var ad = sc.getPodmanActionDefinitions();
 		
 		Assertions.assertNotNull(ad.get("go_compile"));
+	}
+	
+	@Test
+	@DisplayName("test deserialization")
+	@SneakyThrows
+	void test4() {
+		var path = Path.of("config/yacic.json");
+		
+		var config = new ObjectMapper().readValue(Files.readAllBytes(path), ServerConfiguration.class);
+		config.loadPipelines();
+		config.loadActionDefinitions();
+		
+		Assertions.assertEquals("config/pipelines",  config.getPipelineDirectory());
+		Assertions.assertEquals("config/projects",  config.getProjectDirectory());
+		Assertions.assertEquals("config/actiondefinitions",  config.getActionDefinitionDirectory());
+		
+		Assertions.assertEquals(3, config.getPipelines().keySet().size());
+		Assertions.assertEquals(7, config.getPodmanActionDefinitions().keySet().size());
+		Assertions.assertEquals(1, config.getNodes().size());
+		Assertions.assertEquals("odin", config.getNodes().get(0).getHost());
+		Assertions.assertEquals(4, config.getNodes().get(0).getRoles().size());
+		Assertions.assertTrue(config.getNodes().get(0).getRoles().contains("git"));
 	}
 }

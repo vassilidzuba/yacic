@@ -18,6 +18,7 @@ package vassilidzuba.yacic.simpleimpl;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +40,7 @@ class SimulatedPipelineTest {
 		Files.createDirectories(dataArea);
 		pipeline.setDataArea(dataArea);
 		
-		o.run(pipeline, null, Files.createTempFile(Path.of("target"), "temp", ".log"));
+		o.run(pipeline, null, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
 		var ostatus = o.shutdown();
 		
 		Assertions.assertTrue(ostatus);

@@ -31,6 +31,7 @@ import com.sshtools.common.util.IOUtils;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 
 @Slf4j
 class PodmanutilTest {
@@ -65,7 +66,10 @@ class PodmanutilTest {
 		var pad = new PodmanActionDefinition();
 		pad.setCommand("docker.io/library/debian:stable");
 		
-		var result = new Podmanutil().runGeneric(properties, pad, "whoami", System.out);
+		var podmanutil = new Podmanutil();
+		podmanutil.addNode(new Node("odin", "shell"));
+		
+		var result = podmanutil.runGeneric(properties, pad, "whoami", System.out, "shell");
 		Assertions.assertEquals("0", result);
 	}
 
@@ -74,8 +78,25 @@ class PodmanutilTest {
 		var properties = new HashMap<String, String>();
 		
 		var pad = new PodmanActionDefinition();
+
+		var podmanutil = new Podmanutil();
+		podmanutil.addNode(new Node("odin", "shell"));
+
+		var result = podmanutil.runHost(properties, pad, "whoami", System.out, "shell");
+		Assertions.assertEquals("0", result);
+	}
+
+
+	@Test
+	void test4() {
+		var properties = new HashMap<String, String>();
 		
-		var result = new Podmanutil().runHost(properties, pad, "whoami", System.out);
+		var pad = new PodmanActionDefinition();
+
+		var podmanutil = new Podmanutil();
+		podmanutil.addNode(new Node("localhost", "shell"));
+
+		var result = podmanutil.runHost(properties, pad, "hostname && echo foo", System.out, "shell");
 		Assertions.assertEquals("0", result);
 	}
 }

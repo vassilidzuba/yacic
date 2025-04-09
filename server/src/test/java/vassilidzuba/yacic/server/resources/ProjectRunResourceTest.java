@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.simpleimpl.BuiltinAction;
@@ -54,11 +56,20 @@ class ProjectRunResourceTest {
 		pipelines.put(pipeline.getId(), pipeline);
 		
 		String projectDirectory = "target/projects";
+		String logsDirectory = "target/logs";
 
-		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory);
+		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory, logsDirectory, 3, null);
 
 		Files.createDirectories(Path.of(projectDirectory).resolve("test"));
-		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), "{\"pipeline\": \"testpipeline\"}");
+		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), """
+				
+				{"pipeline": "testpipeline",
+	             "branches": [
+		               {"name": "main",            "dir": "b0"},
+		               {"name": "feature/initial", "dir": "b1"}
+	              ]
+                }				
+				""");
 
 		var status = prr.run(Optional.of("test"), Optional.empty());
 
@@ -69,7 +80,7 @@ class ProjectRunResourceTest {
 
 	class SpecialAction extends BuiltinAction {
 		@Override
-		public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+		public String run(SequentialPipelineConfiguration pctx, OutputStream os, List<Node> nodes) {
 			log.info("run specialaction");
 			return "ok";
 		}

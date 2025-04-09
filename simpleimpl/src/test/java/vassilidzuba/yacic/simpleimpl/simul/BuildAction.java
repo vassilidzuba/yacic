@@ -18,8 +18,10 @@ package vassilidzuba.yacic.simpleimpl.simul;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.List;
 
 import lombok.SneakyThrows;
+import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.simpleimpl.BuiltinAction;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
@@ -27,7 +29,7 @@ public class BuildAction  extends BuiltinAction {
 
 	@Override
 	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx, OutputStream os) {
+	public String run(SequentialPipelineConfiguration pctx, OutputStream os, List<Node> nodez) {
 		var src = getDataArea().resolve("src/main/java/foo.java");
 		if (! Files.isRegularFile(src)) {
 			return "missingfile";

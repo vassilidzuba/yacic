@@ -100,9 +100,11 @@ public class ServerApplication extends Application<ServerConfiguration> {
 
 	private void initResources(JerseyEnvironment jersey, ServerConfiguration configuration) {
 		jersey.register(new PipelineListResource(configuration.getPipelines()));
-        jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory()));
+        jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory(), configuration.getLogsDirectory(),
+        		configuration.getMaxNbLogs(),
+        		configuration.getNodes()));
         jersey.register(new ProjectListResource(Path.of(configuration.getProjectDirectory())));
-        jersey.register(new ProjectLogResource(Path.of(configuration.getProjectDirectory())));
+        jersey.register(new ProjectLogResource(Path.of(configuration.getProjectDirectory()), Path.of(configuration.getLogsDirectory())));
         jersey.register(new ConfigReloadResource(configuration));
 	}
 }
