@@ -43,12 +43,6 @@ public interface Action<T extends PipelineConfiguration> {
 	 * @return the exit status of the run. Should be "OK" for a sucessfull run. 
 	 */
 	String run(T pconfig, OutputStream os, List<Node> nodes);
-
-	/**
-	 * Executes an action asynchronously.
-	 * @return the handle to the execution. 
-	 */
-	ActionExecutionHandle<T> runAsynchronously();
 	
 	/**
 	 * set the context qs q JSON string.

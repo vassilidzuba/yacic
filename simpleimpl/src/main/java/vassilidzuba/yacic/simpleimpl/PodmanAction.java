@@ -32,7 +32,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.model.ActionExecutionHandle;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.podmanutil.FileAccessUtil;
 import vassilidzuba.yacic.podmanutil.Podmanutil;
@@ -114,11 +113,6 @@ public class PodmanAction extends AbstractAction {
 		} else {
 			return "ko " + exitStatus;
 		}
-	}
-
-	@Override
-	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
-		throw new UnsupportedOperationException("no asynchronous execution yet");
 	}
 
 	@Override
