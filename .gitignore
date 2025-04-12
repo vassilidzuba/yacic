@@ -4,3 +4,5 @@
 target/
 *.log
 *.db
+yacic.json
+*.dat
