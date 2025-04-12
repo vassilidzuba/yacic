@@ -16,7 +16,6 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.nio.file.Files;
 import java.util.List;
 
 import com.codahale.metrics.annotation.Timed;
@@ -27,6 +26,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
+import vassilidzuba.yacic.persistence.PersistenceManager;
+import vassilidzuba.yacic.server.api.ProjectInfo;
 
 /**
  * Resource returning the list of the names of the projects.
@@ -35,15 +36,17 @@ import lombok.SneakyThrows;
 @Produces(MediaType.APPLICATION_JSON)
 @PermitAll
 public class ProjectListResource {
-	private java.nio.file.Path projectDirectory;
+
+	private PersistenceManager pm = new PersistenceManager();
+
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param projectDirectory the list of the projects.
 	 */
-	public ProjectListResource(java.nio.file.Path projectDirectory) {
-		this.projectDirectory = projectDirectory;
+	public ProjectListResource() {
+		//nothing to do
 	}
 	
 	/**
@@ -55,9 +58,29 @@ public class ProjectListResource {
 	@GET
     @Timed
     @SneakyThrows
-    public List<String> listProjects() {
-		try (var st = Files.list(projectDirectory)) {
-			return st.filter(Files::isDirectory).map(java.nio.file.Path::getFileName).map(java.nio.file.Path::toString).toList();
-		}
+    public List<ProjectInfo> listProjects() {
+		
+		var projects = pm.listProjects();
+		
+		var lp = projects.stream().map(this::project2projectinfo).toList();
+		lp.forEach(this::retriveBranches);
+		
+		return lp;
     }
+	
+	private ProjectInfo project2projectinfo(PersistenceManager.Project p) {
+		var pi = new ProjectInfo();
+		pi.setProjectId(p.getProjectId());
+		pi.setRepo(p.getRepo());
+		return pi;
+	}
+	
+	private void retriveBranches(ProjectInfo pi) {
+		var branches = pm.listBranches(pi.getProjectId());
+		branches.stream().forEach(b -> addBranch(pi, b));
+	}
+	
+	private void addBranch(ProjectInfo pi, PersistenceManager.Branch branch) {
+		pi.getBranches().put(branch.getBranchId(), branch.getBranchdir());
+	}
 }

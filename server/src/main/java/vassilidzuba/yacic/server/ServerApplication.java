@@ -107,7 +107,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
         jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory(), configuration.getLogsDirectory(),
         		configuration.getMaxNbLogs(),
         		configuration.getNodes()));
-        jersey.register(new ProjectListResource(Path.of(configuration.getProjectDirectory())));
+        jersey.register(new ProjectListResource());
         jersey.register(new ProjectLogResource(Path.of(configuration.getProjectDirectory()), Path.of(configuration.getLogsDirectory())));
         jersey.register(new ConfigReloadResource(configuration));
 	}
