@@ -18,6 +18,7 @@ package vassilidzuba.yacic.simpleimpl;
 
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Set;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -41,5 +42,10 @@ public class Action2 extends BuiltinAction {
 	@Override
 	public String getDescription() {
 		return "Action Two";
+	}
+	
+	@Override
+	public Set<String> getSkipWhen() {
+		return Set.of("NOACTION2");
 	}
 }

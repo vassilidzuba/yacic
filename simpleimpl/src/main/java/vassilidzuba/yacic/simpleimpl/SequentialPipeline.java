@@ -61,6 +61,7 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 
 			if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
 				log.warn("action skipped : {}", a.getId());
+				pconfig.getStepEventListeners().forEach(l -> l.complete(a.getId(), getActionSeq(a.getId()), "skipped", 0));
 				return hasNextAction(a.getId(), ps);
 			}
 

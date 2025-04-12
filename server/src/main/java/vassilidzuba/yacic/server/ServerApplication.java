@@ -30,6 +30,7 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.server.health.ConfigurationHealthCheck;
+import vassilidzuba.yacic.server.resources.BuildListResource;
 import vassilidzuba.yacic.server.resources.ConfigReloadResource;
 import vassilidzuba.yacic.server.resources.PipelineListResource;
 import vassilidzuba.yacic.server.resources.ProjectListResource;
@@ -103,6 +104,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
 
 
 	private void initResources(JerseyEnvironment jersey, ServerConfiguration configuration) {
+		jersey.register(new BuildListResource());
 		jersey.register(new PipelineListResource(configuration.getPipelines()));
         jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory(), configuration.getLogsDirectory(),
         		configuration.getMaxNbLogs(),
