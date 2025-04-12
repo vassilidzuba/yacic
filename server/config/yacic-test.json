@@ -22,5 +22,11 @@
             "type": "http",
             "port": 0}
             ]
-    }
+    },
+       
+   "database": {
+       "url": "jdbc:h2:mem:;INIT=RUNSCRIPT FROM 'yacic.sql'",
+       "user": "sa",
+       "password": "sa"
+   }
 }

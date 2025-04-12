@@ -16,30 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
-import java.io.OutputStream;
-import java.util.List;
+public interface StepEventListener {
 
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.model.Node;
-
-@Slf4j
-public class Action2 extends BuiltinAction {
-
-	@Override
-	public String getId() {
-		return "action2";
-	}
-
-	@Override
-	@SneakyThrows
-	public String run(SequentialPipelineConfiguration pctx, OutputStream o, List<Node> nodes) {
-		log.info("running {}", getId());
-		return "ok";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Action Two";
-	}
+	void complete(String step, int seq, String status, int duration);
 }

@@ -16,10 +16,13 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
 import vassilidzuba.yacic.model.PipelineConfiguration;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 
@@ -27,4 +30,6 @@ public class SequentialPipelineConfiguration extends PipelineConfiguration {
 	@Getter
 	private Map<String, PodmanActionDefinition> pad = new HashMap<>();
 
+	@Setter @Getter
+	private List<StepEventListener> stepEventListeners = new ArrayList<>();
 }

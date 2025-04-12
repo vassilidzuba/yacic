@@ -32,11 +32,18 @@ public class Jdbc {
 	}
 
 	@SneakyThrows
-	public void store(String sql, String... parameters) {
+	public void store(String sql, Object... parameters) {
 		try (var conn = ds.getConnection();
 			 var pstmt = conn.prepareStatement(sql)) {
 			for (int ii = 0; ii < parameters.length; ii++) {
-				pstmt.setString(ii + 1, parameters[ii]);
+				var param = parameters[ii];
+				if (param instanceof String) {
+					pstmt.setString(ii + 1, String.class.cast(param));
+				} else if (param instanceof Integer) {
+					pstmt.setInt(ii + 1, Integer.class.cast(param));
+				} else {
+					throw new UnexpectedParameterClass("class is " + param.getClass().getName() + ", should be Integer or String");
+				}
 			}
 			pstmt.executeUpdate();
 		}

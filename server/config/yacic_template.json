@@ -10,8 +10,8 @@
    ],
    
    "database": {
-       "url": "jdbc:postgresql://odin:5432/yacic",
-       "user": "yacic",
-       "password": "Gandalf12!"
+       "url": "****",
+       "user": "****",
+       "password": "****"
    }
 }

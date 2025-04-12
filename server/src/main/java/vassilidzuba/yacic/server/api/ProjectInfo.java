@@ -14,15 +14,19 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.model;
+package vassilidzuba.yacic.server.api;
 
-public interface ActionListener<T extends PipelineConfiguration> {
+import java.util.HashMap;
+import java.util.Map;
 
-	/**
-	 * receives the signal of an event.
-	 * 
-	 * @param event the event
-	 * @param a the action handle
-	 */
-	void signalEvent(ActionEvent event, ActionExecutionHandle<T> a);
+import lombok.Getter;
+import lombok.Setter;
+
+public class ProjectInfo {
+	@Setter @Getter
+	private String projectId;
+	@Setter @Getter
+	private String repo;
+	@Setter @Getter
+	private Map<String, String> branches = new HashMap<>();
 }

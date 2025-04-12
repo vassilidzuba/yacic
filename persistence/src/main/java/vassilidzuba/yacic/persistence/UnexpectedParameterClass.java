@@ -14,32 +14,12 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.model;
+package vassilidzuba.yacic.persistence;
 
-public interface ActionExecutionHandle<T extends PipelineConfiguration> {
+public class UnexpectedParameterClass extends RuntimeException {
+	private static final long serialVersionUID = 4347011520205581229L;
 
-	/**
-	 * return the action corresponding to the run.
-	 * @return the action
-	 */
-	Action<T> getAction();
-	
-	/**
-	 * Checks if the run is completed
-	 * @return true is the run is completed.
-	 */
-	boolean isCompleted();
-	
-	/**
-	 * returns the exit status of the action if it is completed or "*running*" otherwise.   
-	 * @return the exit status
-	 */
-	String getExitStatus();
-	
-	
-	/**
-	 * add a listener.
-	 * @param listener the listener
-	 */
-	void addListener(ActionListener<T> listener);
+	public UnexpectedParameterClass(String msg) {
+		super(msg);
+	}
 }

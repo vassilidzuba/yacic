@@ -16,41 +16,44 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.HashMap;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import lombok.SneakyThrows;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.persistence.PersistenceManager;
+
+@Slf4j
 class ProjectListResourceTest {
 
 	@Test
 	@SneakyThrows
 	void test1() {
-		Path dir = Path.of("target/prr");
+		var pm = new PersistenceManager();
+		
+		var branches1 = new HashMap<String, String>();
+		branches1.put("main", "b0");
+		pm.storeProject("p1", "http://odin.manul.lan:3000/vassili/example1.git", branches1);
 
-		Files.deleteIfExists(dir.resolve("p1"));
-		Files.deleteIfExists(dir.resolve("p2"));
-		Files.deleteIfExists(dir);
-	
-		var plr = new ProjectListResource(dir);
+		var branches2 = new HashMap<String, String>();
+		branches2.put("main", "b0");
+		branches2.put("feature/initial", "b1");
+		branches2.put("feature/somethingstrange", "b2");
+		pm.storeProject("p2", "http://odin.manul.lan:3000/vassili/example1.git", branches2);
 		
-		Files.createDirectories(dir);
 		
-		var projects = plr.listProjects();
-		Assertions.assertTrue(projects.isEmpty());
+		var plr = new ProjectListResource();
+		var lp = plr.listProjects();
 		
-		Files.createDirectories(dir.resolve("p1"));
-		projects = plr.listProjects();
-		Assertions.assertEquals(1, projects.size());
-		Assertions.assertEquals("p1", projects.get(0));
+		var json = new ObjectMapper().writeValueAsString(lp);
 		
-		Files.createDirectories(dir.resolve("p2"));
-		projects = plr.listProjects();
-		Assertions.assertEquals(2, projects.size());
-		Assertions.assertEquals("p1", projects.get(0));
-		Assertions.assertEquals("p2", projects.get(1));
+		log.info("ret: {}", json);
+		
+		Assertions.assertTrue(json.contains("p1"));
+		Assertions.assertTrue(json.contains("p2"));		
 	}
 }

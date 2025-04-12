@@ -20,7 +20,6 @@ import java.nio.file.Path;
 
 import lombok.Getter;
 import lombok.Setter;
-import vassilidzuba.yacic.model.ActionExecutionHandle;
 
 /**
  * An action that executes Java code.
@@ -62,10 +61,5 @@ public abstract class BuiltinAction extends AbstractAction {
 	@Override
 	public Path getDataArea()  {
 		return dataArea;
-	}
-	
-	@Override
-	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
-		throw new UnsupportedOperationException("asynchronous action is not implemeted yet");
 	}
 }

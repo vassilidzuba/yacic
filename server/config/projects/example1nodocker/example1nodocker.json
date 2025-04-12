@@ -1,5 +1,5 @@
 {
-	"project": "example1",
+	"project": "example1nodocker",
 	"repo": "http://odin.manul.lan:3000/vassili/example1.git",
 	"root": "/mnt/yacic",
 	

@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
@@ -56,6 +57,7 @@ public class ServerConfiguration extends Configuration {
 	private int maxNbLogs;
 
 	private List<Node> nodes;
+	private DatabaseConfig database;
 	
 	@JsonIgnore
 	@Getter
@@ -153,9 +155,27 @@ public class ServerConfiguration extends Configuration {
 		this.nodes = nodes;
 	}
 	
+	@JsonProperty("database")
+	public DatabaseConfig getDatatabaseConfig() {
+		return database;
+	}
+	
+	@JsonProperty("database")
+	public void setDatabaseConfig(DatabaseConfig database) {
+		this.database = database;
+	}
 	
 	public void reload() {
 		loadPipelines();
 		loadActionDefinitions();
+	}
+	
+	public static class DatabaseConfig {
+		@Setter @Getter
+		private String url;
+		@Setter @Getter
+		private String user;
+		@Setter @Getter
+		private String password;
 	}
 }

@@ -20,7 +20,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.model.ActionExecutionHandle;
 import vassilidzuba.yacic.model.Node;
 
 @Slf4j
@@ -35,11 +34,6 @@ public class BadAction1 extends BuiltinAction {
 	public String run(SequentialPipelineConfiguration pctx, OutputStream o, List<Node> nodes) {
 		log.info("running {}", getId());
 		return "failure";
-	}
-
-	@Override
-	public ActionExecutionHandle<SequentialPipelineConfiguration> runAsynchronously() {
-		throw new UnsupportedOperationException("not supported");
 	}
 
 	@Override
