@@ -33,7 +33,7 @@ class PersistenceManagerTest {
 
 	@BeforeAll
 	static void setup() {
-		PersistenceManager.setDatabasePassword("sa");
+		PersistenceManager.setDatabaseConfig("sa");
 		pm = new PersistenceManager();
 	}
 
@@ -62,10 +62,9 @@ class PersistenceManagerTest {
 		var nobranch = pm.getBranch("example1", "nosuchbranch");
 		Assertions.assertFalse(nobranch.isPresent());
 		
-		pm.storeBuild("example1", "main", "20250512160000");
-		pm.storeBuild("example1", "main", "20250512170000");
-		pm.setStatusBuild("example1", "main", "20250512170000", "OK", 1300);
-		pm.storeBuild("example1", "main", "20250512180000");
+		pm.storeBuild("example1", "main", "20250512160000", "OK", 100);
+		pm.storeBuild("example1", "main", "20250512170000", "OK", 1300);
+		pm.storeBuild("example1", "main", "20250512180000", "OK", 900);
 		
 		var builds = pm.listBuilds("example1", "main");
 		log.info("builds of example1/main : {}", builds);
@@ -77,10 +76,9 @@ class PersistenceManagerTest {
 		var nobuild = pm.getBuild("example1", "main", "10000512170000");
 		Assertions.assertFalse(nobuild.isPresent());
 
-		pm.storeStep("example1", "main", "20250512170000", "clone", 1);
-		pm.storeStep("example1", "main", "20250512170000", "build", 1);
-		pm.setStatusStep("example1", "main", "20250512170000", "build", "OK", 125);
-		pm.storeStep("example1", "main", "20250512170000", "sonar", 1);
+		pm.storeStep("example1", "main", "20250512170000", "clone", 1, "OK", 200);
+		pm.storeStep("example1", "main", "20250512170000", "build", 1, "OK", 300);
+		pm.storeStep("example1", "main", "20250512170000", "sonar", 1, "KO", 400);
 		
 		var steps = pm.listSteps("example1", "main", "20250512170000");
 		log.info("steps of example1/main/20250512170000 : {}", steps);
@@ -88,7 +86,7 @@ class PersistenceManagerTest {
 		var step = pm.getStep("example1", "main", "20250512170000", "build");
 		Assertions.assertTrue(step.isPresent());
 		Assertions.assertEquals("OK", step.get().getStatus());
-		Assertions.assertEquals(125, step.get().getDuration());
+		Assertions.assertEquals(300, step.get().getDuration());
 		var nostep = pm.getStep("example1", "main", "20250512170000", "nosuchstep");
 		Assertions.assertFalse(nostep.isPresent());
 	}
@@ -96,6 +94,6 @@ class PersistenceManagerTest {
 	private void load(Path p) {
 		var configpath = p.resolve(p.getFileName() + ".json");
 		var pc = ProjectConfiguration.readProjectConfiguration(configpath);
-		pm.store(pc);
+		pm.storeProject(pc.getProject(), pc.getRepo(), pc.getBranches());
 	}
 }

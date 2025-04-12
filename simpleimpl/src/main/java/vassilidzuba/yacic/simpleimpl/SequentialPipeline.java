@@ -19,6 +19,7 @@ package vassilidzuba.yacic.simpleimpl;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,11 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			SequentialPipelineConfiguration pconfig, Path logFile, List<Node> nodes, Set<String> flags) {
 		var currentStep = ps.getCurrentStep();
 		var oa = searchAction(currentStep);
+		var ret = false;
+		
 		if (oa.isPresent()) {
+			var start = LocalDateTime.now();
+			
 			var a = oa.get();
 			a.setContext(getActionContext());
 			a.setDataArea(getDataArea());
@@ -77,14 +82,20 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			setActionContext(a.getContext());
 			if (!"ok".equals(status)) {
 				ps.setStatus(a.getId() + ":" + status);
-				return false;
+				ret = false;
 			} else {
 				ps.setStatus(status);
-				return hasNextAction(a.getId(), ps);
+				ret = hasNextAction(a.getId(), ps);
 			}
+			
+			var finish = LocalDateTime.now();
+			var duration = (int) Duration.between(start, finish).toMillis();
+			
+			var st = status;
+			pconfig.getStepEventListeners().forEach(l -> l.complete(a.getId(), getActionSeq(a.getId()), st, duration));
 		}
 		
-		return false;
+		return ret;
 	}
 	
 	private boolean hasNextAction(String currentStep, PipelineStatus<SequentialPipelineConfiguration> ps) {
@@ -114,6 +125,18 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 
 		return Optional.empty();
 	}
+	
+
+	private int getActionSeq(String id) {
+		for (int ii = 0; ii < actions.size(); ii++) {
+			if (id.equals(actions.get(ii).getId())) {
+				return ii;
+			}
+		}
+
+		return -1;
+	}
+
 
 	@Override
 	public PipelineStatus<SequentialPipelineConfiguration> run(SequentialPipelineConfiguration pconfig, Path logFile,

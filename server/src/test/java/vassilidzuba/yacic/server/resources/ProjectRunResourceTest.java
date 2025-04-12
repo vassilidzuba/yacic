@@ -63,7 +63,9 @@ class ProjectRunResourceTest {
 		Files.createDirectories(Path.of(projectDirectory).resolve("test"));
 		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), """
 				
-				{"pipeline": "testpipeline",
+				{"project": "test",
+				 "repo": "http://gitea.com/test.git",
+				 "pipeline": "testpipeline",
 	             "branches": [
 		               {"name": "main",            "dir": "b0"},
 		               {"name": "feature/initial", "dir": "b1"}

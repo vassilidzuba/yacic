@@ -16,20 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public interface StepEventListener {
 
-import lombok.Getter;
-import lombok.Setter;
-import vassilidzuba.yacic.model.PipelineConfiguration;
-import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
-
-public class SequentialPipelineConfiguration extends PipelineConfiguration {
-	@Getter
-	private Map<String, PodmanActionDefinition> pad = new HashMap<>();
-
-	@Setter @Getter
-	private List<StepEventListener> stepEventListeners = new ArrayList<>();
+	void complete(String step, int seq, String status, int duration);
 }

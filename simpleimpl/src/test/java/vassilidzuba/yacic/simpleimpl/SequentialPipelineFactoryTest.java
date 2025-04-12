@@ -39,7 +39,8 @@ class SequentialPipelineFactoryTest {
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline1.xml")) {
 			var pipeline = SequentialPipelineFactory.parse(is);
 			
-			var ps = pipeline.run(null, Files.createTempFile(Path.of("target"), "test", ".log"), null, null);
+			var pconfig = new SequentialPipelineConfiguration();
+			var ps = pipeline.run(pconfig, Files.createTempFile(Path.of("target"), "test", ".log"), null, null);
 			
 			Assertions.assertEquals("ok", ps.getStatus());
 		}
@@ -52,7 +53,8 @@ class SequentialPipelineFactoryTest {
 		try (var is = classloader.getResourceAsStream("pipelines/pipeline2.xml")) {
 			var pipeline = SequentialPipelineFactory.parse(is);
 			
-			var ps = pipeline.run(null, Files.createTempFile(Path.of("target"), "test", ".log"), null, null);
+			var pconfig = new SequentialPipelineConfiguration();
+			var ps = pipeline.run(pconfig, Files.createTempFile(Path.of("target"), "test", ".log"), null, null);
 			
 			Assertions.assertEquals("badaction1:failure", ps.getStatus());
 		}

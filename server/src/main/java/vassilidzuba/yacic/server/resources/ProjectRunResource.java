@@ -18,6 +18,7 @@ package vassilidzuba.yacic.server.resources;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -37,10 +38,12 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
+import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.server.api.RunStatus;
 import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
+import vassilidzuba.yacic.simpleimpl.StepEventListener;
 
 /**
  * Resource executing a pipeline on a specific project.
@@ -57,6 +60,8 @@ public class ProjectRunResource {
 	private int maxNbLogs;
 	private List<Node> nodes;
 
+	private PersistenceManager pm = new PersistenceManager();
+	
 	/**
 	 * Constructor.
 	 * 
@@ -87,8 +92,12 @@ public class ProjectRunResource {
 	@SneakyThrows
 	public RunStatus run(@QueryParam("project") Optional<String> oproject,
 			@QueryParam("branch") Optional<String> obranch) {
+		
+		var start = LocalDateTime.now();
+				
 		var branch = obranch.orElse("main");
-
+		var timestamp = getTimeStamp();
+		
 		if (oproject.isEmpty()) {
 			return new RunStatus("noname");
 		}
@@ -105,6 +114,10 @@ public class ProjectRunResource {
 		if (prconf == null) {
 			return new RunStatus("bad project config");
 		}
+		var branchDir = prconf.getBranchDir(branch).orElseThrow(() -> new WebApplicationException("no branch " + branch + " for project " + project, 404));
+		
+		storeProject(prconf);
+		storeBranch(prconf.getProject(), branch, branchDir);
 
 		var pconf = new SequentialPipelineConfiguration();
 		pconf.getProperties().putAll(prconf.getProperties());
@@ -112,7 +125,6 @@ public class ProjectRunResource {
 		pconf.getProperties().put("REPO", prconf.getRepo());
 		pconf.getProperties().put("ROOT", prconf.getRoot());
 		pconf.getProperties().put("BRANCH", branch);
-		var branchDir = prconf.getBranchDir(branch).orElseThrow(() -> new WebApplicationException("no branch " + branch + " for project " + project, 404));
 		
 		pconf.getProperties().put("BRANCHDIR", branchDir);
 		pconf.getProperties().put("DATAAREA",
@@ -123,17 +135,43 @@ public class ProjectRunResource {
 
 		var pipeline = pipelines.get(prconf.getPipeline());
 
-		var logFile = Path.of(logsDirectory).resolve(project).resolve(project + "_" + branchDir + "_" + getTimeStamp() + ".log");
+		var logFile = Path.of(logsDirectory).resolve(project).resolve(project + "_" + branchDir + "_" + timestamp + ".log");
 		Files.createDirectories(logFile.getParent());
 		
 		Files.deleteIfExists(logFile);
 		Files.writeString(logFile, "");
 
+		pconf.getStepEventListeners().add(new StepEndListener(project, branch, timestamp));
+		
 		var ps = pipeline.run(pconf, logFile, nodes, prconf.getFlags());
 
 		cleanupLogs(project, branchDir);
 		
-		return new RunStatus(ps.getStatus());
+		var status = ps.getStatus();
+		
+		var finish = LocalDateTime.now();
+		var duration = Duration.between(start, finish).toMillis();
+		
+		storeBuild(project, branch, timestamp, status, (int) duration);
+		
+		return new RunStatus(status);
+	}
+
+	private void storeProject(ProjectConfiguration prconf) {
+		if (pm.getProject(prconf.getProject()).isEmpty()) {
+			pm.storeProject(prconf.getProject(), prconf.getRepo(), prconf.getBranches());
+		}
+		
+	}
+
+	private void storeBranch(String project, String branch, String branchdir) {
+		if (pm.getBranch(project, branch).isEmpty()) {
+			pm.storeBranch(project, branch, branchdir);
+		}
+	}
+	
+	private void storeBuild(String project, String branch, String timestamp, String status, int duration) {
+		pm.storeBuild(project, branch, timestamp, status, duration);		
 	}
 
 	@SneakyThrows
@@ -156,5 +194,22 @@ public class ProjectRunResource {
 
 	private String getTimeStamp() {
 		return DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now());
+	}
+	
+	class StepEndListener implements StepEventListener {
+		private String project;
+		private String branch;
+		private String timestamp; 
+		
+		public StepEndListener(String project, String branch, String timestamp) {
+			this.project = project;
+			this.branch = branch;
+			this.timestamp = timestamp;
+		}
+
+		@Override
+		public void complete(String step, int seq, String status, int duration) {
+			pm.storeStep(project, branch, timestamp, step, seq, status, duration);
+		}
 	}
 }

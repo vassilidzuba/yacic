@@ -28,6 +28,7 @@ import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.server.health.ConfigurationHealthCheck;
 import vassilidzuba.yacic.server.resources.ConfigReloadResource;
 import vassilidzuba.yacic.server.resources.PipelineListResource;
@@ -80,6 +81,9 @@ public class ServerApplication extends Application<ServerConfiguration> {
 	public void run(ServerConfiguration configuration, Environment environment) throws Exception {
 		YacicSecurity.init(Path.of("config/security.json"));
 		
+		var databaseConfig = configuration.getDatatabaseConfig();
+		PersistenceManager.setDatabaseConfig(databaseConfig.getUrl(), databaseConfig.getUser(), databaseConfig.getPassword());
+
 		configuration.loadPipelines();
 		configuration.loadActionDefinitions();
 		
@@ -95,7 +99,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
         // to run health checks: curl http://localhost:8081/healthcheck
         var healthCheck = new ConfigurationHealthCheck(configuration);
         environment.healthChecks().register("config", healthCheck);
-	}
+ 	}
 
 
 	private void initResources(JerseyEnvironment jersey, ServerConfiguration configuration) {

@@ -35,13 +35,14 @@ class SimpleOrchestratorTest {
 		var p = new SequentialPipeline("seq1");
 		p.addAction(new Action1());
 		p.addAction(new Action2());
-		o.run(p, null, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
+		var pconfig= new SequentialPipelineConfiguration();
+		o.run(p, pconfig, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
 
 		var p2 = new SequentialPipeline("seq2");
 		p2.addAction(new Action1());
 		p2.addAction(new BadAction1());
 		p2.addAction(new Action2());
-		o.run(p2, null, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
+		o.run(p2, pconfig, Files.createTempFile(Path.of("target"), "temp", ".log"), null, new HashSet<>());
 		
 		var ostatus = o.shutdown();
 		
