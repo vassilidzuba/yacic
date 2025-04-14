@@ -15,13 +15,13 @@
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>persistence</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>simpleimpl</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

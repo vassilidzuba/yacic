@@ -17,19 +17,18 @@
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>model</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>simpleimpl</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>5.1.0</version>
 		</dependency>
 
 		<dependency>

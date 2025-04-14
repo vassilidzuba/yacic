@@ -32,13 +32,13 @@
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>model</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>podmanutil</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
