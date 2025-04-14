@@ -6,3 +6,4 @@ target/
 *.db
 yacic.json
 *.dat
+.flattened-pom.xml
