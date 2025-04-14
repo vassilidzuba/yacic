@@ -30,11 +30,13 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.server.health.ConfigurationHealthCheck;
+import vassilidzuba.yacic.server.resources.BuildListResource;
 import vassilidzuba.yacic.server.resources.ConfigReloadResource;
 import vassilidzuba.yacic.server.resources.PipelineListResource;
 import vassilidzuba.yacic.server.resources.ProjectListResource;
 import vassilidzuba.yacic.server.resources.ProjectLogResource;
 import vassilidzuba.yacic.server.resources.ProjectRunResource;
+import vassilidzuba.yacic.server.resources.StepListResource;
 import vassilidzuba.yacic.server.security.User;
 import vassilidzuba.yacic.server.security.YacicAuthenticator;
 import vassilidzuba.yacic.server.security.YacicAuthorizer;
@@ -103,6 +105,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
 
 
 	private void initResources(JerseyEnvironment jersey, ServerConfiguration configuration) {
+		jersey.register(new BuildListResource());
 		jersey.register(new PipelineListResource(configuration.getPipelines()));
         jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory(), configuration.getLogsDirectory(),
         		configuration.getMaxNbLogs(),
@@ -110,5 +113,6 @@ public class ServerApplication extends Application<ServerConfiguration> {
         jersey.register(new ProjectListResource());
         jersey.register(new ProjectLogResource(Path.of(configuration.getProjectDirectory()), Path.of(configuration.getLogsDirectory())));
         jersey.register(new ConfigReloadResource(configuration));
+        jersey.register(new StepListResource());
 	}
 }
