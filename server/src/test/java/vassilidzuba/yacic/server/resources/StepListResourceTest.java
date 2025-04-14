@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.persistence.PersistenceManager;
 
 @Slf4j
-class BuildListResourceTest {
+class StepListResourceTest {
 
 	@Test
 	@SneakyThrows
@@ -41,18 +41,22 @@ class BuildListResourceTest {
 		pm.storeProject("p101", "http://somewhere", branches);
 		
 		pm.storeBuild("p101", "main", "20250306122706", "OK", 1280);
-		pm.storeBuild("p101", "main", "20250307122706", "OK", 1380);
-		pm.storeBuild("p101", "main", "20250308122706", "KO:build 3", 1480);
-		pm.storeBuild("p101", "main", "20250309122706", "OK", 1580);
+
+		pm.storeStep("p101", "main", "20250306122706", "clone", 1, "OK", 1212);
+		pm.storeStep("p101", "main", "20250306122706", "build", 1, "OK", 1519);
 		
-		var blr = new BuildListResource();
+		var slr = new StepListResource();
 		
-		var bl = blr.listBuilds(Optional.of("p101"), Optional.of("main"));
+		var sl = slr.listSteps(Optional.of("p101"), Optional.of("main"), Optional.of("20250306122706"));
 		
-		var json = new ObjectMapper().writeValueAsString(bl);
+		Assertions.assertEquals(2, sl.size());
+		Assertions.assertEquals("clone", sl.get(0).getStepId());
+		
+		var json = new ObjectMapper().writeValueAsString(sl);
 		
 		log.info("ret: {}", json);
 		
 		Assertions.assertTrue(json.contains("p101"));
 	}
+
 }

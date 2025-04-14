@@ -36,6 +36,7 @@ import vassilidzuba.yacic.server.resources.PipelineListResource;
 import vassilidzuba.yacic.server.resources.ProjectListResource;
 import vassilidzuba.yacic.server.resources.ProjectLogResource;
 import vassilidzuba.yacic.server.resources.ProjectRunResource;
+import vassilidzuba.yacic.server.resources.StepListResource;
 import vassilidzuba.yacic.server.security.User;
 import vassilidzuba.yacic.server.security.YacicAuthenticator;
 import vassilidzuba.yacic.server.security.YacicAuthorizer;
@@ -112,5 +113,6 @@ public class ServerApplication extends Application<ServerConfiguration> {
         jersey.register(new ProjectListResource());
         jersey.register(new ProjectLogResource(Path.of(configuration.getProjectDirectory()), Path.of(configuration.getLogsDirectory())));
         jersey.register(new ConfigReloadResource(configuration));
+        jersey.register(new StepListResource());
 	}
 }
