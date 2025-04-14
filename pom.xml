@@ -44,6 +44,50 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>io.dropwizard</groupId>
+				<artifactId>dropwizard-bom</artifactId>
+				<version>4.0.13</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>2.3.232</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>42.7.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.17.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sshtools</groupId>
+				<artifactId>maverick-synergy-client</artifactId>
+				<version>3.1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sshtools</groupId>
+				<artifactId>maverick-sshagent</artifactId>
+				<version>3.1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sshtools</groupId>
+				<artifactId>maverick-sshagent-named-pipes</artifactId>
+				<version>3.1.2</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
 				<version>2.18.3</version>
@@ -73,6 +117,12 @@
 				<version>1.18.36</version>
 			</dependency>
 
+			<!-- plugins -->
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
