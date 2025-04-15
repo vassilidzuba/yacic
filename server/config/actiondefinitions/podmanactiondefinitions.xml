@@ -36,10 +36,17 @@
 		<role>java</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="go_tidy">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go mod tidy </command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="go_compile">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build  </command>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build -o PROJECT MAIN </command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
