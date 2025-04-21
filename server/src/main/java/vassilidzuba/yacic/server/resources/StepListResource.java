@@ -54,7 +54,7 @@ public class StepListResource {
 			@QueryParam("branch") Optional<String> obranch, @QueryParam("timestamp") Optional<String> otimestamp) {
 		
 		var project = oproject.orElseThrow(() -> new WebApplicationException("missing project name parameter", 400));
-		var branch = obranch.orElseThrow(() -> new WebApplicationException("missing branch name parameter", 400));
+		var branch =  obranch.orElse("main");
 		var timestamp = otimestamp.orElseThrow(() -> new WebApplicationException("missing timestamp parameter", 400));
 		
 		var pm = new PersistenceManager();
