@@ -31,14 +31,32 @@ class ProjectConfigurationTest {
 	void test1() {
 		try (var is = Files.newInputStream(Path.of("../server/config/projects/example1/example1.json"))) {
 			var pc = ProjectConfiguration.read(is);
-			
+
 			Assertions.assertEquals("example1", pc.getProject());
 			Assertions.assertEquals("http://odin.manul.lan:3000/vassili/example1.git", pc.getRepo());
 			Assertions.assertEquals("/mnt/yacic", pc.getRoot());
 			Assertions.assertEquals("java-build", pc.getPipeline());
-			
+
 			Assertions.assertEquals("b0", pc.getBranches().get("main"));
 			Assertions.assertEquals("b1", pc.getBranches().get("feature/initial"));
 		}
+	}
+
+	@Test
+	@SneakyThrows
+	void test2() {
+		var pc = ProjectConfiguration
+				.readProjectConfiguration(Path.of("../server/config/projects/example1/example1.json"));
+
+		
+		Assertions.assertEquals("example1", pc.getProject());
+		Assertions.assertEquals("http://odin.manul.lan:3000/vassili/example1.git", pc.getRepo());
+		Assertions.assertEquals("/mnt/yacic", pc.getRoot());
+		Assertions.assertEquals("java-build", pc.getPipeline());
+
+		Assertions.assertEquals("b0", pc.getBranches().get("main"));
+		Assertions.assertEquals("b1", pc.getBranches().get("feature/initial"));
+
+		Assertions.assertEquals("b1", pc.getBranchDir("feature/initial").get());
 	}
 }
