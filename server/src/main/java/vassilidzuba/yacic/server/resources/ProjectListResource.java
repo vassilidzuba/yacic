@@ -27,6 +27,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import vassilidzuba.yacic.persistence.PersistenceManager;
+import vassilidzuba.yacic.server.api.BranchInfo;
 import vassilidzuba.yacic.server.api.ProjectInfo;
 
 /**
@@ -77,10 +78,10 @@ public class ProjectListResource {
 	
 	private void retriveBranches(ProjectInfo pi) {
 		var branches = pm.listBranches(pi.getProjectId());
-		branches.stream().forEach(b -> addBranch(pi, b));
+		branches.stream().sorted((a,b) -> a.getBranchdir().compareTo(b.getBranchdir())).forEach(b -> addBranch(pi, b));
 	}
 	
 	private void addBranch(ProjectInfo pi, PersistenceManager.Branch branch) {
-		pi.getBranches().put(branch.getBranchId(), branch.getBranchdir());
+		pi.getBranches().add(new BranchInfo(branch.getBranchId(), branch.getBranchdir()));
 	}
 }

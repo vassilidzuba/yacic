@@ -99,7 +99,7 @@ public class ProjectRunResource {
 		var timestamp = getTimeStamp();
 		
 		if (oproject.isEmpty()) {
-			return new RunStatus("noname");
+			throw new WebApplicationException("missing project name parameter", 400);
 		}
 		
 		var project = oproject.get();
@@ -107,12 +107,12 @@ public class ProjectRunResource {
 		Path pdir = Path.of(projectsDirectory).resolve(project);
 		var path = pdir.resolve(project + ".json");
 		if (!Files.isReadable(path)) {
-			return new RunStatus("noexist");
+			throw new WebApplicationException("project config does not exist", 400);
 		}
 
 		var prconf = ProjectConfiguration.readProjectConfiguration(path);
 		if (prconf == null) {
-			return new RunStatus("bad project config");
+			throw new WebApplicationException("project config does not readable", 400);
 		}
 		var branchDir = prconf.getBranchDir(branch).orElseThrow(() -> new WebApplicationException("no branch " + branch + " for project " + project, 404));
 		
@@ -154,7 +154,7 @@ public class ProjectRunResource {
 		
 		storeBuild(project, branch, timestamp, status, (int) duration);
 		
-		return new RunStatus(status);
+		return new RunStatus(project, branch, timestamp, status, (int) duration);
 	}
 
 	private void storeProject(ProjectConfiguration prconf) {
