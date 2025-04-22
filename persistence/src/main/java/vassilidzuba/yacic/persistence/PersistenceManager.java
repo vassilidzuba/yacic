@@ -171,7 +171,7 @@ public class PersistenceManager {
 
 	public List<Step> listSteps(String project, String branch, String timestamp) {
 		return init().select(
-				"select project_id, branch_id, timestamp, step_id, seq, status, duration from steps where project_id=? and branch_id=? and timestamp=? order by seq desc",
+				"select project_id, branch_id, timestamp, step_id, seq, status, duration from steps where project_id=? and branch_id=? and timestamp=? order by seq asc",
 				new StepMapper(), project, branch, timestamp);
 	}
 

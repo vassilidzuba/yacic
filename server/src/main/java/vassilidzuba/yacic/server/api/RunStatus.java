@@ -16,6 +16,9 @@
 
 package vassilidzuba.yacic.server.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.Getter;
 
 /**
@@ -23,15 +26,32 @@ import lombok.Getter;
  * This is the return value of the resource ProjectRunResource.
  */
 public class RunStatus {
+	@JsonInclude(Include.NON_NULL)
+	@Getter
+	private String projectId;
+	@JsonInclude(Include.NON_NULL)
+	@Getter
+	private String branchId;
+	@JsonInclude(Include.NON_NULL)
+	@Getter
+	private String timestamp;
+	@JsonInclude(Include.NON_NULL)
 	@Getter
 	private String status;
+	@JsonInclude(Include.NON_NULL)
+	@Getter
+	private int duration;
 	
-	public RunStatus(String status) {
+	public RunStatus(String projectId, String branchId, String timestamp, String status, int duration) {
+		this.projectId = projectId;
+		this.branchId = branchId;
+		this.timestamp = timestamp;
 		this.status = status;
+		this.duration = duration;
 	}
 	
 	@Override
 	public String toString() {
-		return "[RunStatus status:" + status + "]";
+		return "[RunStatus " + projectId + " " + branchId + " timestamp:" + timestamp + " status:" + status + " duration:" + duration + "]";
 	}
 }

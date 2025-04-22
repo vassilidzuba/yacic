@@ -155,6 +155,12 @@ public final class SequentialPipelineFactory {
 		case "description":
 			processEndDescription(xmlsr, ctx);
 			break;
+		case "skipwhen":
+			// ignored
+			break;
+		case "flag":
+			// ignored
+			break;
 		default:
 			log.error("unexpected element: {}", name);
 		}

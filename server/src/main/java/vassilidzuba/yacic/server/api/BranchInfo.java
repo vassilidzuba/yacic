@@ -16,17 +16,17 @@
 
 package vassilidzuba.yacic.server.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
-public class ProjectInfo {
+public class BranchInfo {
 	@Setter @Getter
-	private String projectId;
+	private String branchId;
 	@Setter @Getter
-	private String repo;
-	@Setter @Getter
-	private List<BranchInfo> branches = new ArrayList<>();
+	private String branchDir;
+	
+	public BranchInfo(String branchId, String branchDir) {
+		this.branchId = branchId;
+		this.branchDir = branchDir;
+	}
 }

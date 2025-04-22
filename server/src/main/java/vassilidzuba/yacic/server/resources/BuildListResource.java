@@ -54,7 +54,7 @@ public class BuildListResource {
 			@QueryParam("branch") Optional<String> obranch) {
 		
 		var project = oproject.orElseThrow(() -> new WebApplicationException("missing project name parameter", 400));
-		var branch = obranch.orElseThrow(() -> new WebApplicationException("missing branch name parameter", 400));
+		var branch = obranch.orElse("main");
 		
 		var pm = new PersistenceManager();
 		
