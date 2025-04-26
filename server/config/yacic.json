@@ -3,7 +3,7 @@
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
    "logsDirectory": "\\\\192.168.0.19\\yacic\\logs",
-   "maxNbLogs": 3,
+   "maxNbLogs": 5,
       
    "nodes": [
       {"host": "odin", "roles": ["git", "java", "golang", "gcc"]}

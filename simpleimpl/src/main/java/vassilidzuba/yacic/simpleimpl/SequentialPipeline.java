@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -68,7 +69,9 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			String status;
 			try {
 				try (var os = Files.newOutputStream(logFile, StandardOpenOption.APPEND)) {
+					os.write(("*** starting action " + a.getId() + "\n").getBytes(StandardCharsets.UTF_8));
 					status = a.run(pconfig, os, nodes);
+					os.write(("*** action " + a.getId() + " completed with status " + status + "\n").getBytes(StandardCharsets.UTF_8));
 				}
 			} catch (Exception e) {
 				log.error("exception during {}", a, e);

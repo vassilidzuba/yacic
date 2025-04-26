@@ -17,10 +17,10 @@ to run a pipeline (where *example1* is the project name):
     curl -u vassili:sekret http://localhost:8080/yacic/project/run?project=example1
     curl -u vassili:sekret "http://localhost:8080/yacic/project/run?project=example1&branch=feature/initial"
     
-to obtain, the log of the build (defazul branch is *main*):
+to obtain, the log of the build (defautl branch is *main*):
 
-    curl -u vassili:sekret "http://localhost:8080/yacic/build/log?project=example1&timestamp="
-    curl -u vassili:sekret "http://localhost:8080/yacic/build/log?project=example1&branch=feature/initial&timestamp="
+    curl -u vassili:sekret "http://localhost:8080/yacic/build/log?project=example1&timestamp=20250426140427"
+    curl -u vassili:sekret "http://localhost:8080/yacic/build/log?project=example1&branch=feature/initial&timestamp=20250426140427"
     
 ## Security
 
