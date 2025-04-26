@@ -2,7 +2,7 @@
    "pipelineDirectory": "config/pipelines",
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
-   "logsDirectory": "target/logs",
+   "logsDirectory": "\\\\192.168.0.19\\yacic\\logs",
    "maxNbLogs": 3,
       
    "nodes": [

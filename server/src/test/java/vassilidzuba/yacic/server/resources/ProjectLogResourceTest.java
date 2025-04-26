@@ -48,7 +48,7 @@ class ProjectLogResourceTest {
 		
 		createLog(dir, "p1", "p1_b1_20260402132452", "bar");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
 		Assertions.assertEquals("foo3", plr.getLog(Optional.of("p1"), Optional.empty(), Optional.empty()));
 		Assertions.assertEquals("foo3", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.empty()));
@@ -109,7 +109,7 @@ class ProjectLogResourceTest {
 	@SneakyThrows
 	@DisplayName("when no project is specified")
 	void test2() {
-		var plr = new ProjectLogResource(null, null);
+		var plr = new BuildLogResource(null, null);
 		Optional<String> empty = Optional.empty();
 
 		var e1 = Assertions.assertThrows(WebApplicationException.class, () -> {
@@ -125,7 +125,7 @@ class ProjectLogResourceTest {
 		Path pdir = Path.of("target/projects");
 		Path dir = Path.of("target/logs");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
 		cleanup(pdir);
 		cleanup(dir);
@@ -152,7 +152,7 @@ class ProjectLogResourceTest {
 
 		createBadProject(pdir, "p1");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
 		Optional<String> empty = Optional.empty();
 		Optional<String> op1 = Optional.of("p1");
@@ -179,7 +179,7 @@ class ProjectLogResourceTest {
 
 		createProject(pdir, "p1");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
 		Optional<String> empty = Optional.empty();
 		Optional<String> op1 = Optional.of("p1");
@@ -208,7 +208,7 @@ class ProjectLogResourceTest {
 
 		createProject(pdir, "p1");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
 		Optional<String> empty = Optional.empty();
 		Optional<String> op1 = Optional.of("p1");

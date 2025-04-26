@@ -1,0 +1,15 @@
+{
+	"project": "yacictfe",
+	"repo": "https://github.com/vassilidzuba/yacictfe.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "go-build",
+	"branches": [
+		{"name": "main",            "dir": "b0"},
+		{"name": "feature/initial", "dir": "b1"}
+	],
+		"properties": [
+		{"key": "MAIN", "value": "cmd/main.go"}
+	]
+	
+}
