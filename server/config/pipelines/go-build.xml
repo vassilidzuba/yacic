@@ -16,6 +16,14 @@
   
   </step>
 
+  <step id="lint" 
+        category='podman'
+        type="go_lint"
+        subcommand="">
+     <description>lint the project</description>
+  
+  </step>
+
   <step id="build" 
         category='podman'
         type="go_compile"

@@ -8,7 +8,7 @@
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}
 	],
-		"properties": [
+	"properties": [
 		{"key": "MAIN", "value": "main/main.go"}
 	]
 	

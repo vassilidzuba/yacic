@@ -7,5 +7,8 @@
 	"branches": [
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}
+	],
+	"properties": [
+		{"key": "MAIN", "value": "hello.go"}
 	]
 }

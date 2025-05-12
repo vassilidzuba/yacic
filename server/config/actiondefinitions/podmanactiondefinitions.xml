@@ -43,6 +43,13 @@
 		<role>golang</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="go_lint">
+		<image>192.168.0.20:5000/golang-lint:2.1.6</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp 192.168.0.20:5000/golang-lint:2.1.6 run</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="go_compile">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
