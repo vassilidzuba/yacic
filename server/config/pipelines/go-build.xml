@@ -4,7 +4,7 @@
   <step id="clone" 
         category='podman'
         type="clone"
-        subcommand="clone REPO">
+        subcommand="clone --branch BRANCH REPO">
   	<description>clone repository</description>
   </step>
 
