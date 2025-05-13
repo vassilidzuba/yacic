@@ -31,6 +31,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
 
 /**
@@ -68,7 +69,7 @@ public class BuildLogResource {
 			@QueryParam("branch") Optional<String> obranch, @QueryParam("timestamp") Optional<String> otimestamp) {
 
 		var project = oproject.orElseThrow(() -> new WebApplicationException("project not specified", 400));
-		var timestamp = otimestamp.orElseThrow(() -> new WebApplicationException("timestamp not specified", 400));
+		var timestamp = otimestamp.orElse(null);
 
 		Path pdir = projectsDirectory.resolve(project);
 		var path = pdir.resolve(project + ".json");
@@ -88,7 +89,7 @@ public class BuildLogResource {
 		var dir = logsDirectory.resolve(project);
 
 		if (Files.isDirectory(dir)) {
-			var filename = project + "_" + branchdir + "_" + timestamp + ".log";
+			var filename = project + "_" + branchdir + "_" + getTimestamp(project, branch, timestamp) + ".log";
 			var log = dir.resolve(filename);
 			if (Files.isReadable(log)) {
 				return Files.readString(log, StandardCharsets.UTF_8);
@@ -98,5 +99,19 @@ public class BuildLogResource {
 		}
 
 		throw new WebApplicationException("no log directory :" + dir, 404);
+	}
+
+	private String getTimestamp(String project, String branch, String timestamp) {
+		if (timestamp == null) {
+			var pm = new PersistenceManager();
+			var builds = pm.listBuilds(project, branch);
+			if (! builds.isEmpty()) {
+				return builds.get(0).getTimestamp();
+			} else {
+				return "xxx";
+			}
+		} else {
+			return timestamp;
+		}
 	}
 }
