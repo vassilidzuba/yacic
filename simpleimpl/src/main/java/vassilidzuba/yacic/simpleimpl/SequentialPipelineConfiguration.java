@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,9 @@ public class SequentialPipelineConfiguration extends PipelineConfiguration {
 	@Getter
 	private Map<String, PodmanActionDefinition> pad = new HashMap<>();
 
+	@Setter @Getter
+	private Path scriptDirectory;
+	
 	@Setter @Getter
 	private List<StepEventListener> stepEventListeners = new ArrayList<>();
 }

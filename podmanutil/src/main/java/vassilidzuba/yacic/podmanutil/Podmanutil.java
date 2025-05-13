@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +34,11 @@ import com.sshtools.agent.client.SshAgentClient;
 import com.sshtools.client.ExternalKeyAuthenticator;
 import com.sshtools.client.SshClient;
 import com.sshtools.client.SshClient.SshClientBuilder;
+import com.sshtools.client.sftp.SftpClient;
+import com.sshtools.client.sftp.SftpClient.SftpClientBuilder;
 import com.sshtools.client.tasks.CommandTask.CommandTaskBuilder;
 import com.sshtools.client.tasks.Task;
+import com.sshtools.common.sftp.PosixPermissions.PosixPermissionsBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -100,8 +105,30 @@ public class Podmanutil {
 
 		return run(os, fullcommand, role);
 	}
+	
+	@SneakyThrows
+	public boolean copyFileToRemote(String host, Path input, String output) {
 
-	private String run(OutputStream os, String fullcommand, String role) {
+		try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username).build();
+		     var is = new Dos2unixFilterInputStream(Files.newInputStream(input))) {
+
+			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(Constants.YACIC);
+			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
+
+			try (SftpClient sftp = SftpClientBuilder.create()
+					.withClient(ssh)
+					.build()) {
+				
+				sftp.put(is, output);
+				sftp.chmod(PosixPermissionsBuilder.create()
+						.fromBitmask(0755).build(), output);
+			}
+		}
+		
+		return true;
+	}
+
+	public String run(OutputStream os, String fullcommand, String role) {
 		log.info("  command : {}", fullcommand);
 
 		if (dryrun) {
@@ -204,7 +231,7 @@ public class Podmanutil {
 		return result;
 	}
 
-	private String getHost(String role) {
+	public String getHost(String role) {
 		var node = nodes.stream().filter(n -> n.getRoles().contains(role)).findAny();
 		return node.orElseThrow(() -> new NoHostFoundException("no host found for role: " + role)).getHost();
 	}

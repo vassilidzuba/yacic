@@ -48,7 +48,7 @@ class SequentialPipelineTest {
 
 	@Test
 	@SneakyThrows
-	@DisplayName("mainline, some ctions KO")
+	@DisplayName("mainline, some actions KO")
 	void test2() {
 		var p = new SequentialPipeline("seq");
 		p.addAction(new Action1());
