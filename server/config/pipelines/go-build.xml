@@ -32,4 +32,14 @@
   
   </step>
 
+  <step id="build_deb" 
+        category='podman'
+        type="build_deb"
+        subcommand="">
+     <description>build the deb file</description>
+     <skipwhen>
+     	<flag name="NODEB"/>
+     </skipwhen>
+  </step>
+
 </pipeline>

@@ -9,7 +9,6 @@
 		<role>git</role>
 	</podmanactiondefinition>
 
-
 	<podmanactiondefinition id="maven">
 		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
 		<username>podman</username>
@@ -62,6 +61,12 @@
 		<username>podman</username>
 		<command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
 		<role>gcc</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="build_deb" mode="host">
+		<username>podman</username>
+		<command>cd DATAAREA/PROJECT; ./build_deb.sh</command>
+		<role>golang</role>
 	</podmanactiondefinition>
 
 </podmanactiondefinitions>

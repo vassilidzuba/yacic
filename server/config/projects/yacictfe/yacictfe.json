@@ -8,7 +8,8 @@
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}
 	],
-		"properties": [
+	"flags": ["NODEB"],
+	"properties": [
 		{"key": "MAIN", "value": "cmd/main.go"}
 	]
 	

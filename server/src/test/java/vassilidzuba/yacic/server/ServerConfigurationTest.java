@@ -82,7 +82,7 @@ class ServerConfigurationTest {
 		Assertions.assertEquals("config/actiondefinitions",  config.getActionDefinitionDirectory());
 		
 		Assertions.assertEquals(3, config.getPipelines().keySet().size());
-		Assertions.assertEquals(9, config.getPodmanActionDefinitions().keySet().size());
+		Assertions.assertEquals(10, config.getPodmanActionDefinitions().keySet().size());
 		Assertions.assertEquals(1, config.getNodes().size());
 		Assertions.assertEquals("odin", config.getNodes().get(0).getHost());
 		Assertions.assertEquals(4, config.getNodes().get(0).getRoles().size());
