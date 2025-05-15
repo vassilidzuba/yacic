@@ -3,9 +3,10 @@
 This project aims at developing yet another java application to run CI pipelines with the following characteristics:
 
 * simple
-* customisable
+* customizable
 * extensible
 
+More detailed documentation is available [here](doc/_toc.md).
 
 warning: this project is in development, not fit for any purpose yet.
 
