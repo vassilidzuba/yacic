@@ -132,7 +132,7 @@ public class Podmanutil {
 	}
 	
 	@SneakyThrows
-	public Optional<byte[]> copyFileFromRemote(String host, String input, Path output) {
+	public Optional<byte[]> copyFileFromRemote(String host, String input) {
 
 		try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username).build()) {
 

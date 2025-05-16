@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.podmanutil;
 
+import java.nio.file.Files;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Assertions;
@@ -98,5 +99,27 @@ class PodmanutilTest {
 
 		var result = podmanutil.runHost(properties, pad, "hostname && echo foo", System.out, "shell");
 		Assertions.assertEquals("0", result);
+	}
+
+
+	@Test
+	@SneakyThrows
+	void test5() {
+		var podmanutil = new Podmanutil();
+		podmanutil.addNode(new Node("localhost", "shell"));
+
+		var path = Files.createTempFile("tst", ".txt");
+		Files.writeString(path, "xxx");
+		
+		var remotePath = "/tmp/foo.txt";
+		
+		var result = podmanutil.copyFileToRemote("odin", path, remotePath);
+		Assertions.assertTrue(result);
+		
+		var data = podmanutil.copyFileFromRemote("odin", remotePath);
+		
+		Assertions.assertEquals("xxx", new String(data.get()));
+		
+		Files.deleteIfExists(path);
 	}
 }

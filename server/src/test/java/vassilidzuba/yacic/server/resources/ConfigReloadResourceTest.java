@@ -58,7 +58,7 @@ class ConfigReloadResourceTest {
 
 		Assertions.assertTrue(status.isOk());
 		Assertions.assertEquals(2, configuration.getPipelines().entrySet().size());
-		Assertions.assertEquals(10, configuration.getPodmanActionDefinitions().entrySet().size());
+		Assertions.assertEquals(13, configuration.getPodmanActionDefinitions().entrySet().size());
 	}
 	
 
