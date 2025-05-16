@@ -37,6 +37,7 @@ The sample configuration file is:
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
    "logsDirectory": "\\\\192.168.0.19\\yacic\\logs",
+   "authenticationFile": "config/authentication.json",
    "maxNbLogs": 5,
       
    "nodes": [
@@ -57,6 +58,7 @@ The fields in this configuration are:
 - `actionDefinitionDirectory`: directory containing the action definitions
 - `projectDirectory`:  directory containing the projects definitions
 - `logsDirectory`: directory containing the logs
+- `authenticationFile`: file with the authentication data
 - `maxNbLogs`: the maximum number of logs to keep
 - `nodes`: the nodes (see below)
 - `database`: the connection properties od the database
@@ -89,6 +91,24 @@ The posts can be changed by adding the following in the configuration file:
     }
 ```
 
+
+## The authentication
+
+The authentication data contains a list of pairs (user name, password. For instance:
+
+```json
+[
+	{
+		"username": "vassili",
+		"password": "sekret"
+	},
+	{
+		"username": "johndoe",
+		"password": "seKret"
+	},
+]
+
+```
 
 
 [toc](_toc.md)
