@@ -17,6 +17,7 @@
 package vassilidzuba.yacic.podmanutil;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,6 +41,7 @@ import com.sshtools.client.sftp.SftpClient.SftpClientBuilder;
 import com.sshtools.client.tasks.CommandTask.CommandTaskBuilder;
 import com.sshtools.client.tasks.Task;
 import com.sshtools.common.sftp.PosixPermissions.PosixPermissionsBuilder;
+import com.sshtools.common.sftp.SftpStatusException;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -126,6 +129,29 @@ public class Podmanutil {
 		}
 		
 		return true;
+	}
+	
+	@SneakyThrows
+	public Optional<byte[]> copyFileFromRemote(String host, String input, Path output) {
+
+		try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username).build()) {
+
+			SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(Constants.YACIC);
+			ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
+
+			try (SftpClient sftp = SftpClientBuilder.create()
+					.withClient(ssh)
+					.build()) {
+				
+				var out = new ByteArrayOutputStream();
+				sftp.get(input, out);
+				
+				return Optional.of(out.toByteArray());
+			}
+		} catch (SftpStatusException e)  {
+			log.error("no such file! " + input, e.getMessage());
+			return Optional.empty();
+		}
 	}
 
 	public String run(OutputStream os, String fullcommand, String role) {

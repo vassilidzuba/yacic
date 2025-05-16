@@ -22,6 +22,11 @@ to obtain, the log of the build (defautl branch is *main*):
     curl -u vassili:sekret "http://localhost:8080/yacic/build/log?project=example1&timestamp=20250426140427"
     curl -u vassili:sekret "http://localhost:8080/yacic/build/log?project=example1&branch=feature/initial&timestamp=20250426140427"
     
+to get a file (default branch is *main*):
+
+    curl -u vassili:sekret "http://localhost:8080/yacic/project/get?project=hellogo&branch=feature/initial&file=coverage.html"
+
+    
 ## Security
 
 The credentials are stored in an unencrypted file `config/security.json`. Authentication is required but no authorization mechanism is implemented.

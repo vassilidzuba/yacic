@@ -16,6 +16,22 @@
   
   </step>
 
+  <step id="test" 
+        category='podman'
+        type="go_test_coverage"
+        subcommand="">
+     <description>unit tests</description>
+  
+  </step>
+
+  <step id="build_coverage_html" 
+        category='podman'
+        type="go_coverage_to_html"
+        subcommand="">
+     <description>unit tests</description>
+  
+  </step>
+
   <step id="lint" 
         category='podman'
         type="go_lint"

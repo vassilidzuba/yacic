@@ -49,6 +49,27 @@
 		<role>golang</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="go_test">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="go_test_coverage">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test -coverprofile=coverage.out</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="go_coverage_to_html">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go tool cover -html=coverage.out -o coverage.html</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="go_compile">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>

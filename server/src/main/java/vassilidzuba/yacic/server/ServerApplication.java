@@ -30,11 +30,12 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.server.health.ConfigurationHealthCheck;
+import vassilidzuba.yacic.server.resources.ProjectGetResource;
 import vassilidzuba.yacic.server.resources.BuildListResource;
+import vassilidzuba.yacic.server.resources.BuildLogResource;
 import vassilidzuba.yacic.server.resources.ConfigReloadResource;
 import vassilidzuba.yacic.server.resources.PipelineListResource;
 import vassilidzuba.yacic.server.resources.ProjectListResource;
-import vassilidzuba.yacic.server.resources.BuildLogResource;
 import vassilidzuba.yacic.server.resources.ProjectRunResource;
 import vassilidzuba.yacic.server.resources.StepListResource;
 import vassilidzuba.yacic.server.security.User;
@@ -112,6 +113,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
         		configuration.getNodes()));
         jersey.register(new ProjectListResource());
         jersey.register(new BuildLogResource(Path.of(configuration.getProjectDirectory()), Path.of(configuration.getLogsDirectory())));
+        jersey.register(new ProjectGetResource(Path.of(configuration.getProjectDirectory()), configuration.getNodes()));
         jersey.register(new ConfigReloadResource(configuration));
         jersey.register(new StepListResource());
 	}
