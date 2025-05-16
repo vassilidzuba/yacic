@@ -93,7 +93,7 @@ public class ProjectGetResource {
 		var podmanutil = new Podmanutil();
 		var host = nodes.get(0).getHost();
 		
-		var obytes = podmanutil.copyFileFromRemote(host, projectDir + "/" + file, pdir);
+		var obytes = podmanutil.copyFileFromRemote(host, projectDir + "/" + file);
 		return obytes.orElseThrow(() -> new WebApplicationException("file not found: " + file, 404));
 	}
 }
