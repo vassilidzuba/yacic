@@ -21,7 +21,9 @@
         type="go_test_coverage"
         subcommand="">
      <description>unit tests</description>
-  
+     <skipwhen>
+     	<flag name="NOTEST"/>
+     </skipwhen>
   </step>
 
   <step id="build_coverage_html" 
@@ -29,7 +31,9 @@
         type="go_coverage_to_html"
         subcommand="">
      <description>unit tests</description>
-  
+     <skipwhen>
+     	<flag name="NOTEST"/>
+     </skipwhen>
   </step>
 
   <step id="lint" 

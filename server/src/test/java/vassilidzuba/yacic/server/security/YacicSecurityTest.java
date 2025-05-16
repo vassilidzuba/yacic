@@ -30,7 +30,7 @@ class YacicSecurityTest {
 
 	@BeforeAll
 	static void init() {
-		YacicSecurity.init(Path.of("config/security.json"));
+		YacicSecurity.init(Path.of("config/authentication.json"));
 	}
 	
 	@Test

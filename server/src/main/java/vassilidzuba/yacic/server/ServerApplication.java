@@ -82,7 +82,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
 
 	@Override
 	public void run(ServerConfiguration configuration, Environment environment) throws Exception {
-		YacicSecurity.init(Path.of("config/security.json"));
+		YacicSecurity.init(Path.of(configuration.geAuthenticationFile()));
 		
 		var databaseConfig = configuration.getDatatabaseConfig();
 		PersistenceManager.setDatabaseConfig(databaseConfig.getUrl(), databaseConfig.getUser(), databaseConfig.getPassword());

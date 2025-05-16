@@ -2,6 +2,7 @@
    "pipelineDirectory": "config/pipelines",
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
+   "authenticationFile": "config/authentication.json",
    "logsDirectory": "target/logs",
    "maxNbLogs": 3,
       
