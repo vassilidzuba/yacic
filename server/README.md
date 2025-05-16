@@ -26,7 +26,11 @@ to get a file (default branch is *main*):
 
     curl -u vassili:sekret "http://localhost:8080/yacic/project/get?project=hellogo&branch=feature/initial&file=coverage.html"
 
-    
+to get a project configuratioon:
+
+    curl -u vassili:sekret "http://localhost:8080/yacic/project/getconfig?project=hellogo"
+
+   
 ## Security
 
 The credentials are stored in an unencrypted file `config/security.json`. Authentication is required but no authorization mechanism is implemented.
