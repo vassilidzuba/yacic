@@ -17,14 +17,12 @@
 package vassilidzuba.yacic.server.resources;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.model.Node;
 
 @Slf4j
 class ProjectGetconfigResourceTest {
@@ -32,15 +30,11 @@ class ProjectGetconfigResourceTest {
 	@Test
 	void test1()  {
 		var pdir = Path.of("config/projects");
-		var node = new Node("odin", "any");
-		var nodes = List.of(node);
 		
 		var pgr = new ProjectGetconfigResource(pdir);
 		
 		var s = pgr.getConfig(Optional.of("hellogo")).trim();
 
-		log.info("{}", s);
-		
 		Assertions.assertTrue(s.startsWith("{"));
 		Assertions.assertTrue(s.endsWith("}"));
 	}
