@@ -23,7 +23,7 @@ class RunStatusTest {
 
 	@Test
 	void test1() {
-		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000); 
+		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000, "mypîpeline"); 
 		
 		Assertions.assertEquals("OK", rs.getStatus());
 	}

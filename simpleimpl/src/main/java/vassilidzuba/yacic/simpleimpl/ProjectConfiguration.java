@@ -19,6 +19,7 @@ package vassilidzuba.yacic.simpleimpl;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -64,8 +65,10 @@ public class ProjectConfiguration {
 	private String repo;
 	@Setter @Getter
 	private String root;
-	@Setter @Getter
+	@Setter
 	private String pipeline;
+	@Setter
+	private List<PipelineByBranch> pipelines = new ArrayList<>();
 	@Setter @Getter
 	private Set<String> flags = new HashSet<>();
 	
@@ -83,6 +86,14 @@ public class ProjectConfiguration {
 		}
 		
 		return pc;
+	}
+	
+	public String getPipeline(String branch) {
+		var op = pipelines.stream().filter(pbb -> branch.equals(pbb.getBranch())).map(PipelineByBranch::getPipeline).findFirst();
+		if (op.isPresent()) {
+			return op.get();
+		}
+		return pipeline; 
 	}
 
 	public static ProjectConfiguration readProjectConfiguration(Path path) {
@@ -120,5 +131,12 @@ public class ProjectConfiguration {
 		private String name;
 		@Setter @Getter
 		private String dir;
+	}
+	
+	static class PipelineByBranch {
+		@Setter @Getter
+		private String branch; 
+		@Setter @Getter
+		private String pipeline; 
 	}
 }

@@ -1,0 +1,53 @@
+<pipeline type="sequential" id ="java-release">
+  <description>Pipeline Three</description>
+
+  <step id="clone" 
+        category='podman'
+        type="clone"
+        subcommand='clone -b "BRANCH" REPO'>
+  	<description>clone repository</description>
+  </step>
+
+  <step id="build" 
+        category='podman'
+        type="maven"
+        subcommand="mvn -Dsha1=.BUILDID -Dchangelist=  clean package">
+     <description>build package using maven</description>
+  
+  </step>
+
+  <step id="sonar" 
+        category='podman'
+        type="maven_sonar"
+        subcommand="">
+     <description>execute sonarqube</description>
+  
+  </step>
+
+  <step id="deploy_javadoc" 
+        category='podman'
+        type="deploy_javadoc"
+        subcommand="">
+     <description>deploy javadoc to nginx</description>
+  
+  </step>
+
+  <step id="deployto_nexus" 
+        category='podman'
+        type="maven"
+        subcommand="mvn  -Dsha1=.BUILDID -Dchangelist=  -Dmaven.javadoc.skip=true deploy">
+     <description>deploy to nexus</description>
+  
+  </step>
+
+  <step id="build-image" 
+        category='podman'
+        type="build_image"
+        subcommand="">
+     <description>build podman image</description>
+     <skipwhen>
+     	<flag name="NODOCKER"/>
+     </skipwhen>
+  </step>
+
+</pipeline>

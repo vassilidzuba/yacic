@@ -4,6 +4,10 @@
 	"root": "/mnt/yacic",
 	
 	"pipeline": "java-build",
+	"pipelines": [
+		{"branch": "main", "pipeline": "java-release"}
+	],
+	
 	"branches": [
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}

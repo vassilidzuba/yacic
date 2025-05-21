@@ -239,7 +239,7 @@
 		<repository>
 			<id>nexus</id>
 			<name>Releases</name>
-			<url>http://odin:8081/repositories/maven-releases</url>
+			<url>http://odin:8081/repository/maven-releases</url>
 		</repository>
 	</distributionManagement>
 
