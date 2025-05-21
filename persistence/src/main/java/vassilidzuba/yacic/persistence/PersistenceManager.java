@@ -111,9 +111,9 @@ public class PersistenceManager {
 
 	public void storeBuild(String project, String branch, String timestamp, String status, int duration) {
 		init().store("""
-				insert into builds(project_id, branch_id, timestamp, status, duration)
-				values(?, ?, ?, ?, ?);
-				""", project, branch, timestamp, status, duration);
+				insert into builds(project_id, branch_id, timestamp, status, duration, build_id)
+				values(?, ?, ?, ?, ?, ?);
+				""", project, branch, timestamp, status, duration, getNextBuildId(project, branch));
 	}
 
 	public void storeStep(String project, String branch, String timestamp, String step, int seq, String status, int duration) {
@@ -154,19 +154,25 @@ public class PersistenceManager {
 
 	public List<Build> listBuilds(String project, String branch) {
 		return init().select(
-				"select project_id, branch_id, timestamp, status, duration from builds where project_id=? and branch_id=? order by timestamp desc",
+				"select project_id, branch_id, timestamp, status, duration, build_id from builds where project_id=? and branch_id=? order by timestamp desc",
 				new BuildMapper(), project, branch);
 	}
 
 	public Optional<Build> getBuild(String project, String branch, String timestamp) {
 		var builds = init().select(
-				"select project_id, branch_id, timestamp, status, duration from builds where project_id=? and branch_id=? and timestamp=?",
+				"select project_id, branch_id, timestamp, status, duration, build_id from builds where project_id=? and branch_id=? and timestamp=?",
 				new BuildMapper(), project, branch, timestamp);
 		if (!builds.isEmpty()) {
 			return Optional.of(builds.get(0));
 		} else {
 			return Optional.empty();
 		}
+	}
+	
+	public int getNextBuildId(String project, String branch) {
+		var builds = listBuilds(project, branch);
+		var obuildId = builds.stream().map(b -> b.getBuildId()).max(Integer::compare);
+		return obuildId.orElse(0) +1;
 	}
 
 	public List<Step> listSteps(String project, String branch, String timestamp) {
@@ -257,6 +263,9 @@ public class PersistenceManager {
 		private int duration;
 		@Setter
 		@Getter
+		private int buildId;
+		@Setter
+		@Getter
 		private String status;
 
 		@Override
@@ -276,6 +285,7 @@ public class PersistenceManager {
 			build.setTimestamp(rs.getString("timestamp"));
 			build.setStatus(rs.getString("status"));
 			build.setDuration(rs.getInt("duration"));
+			build.setBuildId(rs.getInt("build_id"));
 			return build;
 		}
 	}

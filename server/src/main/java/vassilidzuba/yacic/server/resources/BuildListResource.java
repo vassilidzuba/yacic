@@ -71,6 +71,7 @@ public class BuildListResource {
 		bi.setTimestamp(build.getTimestamp());
 		bi.setStatus(build.getStatus());
 		bi.setDuration(build.getDuration());
+		bi.setBuildId(build.getBuildId());
 		
 		return bi;
 	}

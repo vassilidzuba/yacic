@@ -16,6 +16,8 @@
 
 package vassilidzuba.yacic.server.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,4 +32,7 @@ public class BuildInfo {
 	private String status; 
 	@Setter @Getter
 	private int duration; 
+	@Setter @Getter
+	@JsonProperty("build_id")
+	private int buildId; 
 }

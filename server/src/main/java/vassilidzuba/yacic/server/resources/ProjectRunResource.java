@@ -129,8 +129,9 @@ public class ProjectRunResource {
 		pconf.getProperties().put("BRANCHDIR", branchDir);
 		pconf.getProperties().put("DATAAREA",
 				prconf.getRoot() + "/" + prconf.getProject() + "/" + branchDir);
+		pconf.getProperties().put("BUILDID", Integer.toString(pm.getNextBuildId(project, branch)));
 		pconf.getProperties().putAll(prconf.getProperties());
-
+		
 		pconf.getPad().putAll(actionDefinitions);
 
 		var pipeline = pipelines.get(prconf.getPipeline());
