@@ -60,7 +60,7 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			a.setContext(getActionContext());
 			a.setDataArea(getDataArea());
 
-			if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
+			if (needSkip(a, flags)) {
 				log.warn("action skipped : {}", a.getId());
 				pconfig.getStepEventListeners().forEach(l -> l.complete(a.getId(), getActionSeq(a.getId()), "skipped", 0));
 				return hasNextAction(a.getId(), ps);
@@ -100,6 +100,16 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 		}
 		
 		return ret;
+	}
+	
+	private boolean needSkip(Action<SequentialPipelineConfiguration> a, Set<String> flags) {
+		if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
+			return true;
+		}
+		if (a.getOnlyWhen() != null && ! a.getOnlyWhen().isEmpty() && (flags == null ||  a.getOnlyWhen().stream().allMatch(f -> ! flags.contains(f)))) {
+			return  true;
+		}
+		return false;
 	}
 	
 	private boolean hasNextAction(String currentStep, PipelineStatus<SequentialPipelineConfiguration> ps) {

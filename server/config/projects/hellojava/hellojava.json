@@ -1,0 +1,15 @@
+{
+	"project": "hellojava",
+	"repo": "http://odin.manul.lan:3000/vassili/hellojava.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "java-build",
+	"branches": [
+		{"name": "main",            "dir": "b0"},
+		{"name": "feature/initial", "dir": "b1"}
+	],
+	"flags": [],
+	"properties": [
+	]
+	
+}

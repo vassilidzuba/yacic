@@ -16,19 +16,36 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
-import java.util.HashSet;
+import java.io.OutputStream;
+import java.util.List;
 import java.util.Set;
 
-import lombok.Getter;
-import vassilidzuba.yacic.model.Action;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 
-public abstract class AbstractAction implements Action<SequentialPipelineConfiguration>  {
+@Slf4j
+public class Action3 extends BuiltinAction {
+
+	@Override
+	public String getId() {
+		return "action3";
+	}
+
+	@Override
+	@SneakyThrows
+	public String run(SequentialPipelineConfiguration pctx, OutputStream o, List<Node> nodes) {
+		log.info("running {}", getId());
+		return "ok";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Action Three";
+	}
 	
-
-	@Getter
-	private Set<String> skipWhen = new HashSet<>();
-
-	@Getter
-	private Set<String> onlyWhen = new HashSet<>();
-
+	@Override
+	public Set<String> getOnlyWhen() {
+		return Set.of("DOACTION3");
+	}
 }

@@ -78,7 +78,42 @@ class SequentialPipelineTest {
 		Assertions.assertEquals(1, listener.getSkipped().size());
 		Assertions.assertEquals("action2", listener.getSkipped().get(0));
 	}
-	
+
+	@Test
+	@SneakyThrows
+	@DisplayName("test an action has mandatory flag")
+	void test4() {
+		var p = new SequentialPipeline("seq");
+		p.addAction(new Action3());
+		
+		var pconfig = new SequentialPipelineConfiguration();
+		var listener = new MyStepEventListener();
+		pconfig.getStepEventListeners().add(listener);
+		var ps = p.run(pconfig, Files.createTempFile(Path.of("target"), "temp", ".log"), null, Set.of("DOACTION3"));
+		Assertions.assertEquals("ok", ps.getStatus());
+		
+		Assertions.assertEquals(0, listener.getSkipped().size());
+//		Assertions.assertEquals("action2", listener.getSkipped().get(0));
+	}
+
+	@Test
+	@SneakyThrows
+	@DisplayName("test an action hasn't mandatory flag")
+	void test5() {
+		var p = new SequentialPipeline("seq");
+		p.addAction(new Action1());
+		p.addAction(new Action3());
+		
+		var pconfig = new SequentialPipelineConfiguration();
+		var listener = new MyStepEventListener();
+		pconfig.getStepEventListeners().add(listener);
+		var ps = p.run(pconfig, Files.createTempFile(Path.of("target"), "temp", ".log"), null, null);
+		Assertions.assertEquals("ok", ps.getStatus());
+		
+		Assertions.assertEquals(1, listener.getSkipped().size());
+		Assertions.assertEquals("action3", listener.getSkipped().get(0));
+	}
+
 	class MyStepEventListener implements StepEventListener {
 		@Getter
 		private List<String> skipped = new ArrayList<>();

@@ -11,7 +11,7 @@
   <step id="build" 
         category='podman'
         type="maven"
-        subcommand="mvn clean package javadoc:aggregate-jar">
+        subcommand="mvn clean package">
      <description>build package using maven</description>
   
   </step>
@@ -24,11 +24,19 @@
   
   </step>
 
-  <step id="deploy" 
+  <step id="deploy_javadoc" 
         category='podman'
         type="deploy_javadoc"
         subcommand="">
      <description>deploy javadoc to nginx</description>
+  
+  </step>
+
+  <step id="deployto_nexus" 
+        category='podman'
+        type="maven"
+        subcommand="mvn -Dmaven.javadoc.skip=true deploy">
+     <description>deploy to nexus</description>
   
   </step>
 
