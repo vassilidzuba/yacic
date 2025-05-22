@@ -1,7 +1,8 @@
 # Installation
 
-[toc](_toc.md)
 [previous](01-intro.md)
+[toc](_toc.md)
+[next](03-actiondefinitions.md)
 
 
 Running `yacic` requires Java 21 or later. the program is packaged as a fat jar.
@@ -63,9 +64,10 @@ The fields in this configuration are:
 - `nodes`: the nodes (see below)
 - `database`: the connection properties od the database
 
+## the nodes
+
 The nodes are hosts on which the actions are run (here a single one, named `odin`)
 To each node is associated a list of roles. A given action has an associated role, and will be run randomly on a host accepting that role.
-
 
 
 ## The ports
@@ -111,7 +113,8 @@ The authentication data contains a list of pairs (user name, password. For insta
 ```
 
 
-[toc](_toc.md)
 [previous](01-intro.md)
+[toc](_toc.md)
+[next](03-actiondefinitions.md)
 
 Distributed under license [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
