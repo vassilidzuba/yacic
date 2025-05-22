@@ -8,6 +8,13 @@
   	<description>clone repository</description>
   </step>
 
+  <step id="git_credential" 
+        category='podman'
+        type="git"
+        subcommand="config --local credential.helper 'store --file ~/.SCM-credentials'">
+  	<description>auth repository</description>
+  </step>
+
   <step id="build" 
         category='podman'
         type="maven"
@@ -30,6 +37,20 @@
         subcommand="">
      <description>deploy javadoc to nginx</description>
   
+  </step>
+
+  <step id="git_tag" 
+        category='podman'
+        type="git"
+        subcommand="tag vRELEASE.BUILDID">
+  	<description>tag repo</description>
+  </step>
+
+  <step id="git_tag_push" 
+        category='podman'
+        type="git"
+        subcommand="push origin tag vRELEASE.BUILDID">
+  	<description>tag repo</description>
   </step>
 
   <step id="deployto_nexus" 

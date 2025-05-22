@@ -93,6 +93,8 @@ public class Podmanutil {
 		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + "; echo PODMANTERMINATION $?; "
 				+ cleanup;
 
+		log.info("{}", fullcommand);
+		
 		return run(os, fullcommand, role);
 	}
 

@@ -9,6 +9,15 @@
 		<role>git</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="git">
+		<image>docker.io/alpine/git</image>
+		<username>podman</username>
+		<command>--name auth-PROJECT -v ${HOME}:/root -v DATAAREA/PROJECT:/git docker.io/alpine/git</command>
+		<setup></setup>
+		<cleanup></cleanup>
+		<role>git</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="maven">
 		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
 		<username>podman</username>

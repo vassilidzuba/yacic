@@ -81,7 +81,7 @@ class ServerConfigurationTest {
 		Assertions.assertEquals("config/projects",  config.getProjectDirectory());
 		Assertions.assertEquals("config/actiondefinitions",  config.getActionDefinitionDirectory());
 		
-		Assertions.assertEquals(3, config.getPipelines().keySet().size());
+		Assertions.assertEquals(4, config.getPipelines().keySet().size());
 		Assertions.assertEquals(13, config.getPodmanActionDefinitions().keySet().size());
 		Assertions.assertEquals(1, config.getNodes().size());
 		Assertions.assertEquals("odin", config.getNodes().get(0).getHost());
