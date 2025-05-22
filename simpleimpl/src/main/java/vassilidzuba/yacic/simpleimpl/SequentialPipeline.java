@@ -16,6 +16,7 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -59,7 +60,7 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			a.setContext(getActionContext());
 			a.setDataArea(getDataArea());
 
-			if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
+			if (needSkip(a, flags)) {
 				log.warn("action skipped : {}", a.getId());
 				pconfig.getStepEventListeners().forEach(l -> l.complete(a.getId(), getActionSeq(a.getId()), "skipped", 0));
 				return hasNextAction(a.getId(), ps);
@@ -68,7 +69,9 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 			String status;
 			try {
 				try (var os = Files.newOutputStream(logFile, StandardOpenOption.APPEND)) {
+					os.write(("*** starting action " + a.getId() + "\n").getBytes(StandardCharsets.UTF_8));
 					status = a.run(pconfig, os, nodes);
+					os.write(("*** action " + a.getId() + " completed with status " + status + "\n").getBytes(StandardCharsets.UTF_8));
 				}
 			} catch (Exception e) {
 				log.error("exception during {}", a, e);
@@ -97,6 +100,16 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 		}
 		
 		return ret;
+	}
+	
+	private boolean needSkip(Action<SequentialPipelineConfiguration> a, Set<String> flags) {
+		if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
+			return true;
+		}
+		if (a.getOnlyWhen() != null && ! a.getOnlyWhen().isEmpty() && (flags == null ||  a.getOnlyWhen().stream().allMatch(f -> ! flags.contains(f)))) {
+			return  true;
+		}
+		return false;
 	}
 	
 	private boolean hasNextAction(String currentStep, PipelineStatus<SequentialPipelineConfiguration> ps) {

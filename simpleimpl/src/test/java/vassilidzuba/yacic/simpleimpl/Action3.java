@@ -16,24 +16,36 @@
 
 package vassilidzuba.yacic.simpleimpl;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
-import vassilidzuba.yacic.model.PipelineConfiguration;
-import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.Node;
 
-public class SequentialPipelineConfiguration extends PipelineConfiguration {
-	@Getter
-	private Map<String, PodmanActionDefinition> pad = new HashMap<>();
+@Slf4j
+public class Action3 extends BuiltinAction {
 
-	@Setter @Getter
-	private Path scriptDirectory;
+	@Override
+	public String getId() {
+		return "action3";
+	}
+
+	@Override
+	@SneakyThrows
+	public String run(SequentialPipelineConfiguration pctx, OutputStream o, List<Node> nodes) {
+		log.info("running {}", getId());
+		return "ok";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Action Three";
+	}
 	
-	@Setter @Getter
-	private List<StepEventListener> stepEventListeners = new ArrayList<>();
+	@Override
+	public Set<String> getOnlyWhen() {
+		return Set.of("DOACTION3");
+	}
 }

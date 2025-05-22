@@ -28,4 +28,7 @@ public abstract class AbstractAction implements Action<SequentialPipelineConfigu
 	@Getter
 	private Set<String> skipWhen = new HashSet<>();
 
+	@Getter
+	private Set<String> onlyWhen = new HashSet<>();
+
 }

@@ -73,6 +73,7 @@ class PersistenceManagerTest {
 		Assertions.assertTrue(build.isPresent());
 		Assertions.assertEquals("OK", build.get().getStatus());
 		Assertions.assertEquals(1300, build.get().getDuration());
+		Assertions.assertEquals(2, build.get().getBuildId());
 		var nobuild = pm.getBuild("example1", "main", "10000512170000");
 		Assertions.assertFalse(nobuild.isPresent());
 

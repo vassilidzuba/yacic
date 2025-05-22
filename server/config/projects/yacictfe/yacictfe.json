@@ -1,6 +1,6 @@
 {
-	"project": "hellogo",
-	"repo": "http://odin.manul.lan:3000/vassili/hellogo.git",
+	"project": "yacictfe",
+	"repo": "https://github.com/vassilidzuba/yacictfe.git",
 	"root": "/mnt/yacic",
 	
 	"pipeline": "go-build",
@@ -8,7 +8,9 @@
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}
 	],
+	"flags": ["NODEB"],
 	"properties": [
-		{"key": "MAIN", "value": "hello.go"}
+		{"key": "MAIN", "value": "cmd/main.go"}
 	]
+	
 }

@@ -1,0 +1,18 @@
+<pipeline type="sequential" id ="pip1">
+  <description>Pipeline Script</description>
+
+  <step id="step1" 
+        category='script'
+        script="test-script1.sh"
+        role="any">
+  	<description>test script1 execution</description>
+  </step>
+
+  <step id="step2" 
+        category='script'
+        script="test-script2.sh"
+        role="any">
+  	<description>test script2 execution</description>
+  </step>
+
+</pipeline>

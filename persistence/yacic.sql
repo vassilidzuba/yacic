@@ -14,6 +14,7 @@ CREATE TABLE builds (
 	branch_id VARCHAR(32) NOT NULL,
 	timestamp VARCHAR(14) NOT NULL,
 	duration integer,
+	build_id integer NOT NULL,
 	status VARCHAR(32)
 );
 CREATE TABLE steps (

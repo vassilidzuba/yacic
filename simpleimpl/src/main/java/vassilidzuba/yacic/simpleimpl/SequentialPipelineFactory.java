@@ -129,6 +129,17 @@ public final class SequentialPipelineFactory {
 			ctx.getElementTypes().push(ElementType.BUILTIN_STEP);
 			return;
 		}
+		if ("script".equals(category)) {
+			var script = xmlsr.getAttributeValue(null, "script");
+			var role = xmlsr.getAttributeValue(null, "role");
+			var action = new ScriptAction();
+			action.setId(id);
+			action.setScript(script);
+			action.setRole(role);
+			ctx.setStep(action);
+			ctx.getElementTypes().push(ElementType.SCRIPT_STEP);
+			return;
+		}
 		if ("podman".equals(category)) {
 			var type = xmlsr.getAttributeValue(null, "type");
 			var command = xmlsr.getAttributeValue(null, "subcommand");
@@ -176,6 +187,9 @@ public final class SequentialPipelineFactory {
 		case ElementType.PODMAN_STEP:
 			PodmanAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
 			break;
+		case ElementType.SCRIPT_STEP:
+			ScriptAction.class.cast(ctx.getStep()).setDescription(ctx.getDescription().toString());
+			break;
 		case ElementType.TOP:
 			ctx.getPipeline().setDescription(ctx.getDescription().toString());
 			break;
@@ -215,7 +229,7 @@ public final class SequentialPipelineFactory {
 	}
 	
 	enum ElementType {
-		TOP, DESCRIPTION, BUILTIN_STEP, PODMAN_STEP;
+		TOP, DESCRIPTION, BUILTIN_STEP, PODMAN_STEP, SCRIPT_STEP;
 	}
 	
 }

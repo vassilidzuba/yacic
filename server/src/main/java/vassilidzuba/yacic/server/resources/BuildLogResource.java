@@ -19,7 +19,6 @@ package vassilidzuba.yacic.server.resources;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
 import com.codahale.metrics.annotation.Timed;
@@ -32,17 +31,18 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
 
 /**
- * Resource returning a log of a run. The log is in a file in the specific
- * project direcory, with the name of the project and the extension <i>.log</i>.
+ * Resource returning a log of a build. The log is in a file in the specific
+ * project directory, with the name of the project and the extension <i>.log</i>.
  */
-@jakarta.ws.rs.Path("/yacic/project/log")
+@jakarta.ws.rs.Path("/yacic/build/log")
 @Produces(MediaType.TEXT_PLAIN)
 @PermitAll
 @Slf4j
-public class ProjectLogResource {
+public class BuildLogResource {
 	private Path projectsDirectory;
 	private Path logsDirectory;
 
@@ -51,7 +51,7 @@ public class ProjectLogResource {
 	 * 
 	 * @param projectDirectory the projects directory.
 	 */
-	public ProjectLogResource(Path projectsDirectory, Path logsDirectory) {
+	public BuildLogResource(Path projectsDirectory, Path logsDirectory) {
 		this.projectsDirectory = projectsDirectory;
 		this.logsDirectory = logsDirectory;
 	}
@@ -66,12 +66,10 @@ public class ProjectLogResource {
 	@Timed
 	@SneakyThrows
 	public String getLog(@QueryParam("project") Optional<String> oproject,
-			@QueryParam("branch") Optional<String> obranch, @QueryParam("pos") Optional<String> opos) {
-		if (oproject.isEmpty()) {
-			throw new WebApplicationException("project not specified", 400);
-		}
+			@QueryParam("branch") Optional<String> obranch, @QueryParam("timestamp") Optional<String> otimestamp) {
 
-		var project = oproject.get();
+		var project = oproject.orElseThrow(() -> new WebApplicationException("project not specified", 400));
+		var timestamp = otimestamp.orElse(null);
 
 		Path pdir = projectsDirectory.resolve(project);
 		var path = pdir.resolve(project + ".json");
@@ -88,23 +86,32 @@ public class ProjectLogResource {
 		var branchdir = prconf.getBranchDir(branch)
 				.orElseThrow(() -> new WebApplicationException("no branch " + branch + " for project " + project, 404));
 
-		var pos = Integer.parseInt(opos.orElse("1"));
-
 		var dir = logsDirectory.resolve(project);
 
 		if (Files.isDirectory(dir)) {
-			try (var st = Files.list(dir)) {
-				String prefix = project + "_" + branchdir;
-				List<Path> logs = st.filter(p -> p.getFileName().toString().startsWith(prefix)).sorted().toList();
-				logs.forEach(p -> log.debug("log {}", p));
-
-				if (pos >= 1 && pos <= logs.size()) {
-					Path log = logs.get(logs.size() - pos);
-					return Files.readString(log, StandardCharsets.UTF_8);
-				}
+			var filename = project + "_" + branchdir + "_" + getTimestamp(project, branch, timestamp) + ".log";
+			var log = dir.resolve(filename);
+			if (Files.isReadable(log)) {
+				return Files.readString(log, StandardCharsets.UTF_8);
+			} else {
+				throw new WebApplicationException("log file not found :" + log, 404);
 			}
 		}
 
-		throw new WebApplicationException("log file not found", 404);
+		throw new WebApplicationException("no log directory :" + dir, 404);
+	}
+
+	private String getTimestamp(String project, String branch, String timestamp) {
+		if (timestamp == null) {
+			var pm = new PersistenceManager();
+			var builds = pm.listBuilds(project, branch);
+			if (! builds.isEmpty()) {
+				return builds.get(0).getTimestamp();
+			} else {
+				return "xxx";
+			}
+		} else {
+			return timestamp;
+		}
 	}
 }

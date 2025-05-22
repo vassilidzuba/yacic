@@ -4,7 +4,7 @@
   <step id="clone" 
         category='podman'
         type="clone"
-        subcommand="clone REPO">
+        subcommand="clone --branch BRANCH REPO">
   	<description>clone repository</description>
   </step>
 
@@ -16,12 +16,50 @@
   
   </step>
 
+  <step id="test" 
+        category='podman'
+        type="go_test_coverage"
+        subcommand="">
+     <description>unit tests</description>
+     <skipwhen>
+     	<flag name="NOTEST"/>
+     </skipwhen>
+  </step>
+
+  <step id="build_coverage_html" 
+        category='podman'
+        type="go_coverage_to_html"
+        subcommand="">
+     <description>unit tests</description>
+     <skipwhen>
+     	<flag name="NOTEST"/>
+     </skipwhen>
+  </step>
+
+  <step id="lint" 
+        category='podman'
+        type="go_lint"
+        subcommand="">
+     <description>lint the project</description>
+  
+  </step>
+
   <step id="build" 
         category='podman'
         type="go_compile"
         subcommand="">
      <description>compile the project</description>
   
+  </step>
+
+  <step id="build_deb" 
+        category='podman'
+        type="build_deb"
+        subcommand="">
+     <description>build the deb file</description>
+     <skipwhen>
+     	<flag name="NODEB"/>
+     </skipwhen>
   </step>
 
 </pipeline>

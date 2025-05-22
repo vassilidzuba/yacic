@@ -79,6 +79,7 @@ public class PodmanAction extends AbstractAction {
 		log.info("    type        : {}", type);
 		log.info("    subcommand  : {}", subcommand);
 		log.info("    skipwhen    : {}", getSkipWhen().stream().collect(Collectors.joining(" ")));
+		log.info("    onlywhen    : {}", getOnlyWhen().stream().collect(Collectors.joining(" ")));
 		log.info("    properties  :");
 		
 		

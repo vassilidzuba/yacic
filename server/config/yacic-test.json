@@ -3,6 +3,7 @@
    "actionDefinitionDirectory": "config/actiondefinitions",
    "projectDirectory": "config/projects",
    "logsDirectory": "target/logs",
+   "authenticationFile": "config/authentication.json",
    "maxNbLogs": 3,
       
    "nodes": [

@@ -54,6 +54,9 @@ public class ServerConfiguration extends Configuration {
 	@NotEmpty
 	private String logsDirectory;
 
+	@NotEmpty
+	private String authenticationFile;
+
 	private int maxNbLogs;
 
 	private List<Node> nodes;
@@ -98,7 +101,16 @@ public class ServerConfiguration extends Configuration {
 		this.actionDefinitionDirectory = actionDefinitionDirectory;
 	}
 
+
+	@JsonProperty
+	public String geAuthenticationFile() {
+		return authenticationFile;
+	}
 	
+	@JsonProperty
+	public void setAuthenticationFile(String authenticationFile) {
+		this.authenticationFile = authenticationFile;
+	}
 
 	@SneakyThrows
 	public void loadActionDefinitions() {

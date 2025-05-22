@@ -14,17 +14,28 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server.api;
+package vassilidzuba.yacic.server.resources;
+
+import java.nio.file.Path;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class RunStatusTest {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+class ProjectGetconfigResourceTest {
 
 	@Test
-	void test1() {
-		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000, "mypîpeline"); 
+	void test1()  {
+		var pdir = Path.of("config/projects");
 		
-		Assertions.assertEquals("OK", rs.getStatus());
+		var pgr = new ProjectGetconfigResource(pdir);
+		
+		var s = pgr.getConfig(Optional.of("hellogo")).trim();
+
+		Assertions.assertTrue(s.startsWith("{"));
+		Assertions.assertTrue(s.endsWith("}"));
 	}
 }

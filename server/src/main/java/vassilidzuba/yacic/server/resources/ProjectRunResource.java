@@ -129,12 +129,13 @@ public class ProjectRunResource {
 		pconf.getProperties().put("BRANCHDIR", branchDir);
 		pconf.getProperties().put("DATAAREA",
 				prconf.getRoot() + "/" + prconf.getProject() + "/" + branchDir);
+		pconf.getProperties().put("BUILDID", Integer.toString(pm.getNextBuildId(project, branch)));
 		pconf.getProperties().putAll(prconf.getProperties());
-
+		
 		pconf.getPad().putAll(actionDefinitions);
 
-		var pipeline = pipelines.get(prconf.getPipeline());
-
+		var pipeline = pipelines.get(prconf.getPipeline(branch));
+		
 		var logFile = Path.of(logsDirectory).resolve(project).resolve(project + "_" + branchDir + "_" + timestamp + ".log");
 		Files.createDirectories(logFile.getParent());
 		
@@ -154,7 +155,7 @@ public class ProjectRunResource {
 		
 		storeBuild(project, branch, timestamp, status, (int) duration);
 		
-		return new RunStatus(project, branch, timestamp, status, (int) duration);
+		return new RunStatus(project, branch, timestamp, status, (int) duration, pipeline.getId());
 	}
 
 	private void storeProject(ProjectConfiguration prconf) {

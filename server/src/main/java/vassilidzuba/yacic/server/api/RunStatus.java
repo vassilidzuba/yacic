@@ -41,13 +41,16 @@ public class RunStatus {
 	@JsonInclude(Include.NON_NULL)
 	@Getter
 	private int duration;
+	@Getter
+	private String pipeline;
 	
-	public RunStatus(String projectId, String branchId, String timestamp, String status, int duration) {
+	public RunStatus(String projectId, String branchId, String timestamp, String status, int duration, String pipeline) {
 		this.projectId = projectId;
 		this.branchId = branchId;
 		this.timestamp = timestamp;
 		this.status = status;
 		this.duration = duration;
+		this.pipeline = pipeline;
 	}
 	
 	@Override

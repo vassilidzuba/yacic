@@ -9,6 +9,14 @@
 		<role>git</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="git">
+		<image>docker.io/alpine/git</image>
+		<username>podman</username>
+		<command>--name auth-PROJECT -v ${HOME}:/root -v DATAAREA/PROJECT:/git docker.io/alpine/git</command>
+		<setup></setup>
+		<cleanup></cleanup>
+		<role>git</role>
+	</podmanactiondefinition>
 
 	<podmanactiondefinition id="maven">
 		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
@@ -43,6 +51,34 @@
 		<role>golang</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="go_lint">
+		<image>192.168.0.20:5000/golang-lint:2.1.6</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp 192.168.0.20:5000/golang-lint:2.1.6 run</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="go_test">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="go_test_coverage">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test -coverprofile=coverage.out</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="go_coverage_to_html">
+		<image>docker.io/library/golang:bookworm</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go tool cover -html=coverage.out -o coverage.html</command>
+		<role>golang</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="go_compile">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
@@ -55,6 +91,12 @@
 		<username>podman</username>
 		<command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
 		<role>gcc</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="build_deb" mode="host">
+		<username>podman</username>
+		<command>cd DATAAREA/PROJECT; ./build_deb.sh</command>
+		<role>golang</role>
 	</podmanactiondefinition>
 
 </podmanactiondefinitions>

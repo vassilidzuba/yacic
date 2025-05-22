@@ -1,4 +1,4 @@
-<pipeline type="sequential" id ="java-build">
+<pipeline type="sequential" id ="java-release">
   <description>Pipeline Three</description>
 
   <step id="clone" 
@@ -8,10 +8,17 @@
   	<description>clone repository</description>
   </step>
 
+  <step id="git_credential" 
+        category='podman'
+        type="git"
+        subcommand="config --local credential.helper 'store --file ~/.SCM-credentials'">
+  	<description>auth repository</description>
+  </step>
+
   <step id="build" 
         category='podman'
         type="maven"
-        subcommand="mvn clean package">
+        subcommand="mvn -Dsha1=.BUILDID -Dchangelist=  clean package">
      <description>build package using maven</description>
   
   </step>
@@ -32,10 +39,24 @@
   
   </step>
 
+  <step id="git_tag" 
+        category='podman'
+        type="git"
+        subcommand="tag vRELEASE.BUILDID">
+  	<description>tag repo</description>
+  </step>
+
+  <step id="git_tag_push" 
+        category='podman'
+        type="git"
+        subcommand="push origin tag vRELEASE.BUILDID">
+  	<description>tag repo</description>
+  </step>
+
   <step id="deployto_nexus" 
         category='podman'
         type="maven"
-        subcommand="mvn -Dmaven.javadoc.skip=true deploy">
+        subcommand="mvn  -Dsha1=.BUILDID -Dchangelist=  -Dmaven.javadoc.skip=true deploy">
      <description>deploy to nexus</description>
   
   </step>

@@ -48,15 +48,14 @@ class ProjectLogResourceTest {
 		
 		createLog(dir, "p1", "p1_b1_20260402132452", "bar");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
-		Assertions.assertEquals("foo3", plr.getLog(Optional.of("p1"), Optional.empty(), Optional.empty()));
-		Assertions.assertEquals("foo3", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.empty()));
-		Assertions.assertEquals("foo3", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.of("1")));
-		Assertions.assertEquals("foo2", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.of("2")));
-		Assertions.assertEquals("foo1", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.of("3")));
+		Assertions.assertEquals("foo1", plr.getLog(Optional.of("p1"), Optional.empty(), Optional.of("20250402132452")));
+		Assertions.assertEquals("foo1", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.of("20250402132452")));
+		Assertions.assertEquals("foo2", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.of("20250402232452")));
+		Assertions.assertEquals("foo3", plr.getLog(Optional.of("p1"), Optional.of("main"), Optional.of("20250402332452")));
 
-		Assertions.assertEquals("bar", plr.getLog(Optional.of("p1"), Optional.of("feature/initial"), Optional.empty()));
+		Assertions.assertEquals("bar", plr.getLog(Optional.of("p1"), Optional.of("feature/initial"), Optional.of("20260402132452")));
 
 		cleanup(pdir);
 		cleanup(dir);
@@ -109,7 +108,7 @@ class ProjectLogResourceTest {
 	@SneakyThrows
 	@DisplayName("when no project is specified")
 	void test2() {
-		var plr = new ProjectLogResource(null, null);
+		var plr = new BuildLogResource(null, null);
 		Optional<String> empty = Optional.empty();
 
 		var e1 = Assertions.assertThrows(WebApplicationException.class, () -> {
@@ -122,19 +121,20 @@ class ProjectLogResourceTest {
 	@SneakyThrows
 	@DisplayName("when project does not exist")
 	void test3() {
-		Path pdir = Path.of("target/projects");
-		Path dir = Path.of("target/logs");
+		var pdir = Path.of("target/projects");
+		var dir = Path.of("target/logs");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
 		cleanup(pdir);
 		cleanup(dir);
 
-		Optional<String> empty = Optional.empty();
-		Optional<String> op1 = Optional.of("p1");
+		var empty = Optional.<String>empty();
+		var op1 = Optional.of("p1");
+		var otimestamp = Optional.of("2025040213245");
 		
 		var e1 = Assertions.assertThrows(WebApplicationException.class, () -> {
-			 	plr.getLog(op1, empty, empty);
+			 	plr.getLog(op1, empty, otimestamp);
 		    });
 		Assertions.assertEquals("project does not exists: p1", e1.getMessage());
 	}
@@ -144,21 +144,22 @@ class ProjectLogResourceTest {
 	@SneakyThrows
 	@DisplayName("when bad project configuration file")
 	void test5() {
-		Path pdir = Path.of("target/projects");
-		Path dir = Path.of("target/plog");
+		var pdir = Path.of("target/projects");
+		var dir = Path.of("target/plog");
 
 		cleanup(pdir);
 		cleanup(dir);
 
 		createBadProject(pdir, "p1");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
-		Optional<String> empty = Optional.empty();
-		Optional<String> op1 = Optional.of("p1");
+		var empty = Optional.<String>empty();
+		var op1 = Optional.of("p1");
+		var otimestamp = Optional.of("2025040213245");
 		
 		var e1 = Assertions.assertThrows(WebApplicationException.class, () -> {
-			 	plr.getLog(op1, empty, empty);
+			 	plr.getLog(op1, empty, otimestamp);
 		    });
 		Assertions.assertEquals("bad project configuration file: p1", e1.getMessage());
 		
@@ -171,22 +172,22 @@ class ProjectLogResourceTest {
 	@SneakyThrows
 	@DisplayName("when branch does not exists")
 	void test6() {
-		Path pdir = Path.of("target/projects");
-		Path dir = Path.of("target/plog");
+		var pdir = Path.of("target/projects");
+		var dir = Path.of("target/plog");
 
 		cleanup(pdir);
 		cleanup(dir);
 
 		createProject(pdir, "p1");
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
-		Optional<String> empty = Optional.empty();
-		Optional<String> op1 = Optional.of("p1");
-		Optional<String> obranch = Optional.of("badbranch");
+		var op1 = Optional.of("p1");
+		var obranch = Optional.of("badbranch");
+		var otimestamp = Optional.of("2025040213245");
 
 		var e1 = Assertions.assertThrows(WebApplicationException.class, () -> {
-			 	plr.getLog(op1, obranch, empty);
+			 	plr.getLog(op1, obranch, otimestamp);
 		    });
 		Assertions.assertEquals("no branch badbranch for project p1", e1.getMessage());
 		
@@ -200,23 +201,26 @@ class ProjectLogResourceTest {
 	@SneakyThrows
 	@DisplayName("when log is missing")
 	void test99() {
-		Path pdir = Path.of("target/projects");
-		Path dir = Path.of("target/plog");
+		var pdir = Path.of("target/projects");
+		var dir = Path.of("target/plog");
 
 		cleanup(pdir);
 		cleanup(dir);
 
 		createProject(pdir, "p1");
+		
+		Files.createDirectories(dir.resolve("p1"));
 
-		var plr = new ProjectLogResource(pdir, dir);
+		var plr = new BuildLogResource(pdir, dir);
 
-		Optional<String> empty = Optional.empty();
-		Optional<String> op1 = Optional.of("p1");
+		var empty = Optional.<String>empty();
+		var op1 = Optional.of("p1");
+		var otimestamp = Optional.of("2025040213245");
 
 		var e1 = Assertions.assertThrows(WebApplicationException.class, () -> {
-			 	plr.getLog(op1, empty, empty);
+			 	plr.getLog(op1, empty, otimestamp);
 		    });
-		Assertions.assertEquals("log file not found", e1.getMessage());
+		Assertions.assertEquals("log file not found :target\\plog\\p1\\p1_b0_2025040213245.log", e1.getMessage());
 		
 		cleanup(dir);
 	}
