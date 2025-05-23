@@ -25,6 +25,13 @@
 		<role>java</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="maven_graalvm">
+		<image>192.168.0.20:5000/graalvm:24</image>
+		<username>podman</username>
+		<command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT 192.168.0.20:5000/graalvm:24</command>
+		<role>java</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="maven_sonar">
 		<image>192.168.0.20:5000/maven-sonar:java21</image>
 		<username>podman</username>
@@ -52,7 +59,7 @@
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_lint">
-		<image>192.168.0.20:5000/golang-lint:2.1.6</image>
+		<image>docker.io/golangci/golangci-lint</image>
 		<username>podman</username>
 		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp 192.168.0.20:5000/golang-lint:2.1.6 run</command>
 		<role>golang</role>
