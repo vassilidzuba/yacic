@@ -2,6 +2,7 @@
 
 [previous](02-installation.md)
 [toc](_toc.md)
+[next](04-images.md)
 
 The pipelines refer to actions that are defined in the XML files specified in the action definition directory,
 as defined in the global configuration
@@ -432,3 +433,7 @@ This action build a .deb file. It is run on the host, that must therefore be deb
 
 [previous](02-installation.md)
 [toc](_toc.md)
+[next](04-images.md)
+
+
+Distributed under license [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
