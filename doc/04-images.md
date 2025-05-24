@@ -44,7 +44,7 @@ This image is used to run maven with the sonar target. It is built using the fol
 ```Dockerfile
 from docker.io/library/maven:3.9.9-amazoncorretto-21-alpine
 
-CMD /usr/bin/mvn -Dsonar.token=$token sonar:sonar
+CMD /usr/bin/mvn -Dsonar.token=$token  -Dsonar.host.url=http://192.168.0.20:9000 sonar:sonar
 ```
 
 It has been created only to be able to use the sonar token stored as a podman secret.

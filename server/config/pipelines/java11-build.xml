@@ -1,4 +1,4 @@
-<pipeline type="sequential" id ="java-build">
+<pipeline type="sequential" id ="java11-build">
   <description>Pipeline Three</description>
 
   <step id="clone" 
@@ -13,7 +13,7 @@
 
   <step id="build" 
         category='podman'
-        type="maven"
+        type="maven11"
         subcommand="mvn clean package">
      <description>build package using maven</description>
   
@@ -40,7 +40,9 @@
         type="maven"
         subcommand="mvn -Dmaven.javadoc.skip=true deploy">
      <description>deploy to nexus</description>
-  
+     <skipwhen>
+     	<flag name="NODEPLOY"/>
+     </skipwhen>
   </step>
 
   <step id="build-image" 

@@ -1,0 +1,15 @@
+{
+	"project": "jackson-core",
+	"repo": "https://github.com/FasterXML/jackson-core.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "java11-build",
+		
+	"branches": [
+		{"name": "2.18",            "dir": "b0"}
+	],
+	"flags": ["NOCLONE", "NODEPLOY", "NODOCKER"],
+	"properties": [
+	]
+	
+}

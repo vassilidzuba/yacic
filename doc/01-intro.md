@@ -16,6 +16,13 @@ The concepts are the following:
 - a run of a pipeline is called a *build*
 
 
+## TODO
+
+- add commands to manage the configuration without needing access to the installation file syste.
+- allow to checkout a specific tag
+- allow to build java programs when the pom is not at the root of the repo
+- support gradle
+
 [toc](_toc.md)
 [next](02-installation.md)
 
