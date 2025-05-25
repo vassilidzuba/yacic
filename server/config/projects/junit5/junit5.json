@@ -8,7 +8,7 @@
 	"branches": [
 		{"name": "main",            "dir": "b0"}
 	],
-	"flags": ["NOCLONE2", "NODEPLOY", "NODOCKER"],
+	"flags": ["NOCLONE", "NODEPLOY", "NODOCKER"],
 	"properties": [
 	]
 	
