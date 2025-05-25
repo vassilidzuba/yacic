@@ -37,13 +37,18 @@ public class FileAccessUtil {
 
 	@SneakyThrows
 	public String readFile(String host, String username, String filepath) {
-		if ("localhost".equals(host)) {
+		var hostname = getHostName();
+		
+		log.info("hostname is {}", hostname);
+				
+		if ("localhost".equals(host) || host.equalsIgnoreCase(hostname) || host.startsWith(hostname + ".")) {
 			var path = Path.of(filepath);
 			if (Files.isReadable(path)) {
 				return Files.readString(path);
 			}
 		} else {
-			try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username).build()) {
+			try (SshClient ssh = SshClientBuilder.create().withHostname(host).withPort(22).withUsername(username)
+					.build()) {
 				SshAgentClient agent = SshAgentClient.connectOpenSSHAgent(Constants.YACIC);
 				ssh.authenticate(new ExternalKeyAuthenticator(agent), 30000);
 
@@ -52,13 +57,23 @@ public class FileAccessUtil {
 				var s = Files.readString(tmpFile);
 				Files.delete(tmpFile);
 				return s;
-				
+
 			} catch (Exception e) {
-				log.debug("exception: {}",e.getMessage());
+				log.debug("exception: {}", e.getMessage());
 				return null;
 			}
 		}
-		
+
 		return null;
+	}
+
+	private String getHostName() {
+		String os = System.getProperty("os.name").toLowerCase();
+
+		if (os.contains("win")) {
+			return System.getenv("COMPUTERNAME");
+		} else  {
+			return System.getenv("HOSTNAME");
+		}
 	}
 }
