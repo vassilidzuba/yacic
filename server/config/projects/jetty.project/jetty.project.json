@@ -1,0 +1,15 @@
+{
+	"project": "jetty.project",
+	"repo": "https://github.com/jetty/jetty.project.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "java-build",
+		
+	"branches": [
+		{"name": "jetty-12.0.x",            "dir": "b0"}
+	],
+	"flags": ["NOCLONE", "NODEPLOY", "NODOCKER"],
+	"properties": [
+	]
+	
+}

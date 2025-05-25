@@ -25,3 +25,16 @@ Many sonar issues were found.
 The branch master has been built, with pipeline java11-build.
 
 Many sonar issues were found, with version `3.18.0-SNAPSHOT`.
+
+## jetty.project
+
+doesn't work:
+
+requires call git from maven
+
+## junit5
+
+doesn(t work
+
+requires gradle
+

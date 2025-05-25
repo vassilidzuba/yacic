@@ -1,0 +1,15 @@
+{
+	"project": "junit5",
+	"repo": "https://github.com/junit-team/junit5.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "java-build",
+		
+	"branches": [
+		{"name": "main",            "dir": "b0"}
+	],
+	"flags": ["NOCLONE2", "NODEPLOY", "NODOCKER"],
+	"properties": [
+	]
+	
+}
