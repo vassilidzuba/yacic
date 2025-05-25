@@ -106,10 +106,7 @@ public class SequentialPipeline extends AbstractPipeline<SequentialPipelineConfi
 		if (flags != null && a.getSkipWhen() != null && a.getSkipWhen().stream().anyMatch(flags::contains)) {
 			return true;
 		}
-		if (a.getOnlyWhen() != null && ! a.getOnlyWhen().isEmpty() && (flags == null ||  a.getOnlyWhen().stream().allMatch(f -> ! flags.contains(f)))) {
-			return  true;
-		}
-		return false;
+		return (a.getOnlyWhen() != null && ! a.getOnlyWhen().isEmpty() && (flags == null ||  a.getOnlyWhen().stream().allMatch(f -> ! flags.contains(f))));
 	}
 	
 	private boolean hasNextAction(String currentStep, PipelineStatus<SequentialPipelineConfiguration> ps) {

@@ -3,7 +3,7 @@
 	"repo": "https://github.com/junit-team/junit5.git",
 	"root": "/mnt/yacic",
 	
-	"pipeline": "java-build",
+	"pipeline": "java-gradle",
 		
 	"branches": [
 		{"name": "main",            "dir": "b0"}
