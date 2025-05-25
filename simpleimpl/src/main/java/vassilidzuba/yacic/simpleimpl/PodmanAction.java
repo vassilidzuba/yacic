@@ -93,6 +93,7 @@ public class PodmanAction extends AbstractAction {
 		}
 	
 		var properties = new HashMap<String, String>(); 
+		properties.put("ACTIONID", id);
 		properties.putAll(pconfig.getProperties());
 		if (pdef.isUselocalproperties()) {
 			addLocalProperties(properties, nodes);
