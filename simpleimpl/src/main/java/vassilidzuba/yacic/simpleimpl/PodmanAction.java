@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -94,6 +96,9 @@ public class PodmanAction extends AbstractAction {
 		properties.putAll(pconfig.getProperties());
 		if (pdef.isUselocalproperties()) {
 			addLocalProperties(properties, nodes);
+		}
+		if (StringUtils.isNotBlank(pdef.getImage())) {
+			properties.put("IMAGE", pdef.getImage());
 		}
 
 		properties.forEach((k,v) -> log.info("        {} : {}", k, v));
