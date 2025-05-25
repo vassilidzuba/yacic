@@ -41,7 +41,7 @@ class PodmanutilTest {
 	@SneakyThrows
 	void test1() {
 		Assertions.assertDoesNotThrow(() -> {
-			try (SshClient ssh = SshClientBuilder.create().withHostname("odin").withPort(22).withUsername("podman")
+			try (SshClient ssh = SshClientBuilder.create().withHostname("odin.manul.lan").withPort(22).withUsername("podman")
 					.build()) {
 
 				var cmd = "curl --unix-socket $XDG_RUNTIME_DIR/podman/podman.sock 'http://d/v5.0.0/libpod/images/json'";
