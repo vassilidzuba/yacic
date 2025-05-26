@@ -1,0 +1,15 @@
+{
+	"project": "commons-lang",
+	"repo": "https://github.com/apache/commons-lang.git",
+	"root": "/mnt/yacic",
+	
+	"pipeline": "java11-build",
+		
+	"branches": [
+		{"name": "master",            "dir": "b0"}
+	],
+	"flags": ["NOCLONE", "NODEPLOY", "NODOCKER"],
+	"properties": [
+	]
+	
+}

@@ -40,7 +40,7 @@ class FileAccessUtilTest {
 
 	@Test
 	void test3() {
-		var s = new FileAccessUtil().readFile("odin", "podman", "/mnt/yacic/app/config/yacic.yaml");
+		var s = new FileAccessUtil().readFile("odin.manul.lan", "podman", "/mnt/yacic/app/config/yacic.yaml");
 		Assertions.assertNotNull(s);
 		log.info("{}", s);
 	}
@@ -48,7 +48,7 @@ class FileAccessUtilTest {
 
 	@Test
 	void test4() {
-		var s = new FileAccessUtil().readFile("odin", "podman", "/mnt/yacic/app/config/nosuchfile");
+		var s = new FileAccessUtil().readFile("odin.manul.lan", "podman", "/mnt/yacic/app/config/nosuchfile");
 		Assertions.assertNull(s);
 	}
 }

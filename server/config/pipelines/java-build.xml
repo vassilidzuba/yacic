@@ -4,8 +4,11 @@
   <step id="clone" 
         category='podman'
         type="clone"
-        subcommand='clone -b "BRANCH" REPO'>
+        subcommand='clone -b "@{BRANCHNAME}" @{REPO}'>
   	<description>clone repository</description>
+     <skipwhen>
+     	<flag name="NOCLONE"/>
+     </skipwhen>
   </step>
 
   <step id="build" 

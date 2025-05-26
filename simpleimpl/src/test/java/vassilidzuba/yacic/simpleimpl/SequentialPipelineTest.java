@@ -93,7 +93,6 @@ class SequentialPipelineTest {
 		Assertions.assertEquals("ok", ps.getStatus());
 		
 		Assertions.assertEquals(0, listener.getSkipped().size());
-//		Assertions.assertEquals("action2", listener.getSkipped().get(0));
 	}
 
 	@Test

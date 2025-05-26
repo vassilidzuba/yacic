@@ -3,8 +3,8 @@
 	<podmanactiondefinition id="clone">
 		<image>docker.io/alpine/git</image>
 		<username>podman</username>
-		<command>--name clone-PROJECT -v ${HOME}:/root -v DATAAREA:/git docker.io/alpine/git</command>
-		<setup>rm -rf DATAAREA/PROJECT; mkdir -p DATAAREA;</setup>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v ${HOME}:/root -v @{DATAAREA}:/git @{IMAGE}</command>
+		<setup>rm -rf @{DATAAREA}/@{PROJECT}; mkdir -p @{DATAAREA};</setup>
 		<cleanup></cleanup>
 		<role>git</role>
 	</podmanactiondefinition>
@@ -12,7 +12,7 @@
 	<podmanactiondefinition id="git">
 		<image>docker.io/alpine/git</image>
 		<username>podman</username>
-		<command>--name auth-PROJECT -v ${HOME}:/root -v DATAAREA/PROJECT:/git docker.io/alpine/git</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v ${HOME}:/root -v @{DATAAREA}/@{PROJECT}:/git @{IMAGE}</command>
 		<setup></setup>
 		<cleanup></cleanup>
 		<role>git</role>
@@ -21,88 +21,102 @@
 	<podmanactiondefinition id="maven">
 		<image>maven:3.9.9-amazoncorretto-21-alpine</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/@{PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} @{IMAGE}</command>
+		<role>java</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="maven11">
+		<image>maven:3.9.9-amazoncorretto-11-alpine</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/@{PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} @{IMAGE}</command>
 		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="maven_graalvm">
 		<image>192.168.0.20:5000/graalvm:24</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT 192.168.0.20:5000/graalvm:24</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/@{PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} @{IMAGE}</command>
 		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="maven_sonar">
 		<image>192.168.0.20:5000/maven-sonar:java21</image>
 		<username>podman</username>
-		<command>--name build-PROJECT --secret sonar-token,type=env,target=token -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT 192.168.0.20:5000/maven-sonar:java21</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} --secret sonar-token,type=env,target=token -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/@{PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} @{IMAGE}</command>
+		<role>java</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="gradle">
+		<image>docker.io/library/gradle:8.14.0-jdk21-corretto</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v "$HOME/.gradle:/root/.gradle" -v "@{DATAAREA}/@{PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} @{IMAGE}</command>
 		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="deploy_javadoc" mode="host">
 		<username>podman</username>
-		<command>cp DATAAREA/PROJECT/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
+		<command>cp @{DATAAREA}/@{PROJECT}/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
 		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="build_image" mode="host" uselocalproperties="true">
 		<username>podman</username>
-		<command>cd DATAAREA/PROJECT;  podman build -t DOCKERTAG -f Dockerfile</command>
+		<command>cd @{DATAAREA}/@{PROJECT};  podman build -t @{DOCKERTAG} -f Dockerfile</command>
 		<role>java</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_tidy">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go mod tidy </command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} go mod tidy </command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_lint">
 		<image>docker.io/golangci/golangci-lint</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp 192.168.0.20:5000/golang-lint:2.1.6 run</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} run</command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_test">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} go test</command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_test_coverage">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test -coverprofile=coverage.out</command>
+		<command>--name build-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} go test -coverprofile=coverage.out</command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_coverage_to_html">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go tool cover -html=coverage.out -o coverage.html</command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} go tool cover -html=coverage.out -o coverage.html</command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="go_compile">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build -o PROJECT MAIN </command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} go build -o @{PROJECT} MAIN </command>
 		<role>golang</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="gcc_compile">
 		<image>docker.io/library/gcc:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} make PROGRAM </command>
 		<role>gcc</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="build_deb" mode="host">
 		<username>podman</username>
-		<command>cd DATAAREA/PROJECT; ./build_deb.sh</command>
+		<command>cd @{DATAAREA}/@{PROJECT}; ./build_deb.sh</command>
 		<role>golang</role>
 	</podmanactiondefinition>
 

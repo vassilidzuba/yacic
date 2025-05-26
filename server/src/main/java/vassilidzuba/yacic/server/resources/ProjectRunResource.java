@@ -124,7 +124,7 @@ public class ProjectRunResource {
 		pconf.getProperties().put("PROJECT", prconf.getProject());
 		pconf.getProperties().put("REPO", prconf.getRepo());
 		pconf.getProperties().put("ROOT", prconf.getRoot());
-		pconf.getProperties().put("BRANCH", branch);
+		pconf.getProperties().put("BRANCHNAME", branch);
 		
 		pconf.getProperties().put("BRANCHDIR", branchDir);
 		pconf.getProperties().put("DATAAREA",

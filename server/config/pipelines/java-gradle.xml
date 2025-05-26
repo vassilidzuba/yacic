@@ -1,0 +1,21 @@
+<pipeline type="sequential" id ="java-gradle">
+  <description>Pipeline Three</description>
+
+  <step id="clone" 
+        category='podman'
+        type="clone"
+        subcommand='clone -b "@{BRANCHNAME}" @{REPO}'>
+  	<description>clone repository</description>
+     <skipwhen>
+     	<flag name="NOCLONE"/>
+     </skipwhen>
+  </step>
+
+  <step id="build" 
+        category='podman'
+        type="gradle"
+        subcommand="./gradlew clean build">
+     <description>build package using gradle</description>
+  
+  </step>
+</pipeline>

@@ -1,4 +1,4 @@
-<pipeline type="sequential" id ="java-release">
+<pipeline type="sequential" id ="java11-build">
   <description>Pipeline Three</description>
 
   <step id="clone" 
@@ -6,19 +6,15 @@
         type="clone"
         subcommand='clone -b "@{BRANCHNAME}" @{REPO}'>
   	<description>clone repository</description>
-  </step>
-
-  <step id="git_credential" 
-        category='podman'
-        type="git"
-        subcommand="config --local credential.helper 'store --file ~/.@{SCM}-credentials'">
-  	<description>auth repository</description>
+     <skipwhen>
+     	<flag name="NOCLONE"/>
+     </skipwhen>
   </step>
 
   <step id="build" 
         category='podman'
-        type="maven"
-        subcommand="mvn -Dsha1=.@{BUILDID} -Dchangelist=  clean package">
+        type="maven11"
+        subcommand="mvn clean package">
      <description>build package using maven</description>
   
   </step>
@@ -39,26 +35,14 @@
   
   </step>
 
-  <step id="git_tag" 
-        category='podman'
-        type="git"
-        subcommand="tag v@{RELEASE}.@{BUILDID}">
-  	<description>tag repo</description>
-  </step>
-
-  <step id="git_tag_push" 
-        category='podman'
-        type="git"
-        subcommand="push origin tag v@{RELEASE}.@{BUILDID}">
-  	<description>tag repo</description>
-  </step>
-
   <step id="deployto_nexus" 
         category='podman'
         type="maven"
-        subcommand="mvn  -Dsha1=.@{BUILDID} -Dchangelist=  -Dmaven.javadoc.skip=true deploy">
+        subcommand="mvn -Dmaven.javadoc.skip=true deploy">
      <description>deploy to nexus</description>
-  
+     <skipwhen>
+     	<flag name="NODEPLOY"/>
+     </skipwhen>
   </step>
 
   <step id="build-image" 
