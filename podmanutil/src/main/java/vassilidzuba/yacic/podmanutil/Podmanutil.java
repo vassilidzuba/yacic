@@ -85,10 +85,10 @@ public class Podmanutil {
 			OutputStream os, String role) {
 		log.info("in runGeneric");
 		
-		var setup = substitute(pad.getSetup(), properties);
-		var cleanup = substitute(pad.getCleanup(), properties);
-		var command = substitute(pad.getCommand(), properties);
-		var subcommand2 = substitute(subcommand, properties);
+		var setup = VariableSubtitutionUtil.substitute(pad.getSetup(), properties);
+		var cleanup = VariableSubtitutionUtil.substitute(pad.getCleanup(), properties);
+		var command = VariableSubtitutionUtil.substitute(pad.getCommand(), properties);
+		var subcommand2 = VariableSubtitutionUtil.substitute(subcommand, properties);
 
 		var fullcommand = setup + "podman run -it --rm " + command + " " + subcommand2 + "; echo PODMANTERMINATION $?; "
 				+ cleanup;
@@ -101,10 +101,10 @@ public class Podmanutil {
 	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand,
 			OutputStream os, String role) {
 		log.info("in runHost");
-		var setup = substitute(pad.getSetup(), properties);
-		var cleanup = substitute(pad.getCleanup(), properties);
-		var command = substitute(pad.getCommand(), properties);
-		var subcommand2 = substitute(subcommand, properties);
+		var setup = VariableSubtitutionUtil.substitute(pad.getSetup(), properties);
+		var cleanup = VariableSubtitutionUtil.substitute(pad.getCleanup(), properties);
+		var command = VariableSubtitutionUtil.substitute(pad.getCommand(), properties);
+		var subcommand2 = VariableSubtitutionUtil.substitute(subcommand, properties);
 
 		var fullcommand = setup + command + " " + subcommand2 + "; echo PODMANTERMINATION $?; " + cleanup;
 
@@ -224,17 +224,6 @@ public class Podmanutil {
 		}
 
 		return exitStatus.toString();
-	}
-
-	private String substitute(String cmd, Map<String, String> properties) {
-		var command = cmd;
-		if (command == null) {
-			return "";
-		}
-		for (var e : properties.entrySet()) {
-			command = command.replace(e.getKey(), e.getValue());
-		}
-		return command;
 	}
 
 	@SneakyThrows

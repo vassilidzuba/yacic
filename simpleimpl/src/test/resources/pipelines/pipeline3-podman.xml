@@ -4,7 +4,7 @@
   <step id="step1" 
         category='podman'
         type="clone"
-        subcommand="clone -b BRANCH REPO">
+        subcommand="clone -b @{BRANCH} @{REPO}">
   	<description>clone repository</description>
   </step>
 
@@ -27,7 +27,7 @@
   <step id="step4" 
         category='podman'
         type="build_image"
-        subcommand=" -t 192.168.0.20:5000/PROJECT:VERSION">
+        subcommand=" -t 192.168.0.20:5000/@{PROJECT}:@{VERSION}">
      <description>build docker image</description>
   
   </step>

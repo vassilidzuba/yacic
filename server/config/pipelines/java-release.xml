@@ -4,21 +4,21 @@
   <step id="clone" 
         category='podman'
         type="clone"
-        subcommand='clone -b "BRANCHNAME" REPO'>
+        subcommand='clone -b "@{BRANCHNAME}" @{REPO}'>
   	<description>clone repository</description>
   </step>
 
   <step id="git_credential" 
         category='podman'
         type="git"
-        subcommand="config --local credential.helper 'store --file ~/.SCM-credentials'">
+        subcommand="config --local credential.helper 'store --file ~/.@{SCM}-credentials'">
   	<description>auth repository</description>
   </step>
 
   <step id="build" 
         category='podman'
         type="maven"
-        subcommand="mvn -Dsha1=.BUILDID -Dchangelist=  clean package">
+        subcommand="mvn -Dsha1=.@{BUILDID} -Dchangelist=  clean package">
      <description>build package using maven</description>
   
   </step>
@@ -42,21 +42,21 @@
   <step id="git_tag" 
         category='podman'
         type="git"
-        subcommand="tag vRELEASE.BUILDID">
+        subcommand="tag v@{RELEASE}.@{BUILDID}">
   	<description>tag repo</description>
   </step>
 
   <step id="git_tag_push" 
         category='podman'
         type="git"
-        subcommand="push origin tag vRELEASE.BUILDID">
+        subcommand="push origin tag v@{RELEASE}.@{BUILDID}">
   	<description>tag repo</description>
   </step>
 
   <step id="deployto_nexus" 
         category='podman'
         type="maven"
-        subcommand="mvn  -Dsha1=.BUILDID -Dchangelist=  -Dmaven.javadoc.skip=true deploy">
+        subcommand="mvn  -Dsha1=.@{BUILDID} -Dchangelist=  -Dmaven.javadoc.skip=true deploy">
      <description>deploy to nexus</description>
   
   </step>
