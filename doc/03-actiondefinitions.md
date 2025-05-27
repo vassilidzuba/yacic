@@ -65,7 +65,7 @@ This element contains the name of the username used to connect to the execution 
 
 ### Element command
 
-This the main command to be executed. Ity will be completed by the subcommand defined in the pipeline.
+This the main command to be executed. It will be completed by the subcommand defined in the pipeline.
 Note that *podman* is assumes, except if the mode is *host*.
 
 Here is an example of a command in podman mode:
@@ -101,9 +101,17 @@ using the mapping between roles and host found in the global configuration.
 
 ## The default configuration
 
-This section defines the actions definions of the defaultconfiguration.
+This section defines the actions definitions of the default configuration.
 
 Note that then run process will substitute the property names by their values.
+The syntax of a property reference is;
+
+    @{name}
+
+or, when providing a defaulty value:
+
+    @{name:default}
+
 Several properties are defined by default:
 
 - `DATAAREA`: the directory in which the repo is cloned, derived from the `root` property
@@ -112,6 +120,7 @@ Several properties are defined by default:
 - `BRANCH`: the name of the branch, as specified in the run command.
 - `BUILID`: id of the build, computed incrementally fora given repo/branch using the database.
 - `RELEASE`: release number as defined in the project configuration
+- `ACTIONID`: id of the action
 
 ### Action clone
 
@@ -119,8 +128,8 @@ Several properties are defined by default:
 <podmanactiondefinition id="clone">
     <image>docker.io/alpine/git</image>
     <username>podman</username>
-    <command>--name clone-PROJECT -v ${HOME}:/root -v DATAAREA:/git docker.io/alpine/git</command>
-    <setup>rm -rf DATAAREA/PROJECT; mkdir -p DATAAREA;</setup>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v ${HOME}:/root -v @{DATAAREA}:/git docker.io/alpine/git</command>
+    <setup>rm -rf @{DATAAREA}/@{PROJECT}; mkdir -p @{DATAAREA};</setup>
     <cleanup></cleanup>
     <role>git</role>
 </podmanactiondefinition>
@@ -133,7 +142,7 @@ Here is an example of pipeline step that uses it:
 <step id="clone" 
       category='podman'
       type="clone"
-      subcommand='clone -b "BRANCH" REPO'>
+      subcommand='clone -b "@{BRANCH}" @{REPO}'>
   	<description>clone repository</description>
 </step>
 ```
@@ -147,7 +156,7 @@ Note that the (git command is implied and should not be present in the subcomman
 <podmanactiondefinition id="git">
     <image>docker.io/alpine/git</image>
     <username>podman</username>
-    <command>--name auth-PROJECT -v ${HOME}:/root -v DATAAREA/PROJECT:/git docker.io/alpine/git</command>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v ${HOME}:/root -v @{DATAAREA}/@{PROJECT}:/git docker.io/alpine/git</command>
     <setup></setup>
     <cleanup></cleanup>
     <role>git</role>
@@ -162,7 +171,7 @@ Here is an example of step to tag the repo:
 <step id="git_tag" 
       category='podman'
       type="git"
-      subcommand="tag vRELEASE.BUILDID">
+      subcommand="tag v@{RELEASE}.@{BUILDID}">
    <description>tag repo</description>
 </step>
 ```
@@ -174,7 +183,7 @@ Here is an example of step to tag the repo:
 <podmanactiondefinition id="maven">
     <image>maven:3.9.9-amazoncorretto-21-alpine</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/PROJECT}":/usr/src/PROJECT -w /usr/src/@{PROJECT} maven:3.9.9-amazoncorretto-21-alpine</command>
     <role>java</role>
 </podmanactiondefinition>
 ```
@@ -197,7 +206,7 @@ This action executes a maven command. Here is an example of pipeline step usingh
 <podmanactiondefinition id="maven_sonar">
     <image>192.168.0.20:5000/maven-sonar:java21</image>
     <username>podman</username>
-    <command>--name build-PROJECT --secret sonar-token,type=env,target=token -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT 192.168.0.20:5000/maven-sonar:java21</command>
+    <command>--name  @{ACTIONID}-@{PROJECT} --secret sonar-token,type=env,target=token -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} 192.168.0.20:5000/maven-sonar:java21</command>
     <role>java</role>
 </podmanactiondefinition>
 ```
@@ -220,7 +229,7 @@ token through trhe podman secrets. Here is an example of use iun apipeline step:
 ```xml
 <podmanactiondefinition id="deploy_javadoc" mode="host">
     <username>podman</username>
-    <command>cp DATAAREA/PROJECT/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
+    <command>cp @{DATAAREA}/@{PROJECT}/target/*-javadoc.jar /home/podman/nginx/javadoc; cd /home/podman/nginx; ./launch-nginx.sh; systemctl --user restart nginx</command>
     <role>java</role>
 </podmanactiondefinition>
 ```
@@ -242,7 +251,7 @@ This action is used to copy the javadoic jar files to nginx directory. It is exe
 ```xml
 <podmanactiondefinition id="build_image" mode="host" uselocalproperties="true">
     <username>podman</username>
-    <command>cd DATAAREA/PROJECT;  podman build -t DOCKERTAG -f Dockerfile</command>
+    <command>cd @{DATAAREA}/@{PROJECT;  podman build -t @{DOCKERTAG} -f Dockerfile</command>
     <role>java</role>
 </podmanactiondefinition>
 ```
@@ -269,12 +278,12 @@ Here is an example of step using it, witich is executed only if the flag NODOCKE
 	<podmanactiondefinition id="go_tidy">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go mod tidy </command>
+		<command>--name  @{ACTIONID}-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go mod tidy </command>
 		<role>golang</role>
 	</podmanactiondefinition>
 ```
 
-This action executes a `go mod tidy` command in the repo. Here is an exaùmple of strp using it:
+This action executes a `go mod tidy` command in the repo. Here is an example of strp using it:
 
 ```xml
 <step id="tidy" 
@@ -293,7 +302,7 @@ This action executes a `go mod tidy` command in the repo. Here is an exaùmple o
 	<podmanactiondefinition id="go_lint">
 		<image>192.168.0.20:5000/golang-lint:2.1.6</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp 192.168.0.20:5000/golang-lint:2.1.6 run</command>
+		<command>--name  @{ACTIONID}-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp 192.168.0.20:5000/golang-lint:2.1.6 run</command>
 		<role>golang</role>
 	</podmanactiondefinition>
 ```
@@ -316,7 +325,7 @@ This action executes a `golangci-lint` command in the repo. Here is an example o
 <podmanactiondefinition id="go_test">
     <image>docker.io/library/golang:bookworm</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test</command>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test</command>
     <role>golang</role>
 </podmanactiondefinition>
 ```
@@ -339,7 +348,7 @@ This action executes a `go test` command in the repo. Here is an example of ster
 <podmanactiondefinition id="go_test_coverage">
     <image>docker.io/library/golang:bookworm</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test -coverprofile=coverage.out</command>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go test -coverprofile=coverage.out</command>
     <role>golang</role>
 </podmanactiondefinition>
 ```
@@ -361,7 +370,7 @@ This action executes a `go test` command in the repo, with generation of the cov
 <podmanactiondefinition id="go_coverage_to_html">
    <image>docker.io/library/golang:bookworm</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go tool cover -html=coverage.out -o coverage.html</command>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/PROJECT}:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go tool cover -html=coverage.out -o coverage.html</command>
     <role>golang</role>
 </podmanactiondefinition>
 ```
@@ -385,7 +394,7 @@ This action converts the coverage data into an html file. Here is an example of 
 	<podmanactiondefinition id="go_compile">
 		<image>docker.io/library/golang:bookworm</image>
 		<username>podman</username>
-		<command>--name build-PROJECT -v /mnt/yacic/go:/go  -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build -o PROJECT MAIN </command>
+		<command>--name  @{ACTIONID}-@{PROJECT} -v /mnt/yacic/go:/go  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp docker.io/library/golang:bookworm go build -o PROJECT MAIN </command>
 		<role>golang</role>
 	</podmanactiondefinition>
 ```
@@ -410,7 +419,7 @@ Here is an example of step using it:
 <podmanactiondefinition id="gcc_compile">
     <image>docker.io/library/gcc:bookworm</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v DATAAREA/PROJECT:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make PROGRAM </command>
+    <command>--name  @{ACTIONID}-@{PROJECT} -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp docker.io/library/gcc:bookworm make @{PROGRAM} </command>
     <role>gcc</role>
 </podmanactiondefinition>
 ```
@@ -422,7 +431,7 @@ This action compiles a c/cpp program.
 ```xml
 <podmanactiondefinition id="build_deb" mode="host">
     <username>podman</username>
-    <command>cd DATAAREA/PROJECT; ./build_deb.sh</command>
+    <command>cd @{DATAAREA/@{PROJECT}; ./build_deb.sh</command>
     <role>golang</role>
 </podmanactiondefinition>
 ```

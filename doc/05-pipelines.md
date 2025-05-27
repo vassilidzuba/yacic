@@ -59,7 +59,7 @@ Let's consider the action `maven`:
 <podmanactiondefinition id="maven">
     <image>maven:3.9.9-amazoncorretto-21-alpine</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
+    <command>--name build-@{PROJECT} -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} maven:3.9.9-amazoncorretto-21-alpine</command>
     <role>java</role>
 </podmanactiondefinition>
 ```
@@ -70,7 +70,7 @@ and a step that uses it:
   <step id="build" 
         category='podman'
         type="maven"
-        subcommand="mvn -Dsha1=.BUILDID -Dchangelist=  clean package">
+        subcommand="mvn -Dsha1=.@{BUILDID} -Dchangelist=  clean package">
      <description>build package using maven</description>
   
   </step>
