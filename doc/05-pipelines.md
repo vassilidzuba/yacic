@@ -95,9 +95,11 @@ The pipelines defined in the defaultconfiguration are:
 
 - `gcc-build`: to build a c/cpp program using Make
 - `go-build`: to build a golang app
-- `java-build`: to build a java artifact using maven
+- `java-build`: to build a java artifact using maven -java 21)
+- `java11-build`: to build a java artifact using maven -java 11)
 - `java-release`: to build a java artifact in release mode using maven
 - `java-graalvm`: to build a java artifact using maven with graalvm
+- `gcc-build`: to build a Rust program using cargo
 
 
 [previous](04-images.m)

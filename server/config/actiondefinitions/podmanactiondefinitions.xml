@@ -121,6 +121,13 @@
 		<role>gcc</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="rust">
+		<image>docker.io/library/rust:1.87.0-alpine3.20</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR}  -v "$HOME/.cargo:/root/.cargo" -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} </command>
+		<role>rust</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="build_deb" mode="host">
 		<username>podman</username>
 		<command>cd @{DATAAREA}/@{PROJECT}; ./build_deb.sh</command>

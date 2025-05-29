@@ -426,6 +426,20 @@ Here is an example of step using it:
 
 This action compiles a c/cpp program.
 
+### Action rust
+
+```xml
+<podmanactiondefinition id="rust">
+    <image>docker.io/library/rust:1.87.0-alpine3.20</image>
+    <username>podman</username>
+    <command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR}  -v "$HOME/.cargo:~/.cargo" -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} </command>
+    <role>rust</role>
+</podmanactiondefinition>
+
+```
+
+This action is used to build a Rust program.
+
 ### Action build_deb
 
 ```xml

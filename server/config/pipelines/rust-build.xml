@@ -1,5 +1,5 @@
-<pipeline type="sequential" id ="gcc-build">
-  <description>Pipeline GCC</description>
+<pipeline type="sequential" id ="rust-build">
+  <description>Pipeline Rust</description>
 
   <step id="step1" 
         category='podman'
@@ -10,8 +10,8 @@
 
   <step id="step2" 
         category='podman'
-        type="gcc_compile"
-        subcommand="">
+        type="rust"
+        subcommand="cargo build">
      <description>compile the project</description>
   
   </step>

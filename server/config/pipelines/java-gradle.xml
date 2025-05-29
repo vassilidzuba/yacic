@@ -1,5 +1,5 @@
 <pipeline type="sequential" id ="java-gradle">
-  <description>Pipeline Three</description>
+  <description>Pipeline Gradle</description>
 
   <step id="clone" 
         category='podman'

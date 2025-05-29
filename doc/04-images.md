@@ -58,6 +58,11 @@ This image is used to run the *go* command.
 This image is used to run the ** command.
 
 
+## docker.io/library/rust:1.87.0-alpine3.20
+
+This image is used to run the *cargo* command, to build Rust programs.
+
+
 [previous](03-actiondefinitions.md)
 [toc](_toc.md)
 [next](05-pipelines.md)
