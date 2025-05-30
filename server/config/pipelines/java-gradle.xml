@@ -1,5 +1,5 @@
 <pipeline type="sequential" id ="java-gradle">
-  <description>Pipeline Three</description>
+  <description>Pipeline Gradle</description>
 
   <step id="clone" 
         category='podman'
@@ -17,5 +17,13 @@
         subcommand="./gradlew clean build">
      <description>build package using gradle</description>
   
+  </step>
+  
+  <step id="sonar" 
+        category='podman'
+        type="gradle_sonar"
+        subcommand="./gradlew clean build">
+     <description>run sonar using gradle</description>
+
   </step>
 </pipeline>

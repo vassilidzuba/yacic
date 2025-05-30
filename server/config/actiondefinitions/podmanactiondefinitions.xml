@@ -46,6 +46,13 @@
 		<role>java</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="gradle_sonar">
+		<image>192.168.0.20:5000/gradle-sonar:java21</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} --env PROJECT=@{PROJECT}  --secret sonar-token,type=env,target=token -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/@{PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} @{IMAGE}</command>
+		<role>java</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="gradle">
 		<image>docker.io/library/gradle:8.14.0-jdk21-corretto</image>
 		<username>podman</username>
@@ -112,6 +119,20 @@
 		<username>podman</username>
 		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} make PROGRAM </command>
 		<role>gcc</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="rust">
+		<image>docker.io/library/rust:1.87.0-alpine3.20</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR}  -v "$HOME/.cargo:/root/.cargo" -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} </command>
+		<role>rust</role>
+	</podmanactiondefinition>
+
+	<podmanactiondefinition id="zig">
+		<image>192.168.0.20:5000/zig:0.15</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR}  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} </command>
+		<role>zig</role>
 	</podmanactiondefinition>
 
 	<podmanactiondefinition id="build_deb" mode="host">

@@ -59,7 +59,7 @@ Let's consider the action `maven`:
 <podmanactiondefinition id="maven">
     <image>maven:3.9.9-amazoncorretto-21-alpine</image>
     <username>podman</username>
-    <command>--name build-PROJECT -v "$HOME/.m2:/root/.m2" -v "DATAAREA/PROJECT":/usr/src/PROJECT -w /usr/src/PROJECT maven:3.9.9-amazoncorretto-21-alpine</command>
+    <command>--name build-@{PROJECT} -v "$HOME/.m2:/root/.m2" -v "@{DATAAREA}/PROJECT}":/usr/src/@{PROJECT} -w /usr/src/@{PROJECT} maven:3.9.9-amazoncorretto-21-alpine</command>
     <role>java</role>
 </podmanactiondefinition>
 ```
@@ -70,7 +70,7 @@ and a step that uses it:
   <step id="build" 
         category='podman'
         type="maven"
-        subcommand="mvn -Dsha1=.BUILDID -Dchangelist=  clean package">
+        subcommand="mvn -Dsha1=.@{BUILDID} -Dchangelist=  clean package">
      <description>build package using maven</description>
   
   </step>
@@ -95,10 +95,12 @@ The pipelines defined in the defaultconfiguration are:
 
 - `gcc-build`: to build a c/cpp program using Make
 - `go-build`: to build a golang app
-- `java-build`: to build a java artifact using maven
+- `java-build`: to build a java artifact using maven -java 21)
+- `java11-build`: to build a java artifact using maven -java 11)
 - `java-release`: to build a java artifact in release mode using maven
 - `java-graalvm`: to build a java artifact using maven with graalvm
-
+- `rust-build`: to build a Rust program using cargo
+- `zig-build`: to build a Zig program
 
 [previous](04-images.m)
 [toc](_toc.md)

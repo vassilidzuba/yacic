@@ -1,5 +1,5 @@
-<pipeline type="sequential" id ="gcc-build">
-  <description>Pipeline GCC</description>
+<pipeline type="sequential" id ="zig-build">
+  <description>Pipeline Zig</description>
 
   <step id="step1" 
         category='podman'
@@ -10,8 +10,8 @@
 
   <step id="step2" 
         category='podman'
-        type="gcc_compile"
-        subcommand="">
+        type="zig"
+        subcommand="zig build">
      <description>compile the project</description>
   
   </step>
