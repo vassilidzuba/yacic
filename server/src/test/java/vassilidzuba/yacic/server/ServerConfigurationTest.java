@@ -81,11 +81,11 @@ class ServerConfigurationTest {
 		Assertions.assertEquals("config/projects",  config.getProjectDirectory());
 		Assertions.assertEquals("config/actiondefinitions",  config.getActionDefinitionDirectory());
 		
-		Assertions.assertEquals(7, config.getPipelines().keySet().size());
-		Assertions.assertEquals(17, config.getPodmanActionDefinitions().keySet().size());
+		Assertions.assertEquals(9, config.getPipelines().keySet().size());
+		Assertions.assertEquals(20, config.getPodmanActionDefinitions().keySet().size());
 		Assertions.assertEquals(1, config.getNodes().size());
 		Assertions.assertEquals("odin", config.getNodes().get(0).getHost());
-		Assertions.assertEquals(4, config.getNodes().get(0).getRoles().size());
+		Assertions.assertEquals(6, config.getNodes().get(0).getRoles().size());
 		Assertions.assertTrue(config.getNodes().get(0).getRoles().contains("git"));
 	}
 }
