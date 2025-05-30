@@ -440,6 +440,21 @@ This action compiles a c/cpp program.
 
 This action is used to build a Rust program.
 
+
+### Action rust
+
+```xml
+<podmanactiondefinition id="zig">
+    <image>192.168.0.20:5000/zig:0.15</image>
+    <username>podman</username>
+    <command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR}  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} </command>
+    <role>zig</role>
+</podmanactiondefinition>
+
+```
+
+This action is used to build a Zig program.
+
 ### Action build_deb
 
 ```xml

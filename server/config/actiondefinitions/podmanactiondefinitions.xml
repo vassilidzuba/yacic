@@ -128,6 +128,13 @@
 		<role>rust</role>
 	</podmanactiondefinition>
 
+	<podmanactiondefinition id="zig">
+		<image>192.168.0.20:5000/zig:0.15</image>
+		<username>podman</username>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR}  -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} </command>
+		<role>zig</role>
+	</podmanactiondefinition>
+
 	<podmanactiondefinition id="build_deb" mode="host">
 		<username>podman</username>
 		<command>cd @{DATAAREA}/@{PROJECT}; ./build_deb.sh</command>

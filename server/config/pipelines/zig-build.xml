@@ -1,0 +1,19 @@
+<pipeline type="sequential" id ="zig-build">
+  <description>Pipeline Zig</description>
+
+  <step id="step1" 
+        category='podman'
+        type="clone"
+        subcommand='clone --branch @{BRANCHNAME}  @{REPO}'>
+  	<description>clone repository</description>
+  </step>
+
+  <step id="step2" 
+        category='podman'
+        type="zig"
+        subcommand="zig build">
+     <description>compile the project</description>
+  
+  </step>
+
+</pipeline>

@@ -99,8 +99,8 @@ The pipelines defined in the defaultconfiguration are:
 - `java11-build`: to build a java artifact using maven -java 11)
 - `java-release`: to build a java artifact in release mode using maven
 - `java-graalvm`: to build a java artifact using maven with graalvm
-- `gcc-build`: to build a Rust program using cargo
-
+- `rust-build`: to build a Rust program using cargo
+- `zig-build`: to build a Zig program
 
 [previous](04-images.m)
 [toc](_toc.md)
