@@ -7,3 +7,4 @@ target/
 yacic.json
 *.dat
 .flattened-pom.xml
+.idea
