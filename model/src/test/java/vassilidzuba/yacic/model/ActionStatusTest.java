@@ -14,8 +14,23 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.ktimpl;
+package vassilidzuba.yacic.model;
 
-public class KtPipeline {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
+import vassilidzuba.yacic.model.ActionStatus;
+
+class ActionStatusTest {
+
+	@Test
+	void test1() {
+		var as = new ActionStatus();
+		
+		as.setId("zeId");
+		as.setStatus("success");
+		
+		Assertions.assertEquals("[zeId:success]", as.toString());
+	}
+	
 }

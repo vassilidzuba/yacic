@@ -79,7 +79,7 @@ public class ServerConfiguration extends Configuration {
 	@SneakyThrows
 	public void loadPipelines() {
 		try (var st = Files.list(Path.of(getPipelineDirectory()))) {
-			st.forEach(this::loadPipeline);
+			st.filter(p -> p.getFileName().toString().endsWith(".xml")).forEach(this::loadPipeline);
 		}
 	}
 	

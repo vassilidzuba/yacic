@@ -14,7 +14,7 @@
    limitations under the License.	
 **/
 
-package modelvassilidzuba.yacic.model;
+package vassilidzuba.yacic.model;
 
 import java.nio.file.Path;
 import java.util.List;

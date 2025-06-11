@@ -14,7 +14,7 @@
    limitations under the License.	
 **/
 
-package modelvassilidzuba.yacic.model;
+package vassilidzuba.yacic.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -23,6 +23,7 @@
 	<artifactId>yacic</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<name>yacic</name>
+
 	<packaging>pom</packaging>
 	<description>Yet Another CI Contraption</description>
 
@@ -31,12 +32,14 @@
 		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-	</properties>
+        <kotlin.version>2.1.21</kotlin.version>
+    </properties>
 
 	<modules>
 		<module>model</module>
 		<module>podmanutil</module>
 		<module>simpleimpl</module>
+		<module>ktimpl</module>
 		<module>persistence</module>
 		<module>server</module>
 	</modules>
@@ -125,8 +128,8 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<build>
-		<pluginManagement>
+      <build>
+        <pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -137,23 +140,8 @@
 		</pluginManagement>
 		
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.14.0</version>
-				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
 
-			<plugin>
+            <plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>5.0.0.4389</version>
@@ -181,6 +169,21 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+			   <groupId>org.apache.maven.plugins</groupId>
+			   <artifactId>maven-compiler-plugin</artifactId>
+			   <version>3.14.0</version>
+				<configuration>
+				   <source>${maven.compiler.source}</source>
+				   <target>${maven.compiler.target}</target>
+				   <annotationProcessorPaths>
+					   <path>
+						   <groupId>org.projectlombok</groupId>
+						   <artifactId>lombok</artifactId>
+					   </path>
+				   </annotationProcessorPaths>
+			   </configuration>
+		   </plugin>
 		</plugins>
 	</build>
 
