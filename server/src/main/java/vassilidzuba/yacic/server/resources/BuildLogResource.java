@@ -31,8 +31,8 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.ProjectConfiguration;
 import vassilidzuba.yacic.persistence.PersistenceManager;
-import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
 
 /**
  * Resource returning a log of a build. The log is in a file in the specific

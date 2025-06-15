@@ -1,5 +1,6 @@
 {
 	"project": "hellojava",
+	"implementation": "simple",
 	"repo": "http://odin.manul.lan:3000/vassili/hellojava.git",
 	"root": "/mnt/yacic",
 	

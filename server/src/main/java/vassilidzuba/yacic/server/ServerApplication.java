@@ -28,6 +28,7 @@ import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.GlobalConfiguration;
 import vassilidzuba.yacic.persistence.PersistenceManager;
 import vassilidzuba.yacic.server.health.ConfigurationHealthCheck;
 import vassilidzuba.yacic.server.resources.BuildListResource;
@@ -49,7 +50,8 @@ import vassilidzuba.yacic.server.security.YacicSecurity;
  */
 @Slf4j
 public class ServerApplication extends Application<ServerConfiguration> {
-
+	private static GlobalConfiguration globalConfiguration = new GlobalConfiguration(); 
+	
 	/**
 	 * Main entry point.
 	 * 
@@ -88,8 +90,12 @@ public class ServerApplication extends Application<ServerConfiguration> {
 		var databaseConfig = configuration.getDatatabaseConfig();
 		PersistenceManager.setDatabaseConfig(databaseConfig.getUrl(), databaseConfig.getUser(), databaseConfig.getPassword());
 
-		configuration.loadPipelines();
-		configuration.loadActionDefinitions();
+		globalConfiguration.setActionDefinitionDirectory(Path.of(configuration.getActionDefinitionDirectory()));
+		globalConfiguration.setLogsDirectory(Path.of(configuration.getLogsDirectory()));
+		globalConfiguration.setProjectDirectory(Path.of(configuration.getProjectDirectory()));
+		globalConfiguration.setPipelineDirectory(Path.of(configuration.getPipelineDirectory()));
+		globalConfiguration.setMaxNbLogs(configuration.getMaxNbLogs());
+		globalConfiguration.setNodes(configuration.getNodes());
 		
 	    environment.jersey().register(new AuthDynamicFeature(
 	            new BasicCredentialAuthFilter.Builder<User>()
@@ -108,10 +114,8 @@ public class ServerApplication extends Application<ServerConfiguration> {
 
 	private void initResources(JerseyEnvironment jersey, ServerConfiguration configuration) {
 		jersey.register(new BuildListResource());
-		jersey.register(new PipelineListResource(configuration.getPipelines()));
-        jersey.register(new ProjectRunResource(configuration.getPipelines(), configuration.getPodmanActionDefinitions(), configuration.getProjectDirectory(), configuration.getLogsDirectory(),
-        		configuration.getMaxNbLogs(),
-        		configuration.getNodes()));
+		jersey.register(new PipelineListResource(globalConfiguration.getPipelineDirectory()));
+        jersey.register(new ProjectRunResource(globalConfiguration));
         jersey.register(new ProjectListResource());
         jersey.register(new BuildLogResource(Path.of(configuration.getProjectDirectory()), Path.of(configuration.getLogsDirectory())));
         jersey.register(new ProjectGetResource(Path.of(configuration.getProjectDirectory()), configuration.getNodes()));

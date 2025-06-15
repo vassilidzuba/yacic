@@ -1,5 +1,6 @@
 {
 	"project": "hellogradle",
+	"implementation": "simple",
 	"repo": "http://odin.manul.lan:3000/vassili/hellogradle.git",
 	"root": "/mnt/yacic",
 	

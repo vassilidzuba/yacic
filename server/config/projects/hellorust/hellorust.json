@@ -1,5 +1,6 @@
 {
 	"project": "hellorust",
+	"implementation": "simple",
 	"repo": "http://odin.manul.lan:3000/vassili/hellorust.git",
 	"root": "/mnt/yacic",
 	

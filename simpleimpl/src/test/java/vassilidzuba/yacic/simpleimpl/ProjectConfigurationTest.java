@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
+import vassilidzuba.yacic.model.ProjectConfiguration;
 
 class ProjectConfigurationTest {
 

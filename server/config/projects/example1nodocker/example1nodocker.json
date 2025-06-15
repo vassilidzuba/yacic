@@ -1,5 +1,6 @@
 {
 	"project": "example1nodocker",
+	"implementation": "simple",
 	"repo": "http://odin.manul.lan:3000/vassili/example1.git",
 	"root": "/mnt/yacic",
 	

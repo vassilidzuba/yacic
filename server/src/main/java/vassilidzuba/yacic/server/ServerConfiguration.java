@@ -16,26 +16,15 @@
 
 package vassilidzuba.yacic.server;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.core.Configuration;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import vassilidzuba.yacic.model.Node;
-import vassilidzuba.yacic.model.Pipeline;
-import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
-import vassilidzuba.yacic.simpleimpl.PodmanActionDefinitionFactory;
-import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
-import vassilidzuba.yacic.simpleimpl.SequentialPipelineFactory;
 
 public class ServerConfiguration extends Configuration {
 	@NotEmpty
@@ -43,10 +32,6 @@ public class ServerConfiguration extends Configuration {
 
 	@NotEmpty
 	private String projectDirectory;
-
-	@JsonIgnore
-	@Getter
-	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
 
 	@NotEmpty
 	private String actionDefinitionDirectory;
@@ -61,10 +46,6 @@ public class ServerConfiguration extends Configuration {
 
 	private List<Node> nodes;
 	private DatabaseConfig database;
-	
-	@JsonIgnore
-	@Getter
-	private Map<String, PodmanActionDefinition> podmanActionDefinitions = new HashMap<>();
 
 	@JsonProperty
 	public String getPipelineDirectory() {
@@ -74,21 +55,6 @@ public class ServerConfiguration extends Configuration {
 	@JsonProperty
 	public void setPipelineDirectory(String pipelineDirectory) {
 		this.pipelineDirectory = pipelineDirectory;
-	}
-
-	@SneakyThrows
-	public void loadPipelines() {
-		try (var st = Files.list(Path.of(getPipelineDirectory()))) {
-			st.filter(p -> p.getFileName().toString().endsWith(".xml")).forEach(this::loadPipeline);
-		}
-	}
-	
-	@SneakyThrows
-	private void loadPipeline(Path path) {
-		try (var is = Files.newInputStream(path)) {
-			var pipeline = SequentialPipelineFactory.parse(is);
-			pipelines.put(pipeline.getId(), pipeline);
-		}
 	}
 
 	@JsonProperty
@@ -112,21 +78,6 @@ public class ServerConfiguration extends Configuration {
 		this.authenticationFile = authenticationFile;
 	}
 
-	@SneakyThrows
-	public void loadActionDefinitions() {
-		try (var st = Files.list(Path.of(getActionDefinitionDirectory()))) {
-			st.forEach(this::loadActionDefinition);
-		}
-	}
-
-	@SneakyThrows
-	private void loadActionDefinition(Path path) {
-		try (var is = Files.newInputStream(path)) {
-			var pads = PodmanActionDefinitionFactory.parse(is);
-			podmanActionDefinitions.putAll(pads);
-		}
-	}
-	
 	@JsonProperty
 	public String getProjectDirectory() {
 		return projectDirectory;
@@ -178,8 +129,8 @@ public class ServerConfiguration extends Configuration {
 	}
 	
 	public void reload() {
-		loadPipelines();
-		loadActionDefinitions();
+//		loadPipelines();
+//		loadActionDefinitions();
 	}
 	
 	public static class DatabaseConfig {

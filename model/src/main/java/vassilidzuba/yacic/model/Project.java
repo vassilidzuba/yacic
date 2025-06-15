@@ -14,19 +14,11 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server.api;
+package vassilidzuba.yacic.model;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import vassilidzuba.yacic.model.RunStatus;
-
-class RunStatusTest {
-
-	@Test
-	void test1() {
-		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000, "mypîpeline"); 
-		
-		Assertions.assertEquals("OK", rs.getStatus());
-	}
+public interface Project {
+	
+	void initialize(ProjectConfiguration config, GlobalConfiguration glconfig, String branch);
+	
+	RunStatus run();
 }

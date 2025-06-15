@@ -21,6 +21,7 @@ import vassilidzuba.yacic.model.AbstractPipeline
 import vassilidzuba.yacic.model.Node
 import vassilidzuba.yacic.model.PipelineConfiguration
 import vassilidzuba.yacic.model.PipelineStatus
+import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.file.Path
 
@@ -37,7 +38,11 @@ abstract class KtStep : AbstractAction<KtPipelineConfiguration>() {
         command = substituteVariables(command, mapOf<String, String>("ACTIONID" to id!!))
     }
 
-    open fun run() {
+      override fun run(
+        pconfig: KtPipelineConfiguration?,
+        os: OutputStream?,
+        nodes: List<Node?>?
+    ): String? {
         println("running step $id ($category)")
         if (description != "") {
             println("        description: $description")
@@ -45,30 +50,8 @@ abstract class KtStep : AbstractAction<KtPipelineConfiguration>() {
         if (command != "") {
             println("        command: $command")
         }
-    }
 
-    override fun run(
-        pconfig: KtPipelineConfiguration?,
-        os: OutputStream?,
-        nodes: List<Node?>?
-    ): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun setContext(data: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getContext(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun setDataArea(data: Path?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getDataArea(): Path? {
-        TODO("Not yet implemented")
+          return "ok"
     }
 
     override fun getSkipWhen(): Set<String?>? {
@@ -97,15 +80,22 @@ class KtPodmanStep : KtStep() {
 
     }
 
-    override fun run() {
-        super.run()
+    override fun run(
+        pconfig: KtPipelineConfiguration?,
+        os: OutputStream?,
+        nodes: List<Node?>?
+    ): String? {
+        super.run(pconfig, os, nodes)
         if (image != "") {
             println("        image: $image")
         }
         if (setup != "") {
             println("        setup: $setup")
         }
+
+        return "ok"
     }
+
 }
 
 class KtShellStep : KtStep() {
@@ -151,27 +141,9 @@ class KtPipeline : AbstractPipeline<KtPipelineConfiguration>() {
         return "[$name($description) : $steps]"
     }
 
-    fun run() {
-        println("running pipeline $name")
-        println("   description: $description")
-        steps.forEach { r -> r.run() }
-    }
-
     override fun getType(): String? {
         TODO("Not yet implemented")
     }
-
-    override fun getId(): String? {
-        TODO("Not yet implemented")
-    }
-
-//    override fun getDescription(): String? {
-//       return desc
-//    }
-
-//    fun setDescription(d: String) {
-//        desc = d;
-//    }
 
     override fun run(
         pconfig: KtPipelineConfiguration?,
@@ -179,11 +151,21 @@ class KtPipeline : AbstractPipeline<KtPipelineConfiguration>() {
         nodes: List<Node?>?,
         flags: Set<String?>?
     ): PipelineStatus<KtPipelineConfiguration?>? {
-        TODO("Not yet implemented")
+
+        FileOutputStream(logFile!!.toFile(), true).use { os ->
+
+            steps.forEach {
+                it.run(pconfig, os, nodes)
+            }
+        }
+
+        return PipelineStatus<KtPipelineConfiguration?>(this)
     }
 
     override fun initialize(initialStep: String?): PipelineStatus<KtPipelineConfiguration?>? {
-        TODO("Not yet implemented")
+        val status = PipelineStatus<KtPipelineConfiguration?>(this)
+
+        return status
     }
 
     override fun runNextStep(

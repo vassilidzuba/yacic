@@ -1,5 +1,6 @@
 {
 	"project": "hellozig",
+	"implementation": "simple",
 	"repo": "http://odin.manul.lan:3000/vassili/hellozig.git",
 	"root": "/mnt/yacic",
 	

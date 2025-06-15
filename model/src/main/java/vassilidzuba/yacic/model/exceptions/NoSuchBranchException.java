@@ -14,19 +14,20 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server.api;
+package vassilidzuba.yacic.model.exceptions;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import lombok.Getter;
 
-import vassilidzuba.yacic.model.RunStatus;
-
-class RunStatusTest {
-
-	@Test
-	void test1() {
-		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000, "mypîpeline"); 
-		
-		Assertions.assertEquals("OK", rs.getStatus());
+public class NoSuchBranchException extends RuntimeException {
+	private static final long serialVersionUID = -1382742825638983096L;
+	@Getter
+	private String branch;
+	@Getter
+	private String project;
+	
+	public NoSuchBranchException(String branch, String project) {
+		super("No branch: " + branch + " in project " + project);
+		this.branch = branch;
+		this.project =project;
 	}
 }

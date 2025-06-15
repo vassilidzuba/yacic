@@ -25,6 +25,8 @@ public abstract class AbstractAction<T extends PipelineConfiguration> implements
     private String id;
     @Setter
     private String description;
+    private String context;
+    private Path dataArea;
 
     @Override
     public String getId() {
@@ -34,6 +36,27 @@ public abstract class AbstractAction<T extends PipelineConfiguration> implements
     @Override
     public String getDescription() {
         return this.description;
+    }
+
+    @Override
+    public void setDataArea(Path dataArea) {
+        this.dataArea = dataArea;
+    }
+
+    @Override
+    public Path getDataArea() {
+        return this.dataArea;
+    }
+
+    @Override
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+
+    @Override
+    public String getContext() {
+        return this.context;
     }
 
 }

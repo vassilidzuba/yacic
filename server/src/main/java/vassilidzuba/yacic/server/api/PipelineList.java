@@ -19,10 +19,9 @@ package vassilidzuba.yacic.server.api;
 import java.util.ArrayList;
 
 /**
- * Pipeline list.
- * This is the return value of the resource PipelineListResource. 
+ * Pipeline list. This is the return value of the resource PipelineListResource.
  */
-public class PipelineList extends ArrayList<String> {
+public class PipelineList extends ArrayList<PipelineDescription> {
 	private static final long serialVersionUID = -6620433207929554172L;
 
 }

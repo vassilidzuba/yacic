@@ -25,9 +25,10 @@ class PipelineListTest {
 	void test1() {
 		var pl= new PipelineList();
 		
-		pl.add("pip1");
+		pl.add(new PipelineDescription("pip1", "simple"));
 		
 		Assertions.assertEquals(1, pl.size());
-		Assertions.assertEquals("pip1", pl.get(0));
+		Assertions.assertEquals("pip1", pl.get(0).getName());
+		Assertions.assertEquals("simple", pl.get(0).getType());
 	}
 }

@@ -16,8 +16,7 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -26,9 +25,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import vassilidzuba.yacic.model.Pipeline;
+import lombok.SneakyThrows;
+import vassilidzuba.yacic.server.api.PipelineDescription;
 import vassilidzuba.yacic.server.api.PipelineList;
-import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 /**
  * Resource returning the list of the names of the pipelines.
@@ -37,15 +36,15 @@ import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 @Produces(MediaType.APPLICATION_JSON)
 @PermitAll
 public class PipelineListResource {
-	private Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
+	private java.nio.file.Path pipelineDir;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param pipelines the pipeline map.
 	 */
-	public PipelineListResource(Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines) {
-		this.pipelines.putAll(pipelines);
+	public PipelineListResource(java.nio.file.Path pipelineDir) {
+		this.pipelineDir = pipelineDir;
 	}
 	
 	/**
@@ -56,8 +55,26 @@ public class PipelineListResource {
 	@GET
     @Timed
     public PipelineList listPipelines() {
-		var pipelineList = new PipelineList();
-		pipelineList.addAll(this.pipelines.keySet());
-		return pipelineList;
+		return loadPipelinesDescription(pipelineDir);
     }
+	
+	@SneakyThrows
+	private PipelineList loadPipelinesDescription(java.nio.file.Path dir) {
+		var ret = new PipelineList();
+		try (var st = Files.list(dir)) {
+			st.map(this::loadPipelineDescription).forEach(pd -> ret.add(pd));
+		}
+		return ret;
+	}
+	
+	private PipelineDescription loadPipelineDescription(java.nio.file.Path path) {
+		var name = path.getFileName().toString();
+		if (Files.isReadable(path.resolve(name + ".xml"))) {
+			return new PipelineDescription(name, "simple");
+		}
+		if (Files.isReadable(path.resolve(name + ".kts"))) {
+			return new PipelineDescription(name, "kt");
+		}
+		return new PipelineDescription(name, "undefined");
+	}
 }

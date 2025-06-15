@@ -1,7 +1,7 @@
 {
-	"project": "fibo",
-	"implementation": "simple",
-	"repo": "http://odin.manul.lan:3000/vassili/fibo.git",
+	"project": "hellojavaky",
+	"implementation": "kt",
+	"repo": "http://odin.manul.lan:3000/vassili/hellojava.git",
 	"root": "/mnt/yacic",
 	
 	"pipeline": "java-build",
@@ -13,10 +13,8 @@
 		{"name": "main",            "dir": "b0"},
 		{"name": "feature/initial", "dir": "b1"}
 	],
-	"flags": ["NODOCKER"],
+	"flags": [],
 	"properties": [
-		{"key": "SCM", "value": "gitea"},
-		{"key": "RELEASE", "value": "0.9"}
 	]
 	
 }

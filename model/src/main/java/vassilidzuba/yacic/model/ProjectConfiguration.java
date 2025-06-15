@@ -14,7 +14,7 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.simpleimpl;
+package vassilidzuba.yacic.model;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -71,6 +71,8 @@ public class ProjectConfiguration {
 	private List<PipelineByBranch> pipelines = new ArrayList<>();
 	@Setter @Getter
 	private Set<String> flags = new HashSet<>();
+	@Setter @Getter
+	private String implementation;
 	
 	@SneakyThrows
 	public static ProjectConfiguration read(InputStream is)  {

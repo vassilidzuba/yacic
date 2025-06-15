@@ -1,5 +1,6 @@
 {
 	"project": "junit5",
+	"implementation": "simple",
 	"repo": "https://github.com/junit-team/junit5.git",
 	"root": "/mnt/yacic",
 	

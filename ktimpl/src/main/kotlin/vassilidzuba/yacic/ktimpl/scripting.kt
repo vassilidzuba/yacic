@@ -3,10 +3,17 @@ package vassilidzuba.yacic.ktimpl
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import javax.script.ScriptEngineManager
+import vassilidzuba.yacic.model.Node;
 
 class Scripting {
     fun runScript() {
+        val config = KtPipelineConfiguration()
+        val logFile = Paths.get("target/test.log")
+        val nodes : List<Node?> = ArrayList();
+        val flags : Set<String?> = HashSet()
+
         val strPipeline = Files.readString(Path.of("../server/config/pipelines/java-maven.kts"), StandardCharsets.UTF_8)
 
         val prelim = """
@@ -39,7 +46,7 @@ class Scripting {
         println(ret)
 
         if (ret is KtPipeline) {
-            ret.run()
+            ret.run(config, logFile, nodes, flags)
         } else {
             println("bad type")
         }

@@ -16,17 +16,19 @@
 
 package vassilidzuba.yacic.server.api;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import lombok.Getter;
+import lombok.Setter;
 
-import vassilidzuba.yacic.model.RunStatus;
+public class PipelineDescription {
+	@Setter
+	@Getter
+	private String name;
+	@Setter
+	@Getter
+	private String type;
 
-class RunStatusTest {
-
-	@Test
-	void test1() {
-		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000, "mypîpeline"); 
-		
-		Assertions.assertEquals("OK", rs.getStatus());
+	public PipelineDescription(String name, String type) {
+		this.name = name;
+		this.type = type;
 	}
 }

@@ -1,5 +1,6 @@
 {
 	"project": "jackson-core",
+	"implementation": "simple",
 	"repo": "https://github.com/FasterXML/jackson-core.git",
 	"root": "/mnt/yacic",
 	

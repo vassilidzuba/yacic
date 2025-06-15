@@ -37,6 +37,12 @@
 
 		<dependency>
 			<groupId>vassilidzuba.yacic</groupId>
+			<artifactId>persistence</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>vassilidzuba.yacic</groupId>
 			<artifactId>podmanutil</artifactId>
 			<version>${project.version}</version>
 		</dependency>

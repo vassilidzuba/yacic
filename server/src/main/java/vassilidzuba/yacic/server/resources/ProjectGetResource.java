@@ -32,8 +32,8 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Node;
+import vassilidzuba.yacic.model.ProjectConfiguration;
 import vassilidzuba.yacic.podmanutil.Podmanutil;
-import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
 
 /**
  * Resource returning a file from a build. It could be used for instance

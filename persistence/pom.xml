@@ -21,12 +21,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>vassilidzuba.yacic</groupId>
-			<artifactId>simpleimpl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
 		</dependency>

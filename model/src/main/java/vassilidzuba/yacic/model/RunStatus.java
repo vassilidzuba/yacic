@@ -14,7 +14,7 @@
    limitations under the License.	
 **/
 
-package vassilidzuba.yacic.server.api;
+package vassilidzuba.yacic.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

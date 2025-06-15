@@ -1,5 +1,6 @@
 {
 	"project": "badexample1",
+	"implementation": "simple",
 	"repo": "http://odin.manul.lan:3000/vassili/badexample1.git",
 	"root": "/mnt/yacic",
 	

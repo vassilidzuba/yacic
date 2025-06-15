@@ -13,20 +13,31 @@
    See the License for the specific language governing permissions and
    limitations under the License.	
 **/
+package vassilidzuba.yacic.model;
 
-package vassilidzuba.yacic.server.api;
+import java.nio.file.Path;
+import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import lombok.Getter;
+import lombok.Setter;
 
-import vassilidzuba.yacic.model.RunStatus;
+/**
+ * configuration at the application level; provide configuration values for all the project implementation.
+ * 
+ */
+public class GlobalConfiguration {
+	
+	@Setter @Getter
+	private Path actionDefinitionDirectory;
+	@Setter @Getter
+	private Path pipelineDirectory;
+	@Setter @Getter
+	private Path projectDirectory;
+	@Setter @Getter
+	private Path logsDirectory;
+	@Setter @Getter
+	private int maxNbLogs;
+	@Setter @Getter
+	private List<Node> nodes;
 
-class RunStatusTest {
-
-	@Test
-	void test1() {
-		var rs = new RunStatus("p1", "main", "20250612151212", "OK", 10000, "mypîpeline"); 
-		
-		Assertions.assertEquals("OK", rs.getStatus());
-	}
 }

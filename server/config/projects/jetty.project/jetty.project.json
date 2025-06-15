@@ -1,5 +1,6 @@
 {
 	"project": "jetty.project",
+	"implementation": "simple",
 	"repo": "https://github.com/jetty/jetty.project.git",
 	"root": "/mnt/yacic",
 	

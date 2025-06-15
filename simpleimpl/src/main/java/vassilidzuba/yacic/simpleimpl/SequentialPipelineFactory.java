@@ -30,7 +30,6 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import vassilidzuba.yacic.model.Action;
-import vassilidzuba.yacic.model.Pipeline;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,7 +37,7 @@ public final class SequentialPipelineFactory {
 	static XMLInputFactory xmlif = XMLInputFactory.newInstance();
 
 	@SneakyThrows
-	public static Pipeline<SequentialPipelineConfiguration> parse(InputStream is) {
+	public static SequentialPipeline parse(InputStream is) {
 
 		var xmlsr = xmlif.createXMLStreamReader(is);
 		var ctx = new Context();

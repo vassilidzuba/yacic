@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.simpleimpl.ProjectConfiguration;
+import vassilidzuba.yacic.model.ProjectConfiguration;
 
 @Slf4j
 class PersistenceManagerTest {
@@ -95,6 +95,9 @@ class PersistenceManagerTest {
 	private void load(Path p) {
 		var configpath = p.resolve(p.getFileName() + ".json");
 		var pc = ProjectConfiguration.readProjectConfiguration(configpath);
+		if (pc == null) {
+			log.error("failed to read {}", configpath);
+		}
 		pm.storeProject(pc.getProject(), pc.getRepo(), pc.getBranches());
 	}
 }

@@ -1,5 +1,6 @@
 {
 	"project": "yacic",
+	"implementation": "simple",
 	"repo": "https://github.com/vassilidzuba/yacic.git",
 	"root": "/mnt/yacic",
 	

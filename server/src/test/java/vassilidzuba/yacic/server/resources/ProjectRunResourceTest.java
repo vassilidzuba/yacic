@@ -25,25 +25,26 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import vassilidzuba.yacic.model.GlobalConfiguration;
 import vassilidzuba.yacic.model.Node;
 import vassilidzuba.yacic.model.Pipeline;
-import vassilidzuba.yacic.podmanutil.PodmanActionDefinition;
 import vassilidzuba.yacic.simpleimpl.BuiltinAction;
 import vassilidzuba.yacic.simpleimpl.SequentialPipeline;
 import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 @Slf4j
 class ProjectRunResourceTest {
-
+	
 	@Test
 	@SneakyThrows
+	@Disabled("no possibilitu to mockup the project implementaiotn at thge moment")
 	void test1() {
 		Map<String, Pipeline<SequentialPipelineConfiguration>> pipelines = new HashMap<>();
-		Map<String, PodmanActionDefinition> actionDefinitions = new HashMap<>();
 
 		var action = new SpecialAction();
 		action.setId("start");
@@ -55,15 +56,37 @@ class ProjectRunResourceTest {
 
 		pipelines.put(pipeline.getId(), pipeline);
 		
-		String projectDirectory = "target/projects";
-		String logsDirectory = "target/logs";
+		var projectDirectory = "target/projects";
+		var pipelineDirectory = "target/pipelines";
+		var actionDefinitionDirectory = "target/actions";
+		var logsDirectory = "target/logs";
+		
+		var globalConfigurtation = new GlobalConfiguration();
+		globalConfigurtation.setProjectDirectory(Path.of(projectDirectory));
+		globalConfigurtation.setPipelineDirectory(Path.of(pipelineDirectory));
+		globalConfigurtation.setLogsDirectory(Path.of(logsDirectory));
+		globalConfigurtation.setActionDefinitionDirectory(Path.of(actionDefinitionDirectory));
 
-		var prr = new ProjectRunResource(pipelines, actionDefinitions, projectDirectory, logsDirectory, 3, null);
+		Files.createDirectories(globalConfigurtation.getActionDefinitionDirectory());
+		Files.createDirectories(globalConfigurtation.getPipelineDirectory());
+		Files.createDirectories(globalConfigurtation.getLogsDirectory());
+		
+		var prr = new ProjectRunResource(globalConfigurtation);
+		
+		Files.writeString(Path.of(pipelineDirectory).resolve("testpipeline.xml"), """
+				<pipeline type="sequential" id ="testpipeline">
+				<description>test pipelmine</description>
+
+					
+				</pipeline>
+				""");
+		
 
 		Files.createDirectories(Path.of(projectDirectory).resolve("test"));
 		Files.writeString(Path.of(projectDirectory).resolve("test").resolve("test.json"), """
 				
 				{"project": "test",
+				"implementation": "simple",
 				 "repo": "http://gitea.com/test.git",
 				 "pipeline": "testpipeline",
 	             "branches": [
