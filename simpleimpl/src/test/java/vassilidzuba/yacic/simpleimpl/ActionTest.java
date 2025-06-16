@@ -28,4 +28,5 @@ class ActionTest {
 		Assertions.assertEquals("ok", status);
 		Assertions.assertEquals("action1", a.getId());
 	}
+
 }

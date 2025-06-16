@@ -117,7 +117,7 @@
 	<podmanactiondefinition id="gcc_compile">
 		<image>docker.io/library/gcc:bookworm</image>
 		<username>podman</username>
-		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} make PROGRAM </command>
+		<command>--name @{ACTIONID}-@{PROJECT}-@{BRANCHDIR} -v @{DATAAREA}/@{PROJECT}:/usr/src/myapp -w /usr/src/myapp @{IMAGE} make @{PROGRAM} </command>
 		<role>gcc</role>
 	</podmanactiondefinition>
 

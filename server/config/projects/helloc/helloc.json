@@ -6,6 +6,10 @@
 
 	"pipeline": "gcc-build",
 	
+	"branches": [
+		{"name": "main",            "dir": "b0"}
+	],
+	"flags": [],
 	"properties": [
 		{"key": "PROGRAM", "value": "hello"}
 	]

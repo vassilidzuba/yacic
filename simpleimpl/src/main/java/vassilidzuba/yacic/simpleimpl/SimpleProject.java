@@ -43,6 +43,7 @@ public class SimpleProject implements Project {
 	private String branch;
 	private static Map<String, PodmanActionDefinition> podmanActionDefinitions = new HashMap<>();
 	private static Map<String, SequentialPipeline> pipelines = new HashMap<>();
+	@Setter
 	private PersistenceManager pm = new PersistenceManager();
 	@Setter
 	private static AbstractInitializer initializer = new Initializer();
