@@ -24,10 +24,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
-import vassilidzuba.yacic.model.AbstractPipeline;
-import vassilidzuba.yacic.model.Node;
-import vassilidzuba.yacic.model.PipelineConfiguration;
-import vassilidzuba.yacic.model.PipelineStatus;
 
 @Slf4j
 class AbstractPipelineTest {

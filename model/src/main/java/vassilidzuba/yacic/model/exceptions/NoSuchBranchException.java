@@ -21,9 +21,9 @@ import lombok.Getter;
 public class NoSuchBranchException extends RuntimeException {
 	private static final long serialVersionUID = -1382742825638983096L;
 	@Getter
-	private String branch;
+	private final String branch;
 	@Getter
-	private String project;
+	private final String project;
 	
 	public NoSuchBranchException(String branch, String project) {
 		super("No branch: " + branch + " in project " + project);

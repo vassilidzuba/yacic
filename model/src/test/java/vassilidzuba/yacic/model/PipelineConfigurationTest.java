@@ -19,8 +19,6 @@ package vassilidzuba.yacic.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import vassilidzuba.yacic.model.PipelineConfiguration;
-
 class PipelineConfigurationTest {
 
 	@Test

@@ -128,11 +128,6 @@ public class ServerConfiguration extends Configuration {
 		this.database = database;
 	}
 	
-	public void reload() {
-//		loadPipelines();
-//		loadActionDefinitions();
-	}
-	
 	public static class DatabaseConfig {
 		@Setter @Getter
 		private String url;

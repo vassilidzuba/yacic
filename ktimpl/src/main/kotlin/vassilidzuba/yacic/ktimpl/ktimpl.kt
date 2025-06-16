@@ -25,6 +25,8 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.file.Path
 
+val reason = "not yet implemented"
+
 abstract class KtStep : AbstractAction<KtPipelineConfiguration>() {
     var command: String = ""
     abstract val category: String
@@ -55,11 +57,11 @@ abstract class KtStep : AbstractAction<KtPipelineConfiguration>() {
     }
 
     override fun getSkipWhen(): Set<String?>? {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 
     override fun getOnlyWhen(): Set<String?>? {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 }
 
@@ -175,23 +177,23 @@ class KtPipeline : AbstractPipeline<KtPipelineConfiguration>() {
         nodes: List<Node?>?,
         flags: Set<String?>?
     ): Boolean {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 
     override fun setActionContext(data: String?) {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 
     override fun getActionContext(): String? {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 
     override fun setDataArea(data: Path?) {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 
     override fun getDataArea(): Path? {
-        TODO("Not yet implemented")
+        TODO(reason)
     }
 }
 

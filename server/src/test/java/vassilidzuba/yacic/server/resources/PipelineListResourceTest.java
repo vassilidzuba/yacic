@@ -16,37 +16,19 @@
 
 package vassilidzuba.yacic.server.resources;
 
-import java.util.HashMap;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import vassilidzuba.yacic.model.Pipeline;
-import vassilidzuba.yacic.simpleimpl.SequentialPipeline;
-import vassilidzuba.yacic.simpleimpl.SequentialPipelineConfiguration;
 
 class PipelineListResourceTest {
 
 	@Test
 	void test1() {
-//		var map = new HashMap<String, Pipeline<SequentialPipelineConfiguration>>();
-//		
-//		var pip1 = new SequentialPipeline("podman");
-//		pip1.setId("pip1");
-//		
-//		var pip2 = new SequentialPipeline("podman");
-//		pip2.setId("pip2");
-//		
-//		map.put(pip1.getId(), pip1);
-//		map.put(pip2.getId(), pip2);
-//		
-//		var plr = new PipelineListResource(map);
-//		
-//		var pll = plr.listPipelines();
-//		
-//		Assertions.assertEquals(2, pll.size());
-//		Assertions.assertTrue(pll.contains("pip1"));
-//		Assertions.assertTrue(pll.contains("pip2"));
+		var plr = new PipelineListResource(Path.of("config/pipelines"));
+		
+		var pll = plr.listPipelines();
+		
+		Assertions.assertEquals(10, pll.size());
 	}
-	
 }

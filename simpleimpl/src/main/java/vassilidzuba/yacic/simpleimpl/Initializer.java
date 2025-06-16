@@ -25,9 +25,11 @@ import vassilidzuba.yacic.model.GlobalConfiguration;
 
 @Slf4j
 public class Initializer extends AbstractInitializer {
+	private GlobalConfiguration glconfig;
 
 	@Override
 	public void initialize(GlobalConfiguration glconfig) {
+		this.glconfig = glconfig;
 		if (podmanActionDefinitions.isEmpty()) {
 			loadActionDefinitions(glconfig.getActionDefinitionDirectory());
 		}
@@ -36,6 +38,12 @@ public class Initializer extends AbstractInitializer {
 		}
 	}
 	
+	@Override
+	public void reload() {
+		podmanActionDefinitions.clear();
+		pipelines.clear();
+		initialize(glconfig);
+	}	
 
 	@SneakyThrows
 	public static void loadActionDefinitions(Path dir) {

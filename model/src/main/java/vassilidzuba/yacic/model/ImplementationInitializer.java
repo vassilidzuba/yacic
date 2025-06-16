@@ -18,4 +18,5 @@ package vassilidzuba.yacic.model;
 public interface ImplementationInitializer {
 
 	void initialize(GlobalConfiguration config);
+	void reload();
 }

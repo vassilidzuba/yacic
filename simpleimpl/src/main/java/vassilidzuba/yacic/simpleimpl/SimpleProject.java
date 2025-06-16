@@ -62,6 +62,10 @@ public class SimpleProject implements Project {
 		pipelines = AbstractInitializer.getPipelines();
 	}
 	
+	public void reload() {
+		initializer.reload();
+	}
+	
 
 	@Override
 	@SneakyThrows

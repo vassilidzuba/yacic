@@ -13,4 +13,7 @@ public abstract class AbstractInitializer implements ImplementationInitializer {
 	@Getter
 	protected static Map<String, SequentialPipeline> pipelines = new HashMap<>();
 
+	protected AbstractInitializer() {
+		// nothing
+	}
 }

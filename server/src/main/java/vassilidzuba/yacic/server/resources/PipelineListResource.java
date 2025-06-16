@@ -62,7 +62,7 @@ public class PipelineListResource {
 	private PipelineList loadPipelinesDescription(java.nio.file.Path dir) {
 		var ret = new PipelineList();
 		try (var st = Files.list(dir)) {
-			st.map(this::loadPipelineDescription).forEach(pd -> ret.add(pd));
+			st.map(this::loadPipelineDescription).forEach(ret::add);
 		}
 		return ret;
 	}

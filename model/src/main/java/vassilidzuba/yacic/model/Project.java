@@ -21,4 +21,5 @@ public interface Project {
 	void initialize(ProjectConfiguration config, GlobalConfiguration glconfig, String branch);
 	
 	RunStatus run();
+	void reload();
 }

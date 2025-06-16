@@ -19,8 +19,6 @@ package vassilidzuba.yacic.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import vassilidzuba.yacic.model.ActionStatus;
-
 class ActionStatusTest {
 
 	@Test
@@ -32,5 +30,4 @@ class ActionStatusTest {
 		
 		Assertions.assertEquals("[zeId:success]", as.toString());
 	}
-	
 }

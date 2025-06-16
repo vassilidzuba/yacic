@@ -51,7 +51,7 @@ public class ProjectFactory {
 		var implementation = prconfig.getImplementation();
 		var project = switch(implementation) {
 		case "simple"-> buildSimpleProject();
-		//case "kt" -> new vassilidzuba.yacic.ktimpl.KtProject();
+		case "kt" -> buildKtProject();
 		default -> throw new WebApplicationException("no such project implementation: " + implementation, 500);
 		};
 		
