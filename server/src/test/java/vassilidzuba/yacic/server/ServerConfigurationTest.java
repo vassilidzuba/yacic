@@ -58,7 +58,7 @@ class ServerConfigurationTest {
 		
 		Assertions.assertEquals(1, config.getNodes().size());
 		Assertions.assertEquals("odin", config.getNodes().get(0).getHost());
-		Assertions.assertEquals(6, config.getNodes().get(0).getRoles().size());
+		Assertions.assertEquals(7, config.getNodes().get(0).getRoles().size());
 		Assertions.assertTrue(config.getNodes().get(0).getRoles().contains("git"));
 	}
 }
