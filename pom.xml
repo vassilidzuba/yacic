@@ -39,7 +39,6 @@
 		<module>model</module>
 		<module>podmanutil</module>
 		<module>simpleimpl</module>
-		<module>ktimpl</module>
 		<module>persistence</module>
 		<module>server</module>
 	</modules>

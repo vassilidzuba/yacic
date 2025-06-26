@@ -7,7 +7,7 @@
    "maxNbLogs": 5,
       
    "nodes": [
-      {"host": "odin", "roles": ["git", "java", "golang", "gcc", "rust", "zig"]}
+      {"host": "odin", "roles": ["git", "java", "docker", "golang", "gcc", "rust", "zig"]}
    ],
    
    "database": {

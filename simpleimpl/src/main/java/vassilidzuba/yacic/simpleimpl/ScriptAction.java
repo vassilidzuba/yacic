@@ -102,7 +102,7 @@ public class ScriptAction  extends AbstractAction {
 			podmanutil.copyFileToRemote(host, tempFile, dest);
 		}
 		
-		podmanutil.run(os, dest, role);
+		podmanutil.runLocalOrRemote(os, dest, role);
 		
 		Files.deleteIfExists(tempFile);
 		

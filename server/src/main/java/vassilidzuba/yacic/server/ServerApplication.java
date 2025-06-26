@@ -58,7 +58,7 @@ public class ServerApplication extends Application<ServerConfiguration> {
 	 * @throws Exception when a major failure occurred.
 	 */
 	public static void main(String... args) throws Exception {
-    	if (args.length < 2) {
+        if (args.length < 2) {
     		log.error("too few arguments");
     		throw new NoConfigurationAvailable();
     	}

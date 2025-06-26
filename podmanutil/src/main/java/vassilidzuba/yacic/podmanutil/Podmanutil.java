@@ -95,7 +95,7 @@ public class Podmanutil {
 
 		log.info("{}", fullcommand);
 		
-		return run(os, fullcommand, role);
+		return runLocalOrRemote(os, fullcommand, role);
 	}
 
 	public String runHost(Map<String, String> properties, PodmanActionDefinition pad, String subcommand,
@@ -108,7 +108,7 @@ public class Podmanutil {
 
 		var fullcommand = setup + command + " " + subcommand2 + "; echo PODMANTERMINATION $?; " + cleanup;
 
-		return run(os, fullcommand, role);
+		return runLocalOrRemote(os, fullcommand, role);
 	}
 	
 	@SneakyThrows
@@ -156,7 +156,7 @@ public class Podmanutil {
 		}
 	}
 
-	public String run(OutputStream os, String fullcommand, String role) {
+	public String runLocalOrRemote(OutputStream os, String fullcommand, String role) {
 		log.info("  command : {}", fullcommand);
 
 		if (dryrun) {
